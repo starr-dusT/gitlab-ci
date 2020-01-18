@@ -1,0 +1,46 @@
+image: alpine:3
+
+stages:
+  - failure_stage
+
+before_script:
+  - date
+  - echo '__BEFORE_SCRIPT__'
+
+after_script:
+  - date
+  - echo '__AFTER_SCRIPT__'
+
+'Job 1':
+  stage: failure_stage
+  script:
+    - echo 'Job 1'
+
+'Job 2':
+  stage: failure_stage
+  script:
+    - echo '__SHOULD_NEVER_HAPPEN__'
+  when: on_failure
+
+'Job 3':
+  stage: failure_stage
+  script:
+    - 'false'
+
+'Job 4':
+  stage: failure_stage
+  script:
+    - echo '__SHOULD_ALWAYS_RUN__'
+  when: always
+
+'Job 4':
+  stage: failure_stage
+  script:
+    - echo '__SHOULD_RUN_ON_FAILURE__'
+  when: on_failure
+
+'Job 5':
+  stage: failure_stage
+  script:
+    - echo '__SHOULD_RUN_ON_FAILURE__'
+  when: on_failure

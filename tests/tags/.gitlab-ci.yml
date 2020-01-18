@@ -1,0 +1,26 @@
+image: alpine:3
+
+stages:
+  - one
+  - two
+  - three
+
+'Job 1':
+  stage: one
+  script:
+    - echo 'Job 1'
+
+'Job 2':
+  stage: two
+  tags:
+    - publish
+  script:
+    - echo 'Job 2'
+    - 'false'
+
+'Job 3':
+  stage: three
+  tags:
+    - deploy
+  script:
+    - echo 'Job - 3'

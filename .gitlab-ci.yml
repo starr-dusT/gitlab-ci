@@ -1,0 +1,75 @@
+image: python:3
+
+stages:
+  - build
+  - test
+  - deploy
+
+'Build':
+  stage: build
+  script:
+    - pip install -U setuptools wheel
+    - rm -rf build dist *.egg-info .eggs
+    - python setup.py bdist_wheel
+  artifacts:
+    paths:
+      - dist/
+
+'Unit Tests':
+  stage: test
+  services:
+    - docker:dind
+  variables:
+    DOCKER_DRIVER: overlay2
+    # DOCKER_HOST: tcp://docker:2375
+    FORCE_STYLING: 'true'
+    TEMP: .tmp
+    TERM: ansi
+  script:
+    - mkdir -p ./.tmp/
+    - pip install dist/*.whl
+    - pip install --upgrade --no-deps dist/*.whl
+    - pip show gitlabci-local
+    - gitlabci-local -h
+    - gitlabci-local -c unknown/.gitlab-ci.yml && exit 1 || true
+    - gitlabci-local -c ./examples/.gitlab-ci.yml -d
+    - gitlabci-local -c ./tests/simple/.gitlab-ci.yml -p
+    - gitlabci-local -c ./tests/simple/.gitlab-ci.yml -q -p
+    - gitlabci-local -c ./tests/unsorted/.gitlab-ci.yml -p
+    - gitlabci-local -b -a -c ./tests/templates/.gitlab-ci.yml 'Job 1' 'Job 2' 'Job 3'
+    - gitlabci-local -b -a -c ./tests/failures/.gitlab-ci.yml -p && exit 1 || true
+    - gitlabci-local -c ./tests/failures/.gitlab-ci.yml 'Job 1' 'Job 2'
+    - gitlabci-local -c ./tests/stages/.gitlab-ci.yml unknown_job && exit 1 || true
+    - gitlabci-local -c ./tests/stages/.gitlab-ci.yml -p unknown_stage && exit 1 || true
+    - gitlabci-local -c ./tests/stages/.gitlab-ci.yml -p && exit 1 || true
+    - gitlabci-local -c ./tests/stages/.gitlab-ci.yml -p one two
+    - gitlabci-local -c ./tests/tags/.gitlab-ci.yml -p
+    - gitlabci-local -c ./tests/tags/.gitlab-ci.yml -m -p && exit 1 || true
+    - gitlabci-local -c ./tests/tags/.gitlab-ci.yml -t 'upload' -p && exit 1 || true
+    - gitlabci-local -c ./tests/tags/.gitlab-ci.yml 'Job 3'
+    - gitlabci-local -c ./tests/tags/.gitlab-ci.yml -p three && exit 1 || true
+    - gitlabci-local -c ./tests/tags/.gitlab-ci.yml -m -p three
+
+'Deploy Test':
+  stage: deploy
+  variables:
+    TWINE_PASSWORD_TEST: ${TWINE_PASSWORD_TEST}
+  script:
+    - pip install -U twine setuptools wheel
+    - python setup.py bdist_wheel
+    - twine upload -u '__token__' -p "${TWINE_PASSWORD_TEST}" --repository testpypi dist/*
+  only:
+    - tags
+  when: manual
+
+'Deploy Release':
+  stage: deploy
+  variables:
+    TWINE_PASSWORD: ${TWINE_PASSWORD}
+  script:
+    - pip install -U twine setuptools wheel
+    - python setup.py bdist_wheel
+    - twine upload -u '__token__' -p "${TWINE_PASSWORD}" dist/*
+  only:
+    - tags
+  when: manual
