@@ -39,9 +39,16 @@ def selector(options, jobs):
     # Stages groups
     for job in jobs:
 
-        # Filtered jobs
-        if options.names and job not in options.names:
-            continue
+        # Filter names
+        if options.names:
+
+            # Filter jobs list
+            if not options.pipeline and job not in options.names:
+                continue
+
+            # Filter stages list
+            if options.pipeline and jobs[job]['stage'] not in options.names:
+                continue
 
         # Stages separator
         if stage != jobs[job]['stage']:
@@ -88,7 +95,7 @@ def selector(options, jobs):
         answers = PyInquirer.prompt(selection_prompt, style=SelectorTheme)
     else:
         print(
-            '%s%s: %sERROR: %sNo jobs found for selection%s' %
+            ' %s%s: %sERROR: %sNo jobs found for selection%s' %
             (term.green + term.bold, NAME, term.red + term.bold, term.normal + term.bold,
              term.normal), flush=True)
         answers = None
@@ -98,6 +105,9 @@ def selector(options, jobs):
         options.names = answers['jobs']
     else:
         options.names = []
+
+    # Drop pipeline mode for jobs
+    options.pipeline = False
 
     # Footer
     print(' ')
@@ -167,7 +177,7 @@ def configurator(configurations):
             answers = configurations_defaults
     else:
         print(
-            '%s%s: %sERROR: %sNo configuration found%s' %
+            ' %s%s: %sERROR: %sNo configuration found%s' %
             (term.green + term.bold, NAME, term.red + term.bold, term.normal + term.bold,
              term.normal), flush=True)
         answers = None

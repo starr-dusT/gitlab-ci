@@ -34,10 +34,10 @@ gitlabci-runner-local: Launch .gitlab-ci.yml jobs locally
 | -a, --after        | Enable after_script executions                                    |
 | -m, --manual       | Allow manual jobs to be used                                      |
 | -t MANUAL_TAGS     | Handle listed tags as manual jobs<br>Default list: deploy,publish |
+| -p, --pipeline     | Run complete stages rather than jobs                              |
 | -d, --dump         | Dump parsed .gitlab-ci.yml configuration                          |
-| -s, --select       | Force jobs selection with enumerated jobs                         |
+| -s, --select       | Force jobs selection from enumerated names                        |
 | -l, --list         | Select one job to run (implies --manual)                          |
-| -p, --pipeline     | Run the pipeline stages without selection                         |
 
 ---
 

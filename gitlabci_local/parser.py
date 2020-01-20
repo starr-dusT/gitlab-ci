@@ -17,13 +17,13 @@ def reader(options):
             data = yaml.safe_load(configuration_data)
             return parser(options, data)
         except yaml.YAMLError as exc:
-            print('%s%s: %sERROR: %s%s%s' %
+            print(' %s%s: %sERROR: %s%s%s' %
                   (term.green + term.bold, NAME, term.red + term.bold,
                    term.normal + term.bold, exc, term.normal))
         except:
-            print(
-                '%s%s: %sERROR: %s%s' % (term.green + term.bold, NAME, term.red +
-                                         term.bold, term.normal + term.bold, term.normal))
+            print(' %s%s: %sERROR: %s%s' %
+                  (term.green + term.bold, NAME, term.red + term.bold,
+                   term.normal + term.bold, term.normal))
 
     # Failure
     return None

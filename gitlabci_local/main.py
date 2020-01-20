@@ -25,6 +25,7 @@ from .runner import launcher
 def main():
 
     # Variables
+    interactive = (sys.stdin.isatty() and sys.stdout.isatty())
     result = False
 
     # Arguments creation
@@ -48,17 +49,17 @@ def main():
     parser.add_argument(
         '-t', dest='manual_tags', default='deploy,publish',
         help='Handle listed tags as manual jobs\nDefault list: %(default)s')
+    parser.add_argument('-p', '--pipeline', dest='pipeline', action='store_true',
+                        help='Run complete stages rather than jobs')
 
     # Arguments exclusive definitions
     group = parser.add_mutually_exclusive_group()
     group.add_argument('-d', '--dump', dest='dump', action='store_true',
                        help='Dump parsed .gitlab-ci.yml configuration')
     group.add_argument('-s', '--select', dest='select', action='store_true',
-                       help='Force jobs selection with enumerated jobs')
+                       help='Force jobs selection from enumerated names')
     group.add_argument('-l', '--list', dest='list', action='store_true',
                        help='Select one job to run (implies --manual)')
-    group.add_argument('-p', '--pipeline', dest='pipeline', action='store_true',
-                       help='Run the pipeline stages without selection')
 
     # Arguments positional definitions
     parser.add_argument('names', nargs='*',
@@ -88,22 +89,33 @@ def main():
     if options.dump:
         result = dumper(options, jobs)
 
-    # Launch pipeline
-    elif options.pipeline:
-        result = launcher(options, jobs)
-
     # Select job
-    elif options.list:
+    elif options.list and interactive:
         options.manual = True
         result = selector(options, jobs)
 
     # Select jobs
-    elif options.select or not options.names:
+    elif options.select and interactive:
         result = selector(options, jobs)
+
+    # Launch pipeline
+    elif options.pipeline:
+        result = launcher(options, jobs)
 
     # Launch jobs
     elif options.names:
         result = launcher(options, jobs)
+
+    # Select jobs
+    elif interactive:
+        result = selector(options, jobs)
+
+    # Unsupported case
+    else:
+        print(' %s%s: %sERROR: %sUnsupported non-interactive context...%s' %
+              (term.green + term.bold, NAME, term.red + term.bold,
+               term.normal + term.bold, term.normal))
+        print(' ', flush=True)
 
     # Result
     if result:

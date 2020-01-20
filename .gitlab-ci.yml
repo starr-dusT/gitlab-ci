@@ -34,6 +34,7 @@ stages:
     - gitlabci-local -h
     - gitlabci-local -c unknown/.gitlab-ci.yml && exit 1 || true
     - gitlabci-local -c ./examples/.gitlab-ci.yml -d
+    - gitlabci-local -c ./tests/simple/.gitlab-ci.yml </dev/null && exit 1 || true
     - gitlabci-local -c ./tests/simple/.gitlab-ci.yml -p
     - gitlabci-local -c ./tests/simple/.gitlab-ci.yml -q -p
     - gitlabci-local -c ./tests/unsorted/.gitlab-ci.yml -p
@@ -44,6 +45,7 @@ stages:
     - gitlabci-local -c ./tests/stages/.gitlab-ci.yml -p unknown_stage && exit 1 || true
     - gitlabci-local -c ./tests/stages/.gitlab-ci.yml -p && exit 1 || true
     - gitlabci-local -c ./tests/stages/.gitlab-ci.yml -p one two
+    - gitlabci-local -c ./tests/stages/.gitlab-ci.yml -s -p one two </dev/null
     - gitlabci-local -c ./tests/tags/.gitlab-ci.yml -p
     - gitlabci-local -c ./tests/tags/.gitlab-ci.yml -m -p && exit 1 || true
     - gitlabci-local -c ./tests/tags/.gitlab-ci.yml -t 'upload' -p && exit 1 || true
