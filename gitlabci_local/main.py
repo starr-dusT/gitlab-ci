@@ -30,7 +30,7 @@ def main():
     # Arguments creation
     parser = argparse.ArgumentParser(
         prog=NAME, description='%s: Launch .gitlab-ci.yml jobs locally' % (NAME),
-        add_help=False)
+        add_help=False, formatter_class=argparse.RawTextHelpFormatter)
 
     # Arguments optional definitions
     parser.add_argument('-h', dest='help', action='store_true',
@@ -45,9 +45,9 @@ def main():
                         help='Enable after_script executions')
     parser.add_argument('-m', '--manual', dest='manual', action='store_true',
                         help='Allow manual jobs to be used')
-    parser.add_argument('-t', '--manual-tags', dest='manual_tags',
-                        default='deploy,publish',
-                        help='Handle specific tags as manual jobs')
+    parser.add_argument(
+        '-t', dest='manual_tags', default='deploy,publish',
+        help='Handle listed tags as manual jobs\nDefault list: %(default)s')
 
     # Arguments exclusive definitions
     group = parser.add_mutually_exclusive_group()
