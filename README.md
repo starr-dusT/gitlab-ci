@@ -38,3 +38,20 @@ gitlabci-runner-local: Launch .gitlab-ci.yml jobs locally
 | -s, --select                              | Force jobs selection with enumerated jobs |
 | -l, --list                                | Select one job to run (implies --manual)  |
 | -p, --pipeline                            | Run the pipeline stages without selection |
+
+---
+
+## Dependencies
+
+* [blessings](https://pypi.org/project/blessings/): Terminal colors and styles
+* [docker](https://pypi.org/project/docker/): Docker Engine API
+* [oyaml](https://pypi.org/project/oyaml/): Ordered YAML dictionnaries
+* [PyInquirer](https://pypi.org/project/PyInquirer/): Interactive terminal user interfaces
+
+---
+
+## References
+
+* [.gitlab-ci.yml](https://docs.gitlab.com/ee/ci/yaml/): GitLab CI/CD Pipeline Configuration Reference
+* [peek](https://github.com/phw/peek): Simple GIF screen recorder
+* [PyPI](https://pypi.org/): The Python Package Index
