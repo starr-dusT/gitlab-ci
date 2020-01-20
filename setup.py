@@ -1,15 +1,17 @@
+# Libraries
 import setuptools
 
-requirements = [
-    'blessings',
-    'docker',
-    'oyaml',
-    'PyInquirer',
-]
+# Requirements
+requirements = []
+with open('requirements.txt') as f:
+    requirements = f.read().splitlines()
 
+# Long description
+long_description = ''
 with open('README.md', 'r') as f:
     long_description = f.read()
 
+# Setup configurations
 setuptools.setup(
     name='gitlabci-local',
     use_scm_version=True,

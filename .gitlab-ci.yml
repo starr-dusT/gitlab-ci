@@ -9,6 +9,7 @@ stages:
   stage: build
   script:
     - pip install -U setuptools wheel
+    - pip install -r requirements.txt
     - rm -rf build dist *.egg-info .eggs
     - python setup.py bdist_wheel
   artifacts:
