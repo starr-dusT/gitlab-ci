@@ -49,6 +49,8 @@ stages:
     - gitlabci-local -c ./tests/tags/.gitlab-ci.yml 'Job 3'
     - gitlabci-local -c ./tests/tags/.gitlab-ci.yml -p three && exit 1 || true
     - gitlabci-local -c ./tests/tags/.gitlab-ci.yml -m -p three
+    - gitlabci-local -c ./tests/configurations/.gitlab-ci.yml -p
+    - gitlabci-local -c ./tests/configurations/.gitlab-ci.yml -p </dev/null
 
 'Deploy Test':
   stage: deploy

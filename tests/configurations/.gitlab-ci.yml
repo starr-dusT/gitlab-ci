@@ -1,0 +1,32 @@
+image: alpine:3
+
+stages:
+  - build
+
+variables:
+  CONSTANT_1: 'constant1'
+  CONSTANT_2: 'constant2'
+
+.configurations:
+  variables:
+    VARIABLE_1: 'true,false# Configure the first variable'
+    VARIABLE_2: 'value1,value2,value3# Configure the second variable'
+    VARIABLE_3: 'false,true# Configure the third variable'
+
+'Job 1':
+  stage: build
+  script:
+    - echo 'Job 1'
+    - echo "${VARIABLE_1}"
+
+'Job 2':
+  stage: build
+  script:
+    - echo 'Job 2'
+    - echo "${VARIABLE_2}"
+
+'Job 3':
+  stage: build
+  script:
+    - echo 'Job 3'
+    - echo "${VARIABLE_3}"

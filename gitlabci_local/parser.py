@@ -6,6 +6,7 @@ import oyaml as yaml
 
 # Components
 from .main import NAME, term
+from .menu import configurator
 
 # Reader
 def reader(options):
@@ -31,6 +32,7 @@ def reader(options):
 def parser(options, data):
 
     # Variables
+    configurations = dict()
     global_values = dict({
         'after_script': [],
         'before_script': [],
@@ -70,7 +72,15 @@ def parser(options, data):
 
         # Filter variables node
         if node == 'variables':
-            global_values['variables'] = data['variables']
+            global_values['variables'].update(data['variables'])
+            continue
+
+        # Filter .configurations node
+        if node == '.configurations':
+            configurations = data['.configurations']
+            if 'variables' in configurations and configurations['variables']:
+                configuredVariables = configurator(configurations)
+                global_values['variables'].update(configuredVariables)
             continue
 
         # Validate job node

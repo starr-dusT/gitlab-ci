@@ -38,10 +38,3 @@ gitlabci-runner-local: Launch .gitlab-ci.yml jobs locally
 | -s, --select                              | Force jobs selection with enumerated jobs |
 | -l, --list                                | Select one job to run (implies --manual)  |
 | -p, --pipeline                            | Run the pipeline stages without selection |
-
----
-
-## TODO:
-
-* Implement `.configuration` TUI menu
-* Support job/retry values
