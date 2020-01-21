@@ -1,13 +1,17 @@
 #!/usr/bin/env python3
 
 # Libraries
+import json
 import os
+import oyaml as yaml
+from pathlib import Path
 import PyInquirer
 import sys
 
 # Components
 from .main import NAME, term
 from .runner import launcher
+from .utils import dictGet
 
 # Selector theme
 SelectorTheme = PyInquirer.style_from_dict({
@@ -126,7 +130,7 @@ def selector(options, jobs):
     return result
 
 # Configurator
-def configurator(configurations):
+def configurator(options, configurations):
 
     # Variables
     result = dict()
@@ -160,15 +164,20 @@ def configurator(configurations):
             'message': 'Variable %s: %s:' % (variable, variable_help),
         }]
 
+        # Extract environment variable
+        if variable in os.environ:
+            variable_default = os.environ[variable]
+            variable_set = True
+
         # Parse configuration types: boolean
         if variable_type == 'boolean':
             if 'default' in variable_node and variable_node['default'] in [
                     False, 'false'
             ]:
                 variable_values = ['false', 'true']
-                variable_default = variable_values[0]
             else:
                 variable_values = ['true', 'false']
+            if not variable_set:
                 variable_default = variable_values[0]
             for choice in variable_values:
                 variable_index += 1
@@ -183,7 +192,8 @@ def configurator(configurations):
         # Parse configuration types: choice
         elif variable_type == 'choice':
             variable_values = variable_node['values']
-            variable_default = variable_values[0]
+            if not variable_set:
+                variable_default = variable_values[0]
             for choice in variable_values:
                 variable_index += 1
                 variable_choices += [{
@@ -197,9 +207,54 @@ def configurator(configurations):
         # Parse configuration types: input
         elif variable_type == 'input':
             configuration_prompt[0]['type'] = 'input'
-            if 'default' in variable_node and variable_node['default']:
+            if 'default' in variable_node and variable_node[
+                    'default'] and not variable_set:
                 variable_default = variable_node['default']
                 configuration_prompt[0]['default'] = variable_default
+
+        # Parse configuration types: json
+        elif variable_type == 'json':
+            if not variable_set:
+                configuration_path = str(Path(options.path) / variable_node['path'])
+                configuration_key = variable_node['key']
+                with open(configuration_path, 'r') as configuration_data:
+                    variable_values = dictGet(json.load(configuration_data),
+                                              configuration_key)
+                    if not variable_values:
+                        raise ValueError(
+                            'Unknown "%s" key in %s for "%s"' %
+                            (configuration_key, configuration_path, variable))
+                    for choice in variable_values:
+                        variable_index += 1
+                        variable_choices += [{
+                            'key': str(variable_index),
+                            'name': '%s' % (choice),
+                            'value': choice
+                        }]
+                    configuration_prompt[0]['type'] = 'list'
+                    configuration_prompt[0]['choices'] = variable_values
+
+        # Parse configuration types: yaml
+        elif variable_type == 'yaml':
+            if not variable_set:
+                configuration_path = str(Path(options.path) / variable_node['path'])
+                configuration_key = variable_node['key']
+                with open(configuration_path, 'r') as configuration_data:
+                    variable_values = dictGet(yaml.safe_load(configuration_data),
+                                              configuration_key)
+                    if not variable_values:
+                        raise ValueError(
+                            'Unknown "%s" key in %s for "%s"' %
+                            (configuration_key, configuration_path, variable))
+                    for choice in variable_values:
+                        variable_index += 1
+                        variable_choices += [{
+                            'key': str(variable_index),
+                            'name': '%s' % (choice),
+                            'value': choice
+                        }]
+                    configuration_prompt[0]['type'] = 'list'
+                    configuration_prompt[0]['choices'] = variable_values
 
         # Parse configuration types: unknown
         else:

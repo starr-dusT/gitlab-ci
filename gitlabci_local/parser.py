@@ -55,6 +55,12 @@ def parser(options, data):
     jobs = dict()
     stages = dict()
 
+    # Filter .configurations node
+    if '.configurations' in data and data['.configurations']:
+        configurations = data['.configurations']
+        configuredVariables = configurator(options, configurations)
+        global_values['variables'].update(configuredVariables)
+
     # Iterate through stages
     for node in data:
 
@@ -88,16 +94,12 @@ def parser(options, data):
             global_values['variables'].update(data['variables'])
             continue
 
-        # Filter .configurations node
-        if node == '.configurations':
-            configurations = data['.configurations']
-            if configurations:
-                configuredVariables = configurator(configurations)
-                global_values['variables'].update(configuredVariables)
-            continue
-
         # Validate job node
         if 'stage' not in data[node]:
+            continue
+
+        # Filter .configurations node
+        if node == '.configurations':
             continue
 
         # Ignore template stage

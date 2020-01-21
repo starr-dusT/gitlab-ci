@@ -64,10 +64,11 @@ stages:
     - gitlabci-local -c ./tests/tags/.gitlab-ci.yml 'Job 3'
     - gitlabci-local -c ./tests/tags/.gitlab-ci.yml -p three && exit 1 || true
     - gitlabci-local -c ./tests/tags/.gitlab-ci.yml -m -p three
-    - gitlabci-local -c ./tests/configurations/.gitlab-ci.yml -p
-    - gitlabci-local -c ./tests/configurations/.gitlab-ci.yml -p </dev/null
+    - gitlabci-local -c ./tests/configurations/.gitlab-ci.yml -p && exit 1 || true
+    - gitlabci-local -c ./tests/configurations/.gitlab-ci.yml -p </dev/null && exit 1 || true
+    - VARIABLE_8=value8 gitlabci-local -c ./tests/configurations/.gitlab-ci.yml -p </dev/null && exit 1 || true
+    - VARIABLE_8=value8 VARIABLE_11=value11 gitlabci-local -c ./tests/configurations/.gitlab-ci.yml -p </dev/null
     - gitlabci-local -c ./tests/environment/.gitlab-ci.yml -p
-    - gitlabci-local -c ./tests/environment/.gitlab-ci.yml 'Job' </dev/null
 
 'Deploy Test':
   stage: deploy
