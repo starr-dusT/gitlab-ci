@@ -5,6 +5,18 @@ with inplace project volume mounts and adaptive user selections.
 
 ---
 
+## Purpose
+
+The main purpose of this project is to unify and enhance reliability  
+of builds, tests or releases running on GitLab CI in a similar local context,  
+by providing the simplicity of an interactive and automated terminal tool  
+and avoiding code duplication (Makefile, Shell scripts, docker run, ...).
+
+Rather than creating yet another standard, the .gitlab-ci.yml specification  
+is the common and unique interface between GitLab CI and gitlabci-local.
+
+---
+
 ## Preview
 
 ![preview.gif](https://gitlab.com/AdrianDC/gitlabci-local/raw/master/docs/preview.gif)
@@ -13,7 +25,7 @@ with inplace project volume mounts and adaptive user selections.
 
 ## Usage
 
-```
+```shell
 usage: gitlabci-runner-local [-h] [-q] [-c CONFIGURATION] [-b] [-a] [-m] [-p]
                              [-e ENV] [-t TAGS] [-d | -s | -l]
                              [names [names ...]]
@@ -39,6 +51,42 @@ gitlabci-runner-local: Launch .gitlab-ci.yml jobs locally
 | -d, --dump           | Dump parsed .gitlab-ci.yml configuration                                          |
 | -s, --select         | Force jobs selection from enumerated names                                        |
 | -l, --list           | Select one job to run (implies --manual)                                          |
+
+---
+
+## User configurations with ".configurations"
+
+gitlabci-local implements support for specific user configurations  
+allowing simple and interactive local pipeline configurations.
+
+Supported user configurations include `boolean`, `choice`, `input`, `yaml` and `json`.
+
+Examples for each of these can be found in the `configurations` unit tests: [tests/configurations](https://gitlab.com/AdrianDC/gitlabci-local/blob/master/tests/configurations/.gitlab-ci.yml)
+
+---
+
+## Job execution in native context
+
+gitlabci-local runs every jobs in the specified Docker image.
+
+For specific local purposes where the native host context is wished,  
+where the host tools, folders or credentials are required,  
+`image: local` can be used to run the scripts natively.
+
+An example usage can be found in the local CHANGELOG job: [.gitlab-ci.yml](https://gitlab.com/AdrianDC/gitlabci-local/blob/master/.gitlab-ci.yml)
+
+---
+
+## Environment variables
+
+gitlabci-local uses the variables defined in .gitlab-ci.yml,  
+parses the simple environment variables file named `.env`  
+and the configurations selected through `.configurations`.
+
+If specific environment variables are to be used in the job's container,  
+the `-e VARIABLE` or `-e VARIABLE=value` parameters can be used.
+
+For example, `-e TERM=ansi` may enable colored terminal outputs.
 
 ---
 
