@@ -107,59 +107,79 @@ def runner(options, job_data, last_result):
         for variable in job_data['variables']:
             variables[variable] = os.path.expandvars(job_data['variables'][variable])
 
-        # Launch container
-        container = client.containers.run(
-            job_data['image'], auto_remove=True, command=script.name, detach=True,
-            entrypoint=entrypoint, environment=variables, network_mode='bridge',
-            stdout=True, stderr=True, stream=True, volumes=volumes,
-            working_dir=pathProject)
+        # Prepare image
+        image = job_data['image']
 
-        # Create interruption handler
-        def interruptHandler(signal, frame):
-            print(' ')
-            print(' ')
-            print(
-                ' %s> WARNING: %sUser interruption detected, stopping the container...%s'
-                % (term.yellow + term.bold, term.normal + term.bold, term.normal))
-            print(' ', flush=True)
-            container.stop(timeout=0)
+        # Container execution
+        if image not in ['local']:
 
-        # Register interruption handler
-        originalInterruptionHandler = signal.getsignal(signal.SIGINT)
-        signal.signal(signal.SIGINT, interruptHandler)
+            # Launch container
+            container = client.containers.run(
+                job_data['image'], auto_remove=True, command=script.name, detach=True,
+                entrypoint=entrypoint, environment=variables, network_mode='bridge',
+                stdout=True, stderr=True, stream=True, volumes=volumes,
+                working_dir=pathProject)
 
-        # Execution wrapper
-        success = False
-        try:
-
-            # Show container logs
-            for line in container.logs(stream=True):
-                print(line.decode('utf-8'), end='', flush=True)
-
-            # Check container status
-            wait = container.wait()
-            success = (wait['StatusCode'] == 0)
-
-            # Stop container
-            container.stop(timeout=0)
-
-        # Intercept execution failures
-        except:
-
-            # Stop container
-            try:
+            # Create interruption handler
+            def interruptHandler(signal, frame):
+                print(' ')
+                print(' ')
+                print(
+                    ' %s> WARNING: %sUser interruption detected, stopping the container...%s'
+                    % (term.yellow + term.bold, term.normal + term.bold, term.normal))
+                print(' ', flush=True)
                 container.stop(timeout=0)
+
+            # Register interruption handler
+            originalInterruptionHandler = signal.getsignal(signal.SIGINT)
+            signal.signal(signal.SIGINT, interruptHandler)
+
+            # Execution wrapper
+            success = False
+            try:
+
+                # Show container logs
+                for line in container.logs(stream=True):
+                    print(line.decode('utf-8'), end='', flush=True)
+
+                # Check container status
+                wait = container.wait()
+                success = (wait['StatusCode'] == 0)
+
+                # Stop container
+                container.stop(timeout=0)
+
+            # Intercept execution failures
             except:
-                pass
 
-        # Unregister interruption handler
-        signal.signal(signal.SIGINT, originalInterruptionHandler)
+                # Stop container
+                try:
+                    container.stop(timeout=0)
+                except:
+                    pass
 
-        # Result evaluation
-        if job_data['when'] in ['on_failure', 'always']:
-            result = last_result
-        elif success:
-            result = True
+            # Unregister interruption handler
+            signal.signal(signal.SIGINT, originalInterruptionHandler)
+
+            # Result evaluation
+            if job_data['when'] in ['on_failure', 'always']:
+                result = last_result
+            elif success:
+                result = True
+
+        # Native execution
+        else:
+
+            # Prepare environment
+            _environ = dict(os.environ) # or os.environ.copy()
+            os.environ.update(variables)
+
+            # Native execution
+            result = (os.system(' '.join([entrypoint, script.name])) == 0)
+
+            # Restore environment
+            os.environ.clear()
+            os.environ.update(_environ)
 
     # Footer
     print(' ', flush=True)
