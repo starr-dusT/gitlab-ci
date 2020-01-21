@@ -33,6 +33,9 @@ def main():
         prog=NAME, description='%s: Launch .gitlab-ci.yml jobs locally' % (NAME),
         add_help=False, formatter_class=argparse.RawTextHelpFormatter)
 
+    # Arguments default definitions
+    tagsDefault = ['deploy', 'local', 'publish']
+
     # Arguments optional definitions
     parser.add_argument('-h', dest='help', action='store_true',
                         help='Show this help message')
@@ -51,8 +54,9 @@ def main():
     parser.add_argument('-e', dest='env', action='append',
                         help='Define VARIABLE=value or pass VARIABLE environment')
     parser.add_argument(
-        '-t', dest='tags', action='append', default=['deploy', 'local', 'publish'],
-        help='Handle listed tags as manual jobs\nDefault list: %(default)s')
+        '-t', dest='tags', action='append',
+        help='Handle listed tags as manual jobs\nDefault list: [\'%s\']' %
+        ('\', \''.join(tagsDefault)))
 
     # Arguments exclusive definitions
     group = parser.add_mutually_exclusive_group()
@@ -77,6 +81,10 @@ def main():
 
     # Prepare paths
     options.path = os.path.dirname(os.path.abspath(options.configuration))
+
+    # Prepare tags
+    if not options.tags:
+        options.tags = tagsDefault
 
     # Read configuration
     jobs = reader(options)

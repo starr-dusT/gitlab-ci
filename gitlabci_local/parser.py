@@ -29,7 +29,10 @@ def reader(options):
                 environment[variable] = value
             else:
                 variable = env
-                environment[variable] = os.environ[variable]
+                if variable in os.environ:
+                    environment[variable] = os.environ[variable]
+                else:
+                    environment[variable] = ''
 
     # Read environment variables
     for environment_file in [Path(options.path) / '.env']:
