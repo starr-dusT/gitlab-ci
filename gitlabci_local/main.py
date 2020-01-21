@@ -47,7 +47,7 @@ def main():
     parser.add_argument('-m', '--manual', dest='manual', action='store_true',
                         help='Allow manual jobs to be used')
     parser.add_argument(
-        '-t', dest='manual_tags', default='deploy,publish',
+        '-t', dest='manual_tags', default='deploy,local,publish',
         help='Handle listed tags as manual jobs\nDefault list: %(default)s')
     parser.add_argument('-p', '--pipeline', dest='pipeline', action='store_true',
                         help='Run complete stages rather than jobs')
