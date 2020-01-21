@@ -54,6 +54,7 @@ stages:
     - gitlabci-local -c ./tests/tags/.gitlab-ci.yml -m -p three
     - gitlabci-local -c ./tests/configurations/.gitlab-ci.yml -p
     - gitlabci-local -c ./tests/configurations/.gitlab-ci.yml -p </dev/null
+    - gitlabci-local -c ./tests/environment/.gitlab-ci.yml -p
 
 'Deploy Test':
   stage: deploy

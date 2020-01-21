@@ -2,6 +2,9 @@
 
 # Libraries
 import collections
+from dotenv import load_dotenv
+import os
+from pathlib import Path
 import oyaml as yaml
 
 # Components
@@ -10,6 +13,11 @@ from .menu import configurator
 
 # Reader
 def reader(options):
+
+    # Read environment variables
+    for environment_file in [Path(options.path) / '.env']:
+        if environment_file.is_file():
+            load_dotenv(dotenv_path=environment_file)
 
     # Read GitLab CI YAML
     with open(options.configuration, 'r') as configuration_data:
@@ -51,7 +59,7 @@ def parser(options, data):
 
         # Filter image node
         if node == 'image':
-            global_values['image'] = data[node]
+            global_values['image'] = os.path.expandvars(data[node])
             continue
 
         # Filter before_script node
@@ -120,7 +128,7 @@ def stager(options, job_name, job_data, global_values):
 
     # Extract job image
     if 'image' in job_data and job_data['image']:
-        job['image'] = job_data['image']
+        job['image'] = os.path.expandvars(job_data['image'])
 
     # Extract job variables
     if 'variables' in job_data and job_data['variables']:

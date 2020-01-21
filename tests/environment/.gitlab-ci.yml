@@ -1,0 +1,15 @@
+image: ${IMAGE_REFERENCE_1}
+
+stages:
+  - build
+
+'Job 1':
+  stage: build
+  script:
+    - echo 'Job 1'
+
+'Job 2':
+  stage: build
+  image: ${IMAGE_REFERENCE_2}
+  script:
+    - echo 'Job 2'

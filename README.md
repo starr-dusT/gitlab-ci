@@ -47,6 +47,7 @@ gitlabci-runner-local: Launch .gitlab-ci.yml jobs locally
 * [docker](https://pypi.org/project/docker/): Docker Engine API
 * [oyaml](https://pypi.org/project/oyaml/): Ordered YAML dictionnaries
 * [PyInquirer](https://pypi.org/project/PyInquirer/): Interactive terminal user interfaces
+* [python-dotenv](https://pypi.org/project/python-dotenv/): Support for .env files parsing
 
 ---
 
