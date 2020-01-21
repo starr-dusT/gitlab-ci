@@ -54,5 +54,6 @@ gitlabci-runner-local: Launch .gitlab-ci.yml jobs locally
 ## References
 
 * [.gitlab-ci.yml](https://docs.gitlab.com/ee/ci/yaml/): GitLab CI/CD Pipeline Configuration Reference
+* [git-chglog](https://github.com/git-chglog/git-chglog): CHANGELOG generator
 * [peek](https://github.com/phw/peek): Simple GIF screen recorder
 * [PyPI](https://pypi.org/): The Python Package Index
