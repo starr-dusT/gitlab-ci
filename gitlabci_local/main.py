@@ -46,11 +46,11 @@ def main():
                         help='Enable after_script executions')
     parser.add_argument('-m', '--manual', dest='manual', action='store_true',
                         help='Allow manual jobs to be used')
-    parser.add_argument(
-        '-t', dest='manual_tags', default='deploy,local,publish',
-        help='Handle listed tags as manual jobs\nDefault list: %(default)s')
     parser.add_argument('-p', '--pipeline', dest='pipeline', action='store_true',
                         help='Run complete stages rather than jobs')
+    parser.add_argument(
+        '-t', dest='tags', action='append', default=['deploy', 'local', 'publish'],
+        help='Handle listed tags as manual jobs\nDefault list: %(default)s')
 
     # Arguments exclusive definitions
     group = parser.add_mutually_exclusive_group()
@@ -72,9 +72,6 @@ def main():
         parser.print_help()
         print(' ', flush=True)
         sys.exit(0)
-
-    # Prepare manual_tags
-    options.manual_tags = options.manual_tags.split(',')
 
     # Prepare paths
     options.path = os.path.dirname(os.path.abspath(options.configuration))

@@ -164,7 +164,7 @@ def stager(options, job_name, job_data, global_values):
         job['tags'] = job_data['tags'][:]
 
     # Configure job tags
-    if (set(job['tags']) & set(options.manual_tags)):
+    if (set(job['tags']) & set(options.tags)):
         job['when'] = 'manual'
 
     # Result
