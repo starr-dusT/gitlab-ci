@@ -7,7 +7,7 @@ with inplace project volume mounts and adaptive user selections.
 
 ## Preview
 
-![](https://gitlab.com/AdrianDC/gitlabci-local/raw/master/docs/preview.gif)
+![preview.gif](https://gitlab.com/AdrianDC/gitlabci-local/raw/master/docs/preview.gif)
 
 ---
 
