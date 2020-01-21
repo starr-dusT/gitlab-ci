@@ -20,10 +20,21 @@ stages:
   stage: build
   image: local
   script:
+    - set +x
     - mkdir -p ./.tmp/
     - ls ./.tmp/git-chglog >/dev/null 2>&1 || wget -O ./.tmp/git-chglog -q https://github.com/git-chglog/git-chglog/releases/download/0.9.1/git-chglog_linux_amd64
     - chmod +x ./.tmp/git-chglog
+    - echo ''
+    - 'read -p " > Release tag : " -r tag'
+    - git tag -f -m '' "${tag}"
     - ./.tmp/git-chglog -o CHANGELOG.md
+    - git add -v CHANGELOG.md
+    - 'git commit -m "CHANGELOG: regenerate release tag changes history"'
+    - git tag -f -m '' "${tag}"
+    - ./.tmp/git-chglog -o CHANGELOG.md
+    - git add -v CHANGELOG.md
+    - git commit --amend --no-edit
+    - git tag -f -m '' "${tag}"
   tags:
     - local
   only:
