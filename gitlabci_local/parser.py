@@ -91,7 +91,7 @@ def parser(options, data):
         # Filter .configurations node
         if node == '.configurations':
             configurations = data['.configurations']
-            if 'variables' in configurations and configurations['variables']:
+            if configurations:
                 configuredVariables = configurator(configurations)
                 global_values['variables'].update(configuredVariables)
             continue

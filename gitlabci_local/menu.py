@@ -34,6 +34,7 @@ def selector(options, jobs):
     # Variables
     jobs_available = False
     jobs_choices = []
+    jobs_index = 0
     result = True
     stage = ''
 
@@ -74,7 +75,9 @@ def selector(options, jobs):
             tags = ' [%s]' % (','.join(jobs[job]['tags']))
 
         # Job choices
+        jobs_index += 1
         jobs_choices += [{
+            # 'key': str(jobs_index),
             'name': '%s%s%s' % (jobs[job]['name'], tags, when),
             'value': job,
             'checked': False,
@@ -125,8 +128,6 @@ def selector(options, jobs):
 def configurator(configurations):
 
     # Variables
-    configurations_defaults = dict()
-    configurations_prompt = []
     result = dict()
 
     # Header
@@ -137,59 +138,86 @@ def configurator(configurations):
     print(' ', flush=True)
 
     # Walk through configurations
-    for variable in configurations['variables']:
+    for variable in configurations:
+
+        # Variables
+        variable_choices = []
+        variable_default = ''
+        variable_index = 0
+        variable_values = []
 
         # Extract configuration fields
-        variable_fields = configurations['variables'][variable].split('# ')
-        variable_values = variable_fields[0].split(',')
-        variable_description = variable_fields[1]
-        variable_choices = []
-
-        # Register default values
-        configurations_defaults[variable] = variable_values[0]
-
-        # Prepare configuration choices
-        for choice in variable_values:
-            variable_choices += [{
-                'name': '%s' % (choice),
-                'value': choice,
-                'checked': False
-            }]
+        variable_node = configurations[variable]
+        variable_help = variable_node['help']
+        variable_type = variable_node['type']
 
         # Prepare configuration selection
-        configurations_prompt += [{
-            'type': 'list',
-            'qmark': '',
-            'message': 'Variable %s: %s:' % (variable, variable_description),
+        configuration_prompt = [{
             'name': variable,
-            'choices': variable_choices
+            'qmark': '',
+            'message': 'Variable %s: %s:' % (variable, variable_help),
         }]
 
-    # Request configurations selection
-    if configurations_prompt:
-        if sys.stdin.isatty():
-            answers = PyInquirer.prompt(configurations_prompt, style=ConfigurationsTheme)
+        # Parse configuration types: boolean
+        if variable_type == 'boolean':
+            if 'default' in variable_node and variable_node['default'] in [
+                    False, 'false'
+            ]:
+                variable_values = ['false', 'true']
+                variable_default = variable_values[0]
+            else:
+                variable_values = ['true', 'false']
+                variable_default = variable_values[0]
+            for choice in variable_values:
+                variable_index += 1
+                variable_choices += [{
+                    # 'key': str(variable_index),
+                    'name': '%s' % (choice),
+                    'value': choice
+                }]
+            configuration_prompt[0]['type'] = 'list'
+            configuration_prompt[0]['choices'] = variable_choices
+
+        # Parse configuration types: choice
+        elif variable_type == 'choice':
+            variable_values = variable_node['values']
+            variable_default = variable_values[0]
+            for choice in variable_values:
+                variable_index += 1
+                variable_choices += [{
+                    'key': str(variable_index),
+                    'name': '%s' % (choice),
+                    'value': choice
+                }]
+            configuration_prompt[0]['type'] = 'list'
+            configuration_prompt[0]['choices'] = variable_choices
+
+        # Parse configuration types: input
+        elif variable_type == 'input':
+            configuration_prompt[0]['type'] = 'input'
+            if 'default' in variable_node and variable_node['default']:
+                variable_default = variable_node['default']
+                configuration_prompt[0]['default'] = variable_default
+
+        # Parse configuration types: unknown
+        else:
+            print(' ')
+            print(' %s%s: %sERROR: %sUnsupported configuration type "%s"...%s' %
+                  (term.green + term.bold, NAME, term.red + term.bold,
+                   term.normal + term.bold, variable_type, term.normal))
+            print(' ', flush=True)
+
+        # Request configuration selection
+        if not sys.stdin.isatty():
+            result[variable] = str(variable_default)
+            print(' %s%s  %s%s%s' %
+                  (term.yellow + term.bold, configuration_prompt[0]['message'],
+                   term.cyan + term.bold, result[variable], term.normal))
+        else:
+            answers = PyInquirer.prompt(configuration_prompt, style=ConfigurationsTheme)
             if not answers:
                 raise KeyboardInterrupt
-        else:
-            for configuration in configurations_prompt:
-                print(' %s%s  %s%s%s' %
-                      (term.yellow + term.bold, configuration['message'],
-                       term.cyan + term.bold,
-                       configurations_defaults[configuration['name']], term.normal))
-            answers = configurations_defaults
-    else:
-        print(
-            ' %s%s: %sERROR: %sNo configuration found%s' %
-            (term.green + term.bold, NAME, term.red + term.bold, term.normal + term.bold,
-             term.normal), flush=True)
-        answers = None
-
-    # Extract configurations selection
-    if answers:
-        result = answers
-    else:
-        result = configurations_defaults
+            result[variable] = str(answers[variable])
 
     # Footer
     print(' ', flush=True)

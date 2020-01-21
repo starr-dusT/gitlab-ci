@@ -8,25 +8,43 @@ variables:
   CONSTANT_2: 'constant2'
 
 .configurations:
-  variables:
-    VARIABLE_1: 'true,false# Configure the first variable'
-    VARIABLE_2: 'value1,value2,value3# Configure the second variable'
-    VARIABLE_3: 'false,true# Configure the third variable'
+  VARIABLE_1:
+    help: Configure the first variable
+    type: boolean
+    default: true
+  VARIABLE_2:
+    help: Configure the second variable
+    type: boolean
+    default: 'false'
+  VARIABLE_3:
+    help: Configure the third variable
+    type: choice
+    values:
+      - 'value1'
+      - 'value2'
+      - 'value3'
+  VARIABLE_4:
+    help: Configure the forth variable
+    type: choice
+    values:
+      - 'false'
+      - true
+      - 'value3'
+  VARIABLE_5:
+    help: Configure the fifth variable
+    type: input
+  VARIABLE_6:
+    help: Configure the sixth variable
+    type: input
+    default: 'value'
 
-'Job 1':
+'Job':
   stage: build
   script:
-    - echo 'Job 1'
+    - echo 'Job'
     - echo "${VARIABLE_1}"
-
-'Job 2':
-  stage: build
-  script:
-    - echo 'Job 2'
     - echo "${VARIABLE_2}"
-
-'Job 3':
-  stage: build
-  script:
-    - echo 'Job 3'
     - echo "${VARIABLE_3}"
+    - echo "${VARIABLE_4}"
+    - echo "${VARIABLE_5}"
+    - echo "${VARIABLE_6}"

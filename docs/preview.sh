@@ -16,7 +16,7 @@ function previewer()
 
   # Prompt
   echo ''
-  echo -en "\033[32m${USER}@preview \033[33m~/gitlabci-local\033[0m\n$ "
+  echo -en "\033[32m${USER}@preview \033[33mgitlabci-local\033[0m $ "
   sleep 1
 
   # Input
