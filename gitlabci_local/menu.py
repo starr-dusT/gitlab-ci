@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 # Libraries
+import os
 import PyInquirer
 import sys
 
@@ -144,6 +145,7 @@ def configurator(configurations):
         variable_choices = []
         variable_default = ''
         variable_index = 0
+        variable_set = False
         variable_values = []
 
         # Extract configuration fields
@@ -207,8 +209,13 @@ def configurator(configurations):
                    term.normal + term.bold, variable_type, term.normal))
             print(' ', flush=True)
 
+        # Extract environment variable
+        if variable in os.environ:
+            variable_default = os.environ[variable]
+            variable_set = True
+
         # Request configuration selection
-        if not sys.stdin.isatty():
+        if not sys.stdin.isatty() or variable_set:
             result[variable] = str(variable_default)
             print(' %s%s  %s%s%s' %
                   (term.yellow + term.bold, configuration_prompt[0]['message'],
