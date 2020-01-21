@@ -4,10 +4,11 @@
 import docker
 import os
 from pathlib import Path
+import signal
 import tempfile
 
 # Components
-from .main import term
+from .main import NAME, term
 
 # Launcher
 def launcher(options, jobs):
@@ -113,6 +114,20 @@ def runner(options, job_data, last_result):
             stdout=True, stderr=True, stream=True, volumes=volumes,
             working_dir=pathProject)
 
+        # Create interruption handler
+        def interruptHandler(signal, frame):
+            print(' ')
+            print(' ')
+            print(
+                ' %s> WARNING: %sUser interruption detected, stopping the container...%s'
+                % (term.yellow + term.bold, term.normal + term.bold, term.normal))
+            print(' ', flush=True)
+            container.stop(timeout=0)
+
+        # Register interruption handler
+        originalInterruptionHandler = signal.getsignal(signal.SIGINT)
+        signal.signal(signal.SIGINT, interruptHandler)
+
         # Execution wrapper
         success = False
         try:
@@ -126,16 +141,19 @@ def runner(options, job_data, last_result):
             success = (wait['StatusCode'] == 0)
 
             # Stop container
-            container.stop()
+            container.stop(timeout=0)
 
         # Intercept execution failures
         except:
 
             # Stop container
             try:
-                container.stop()
+                container.stop(timeout=0)
             except:
                 pass
+
+        # Unregister interruption handler
+        signal.signal(signal.SIGINT, originalInterruptionHandler)
 
         # Result evaluation
         if job_data['when'] in ['on_failure', 'always']:
