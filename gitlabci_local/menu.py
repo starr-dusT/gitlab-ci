@@ -2,6 +2,7 @@
 
 # Libraries
 import PyInquirer
+import sys
 
 # Components
 from .main import NAME, term
@@ -166,9 +167,11 @@ def configurator(configurations):
 
     # Request configurations selection
     if configurations_prompt:
-        try:
+        if sys.stdin.isatty():
             answers = PyInquirer.prompt(configurations_prompt, style=ConfigurationsTheme)
-        except:
+            if not answers:
+                raise KeyboardInterrupt
+        else:
             for configuration in configurations_prompt:
                 print(' %s%s  %s%s%s' %
                       (term.yellow + term.bold, configuration['message'],

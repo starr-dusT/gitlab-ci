@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 import os
 from pathlib import Path
 import oyaml as yaml
+import sys
 
 # Components
 from .main import NAME, term
@@ -20,18 +21,22 @@ def reader(options):
             load_dotenv(dotenv_path=environment_file)
 
     # Read GitLab CI YAML
-    with open(options.configuration, 'r') as configuration_data:
-        try:
+    try:
+        with open(options.configuration, 'r') as configuration_data:
             data = yaml.safe_load(configuration_data)
             return parser(options, data)
-        except yaml.YAMLError as exc:
-            print(' %s%s: %sERROR: %s%s%s' %
-                  (term.green + term.bold, NAME, term.red + term.bold,
-                   term.normal + term.bold, exc, term.normal))
-        except:
-            print(' %s%s: %sERROR: %s%s' %
-                  (term.green + term.bold, NAME, term.red + term.bold,
-                   term.normal + term.bold, term.normal))
+    except yaml.YAMLError as exc:
+        print('')
+        print(' %s%s: %sERROR: %s%s%s' %
+              (term.green + term.bold, NAME, term.red + term.bold,
+               term.normal + term.bold, exc, term.normal))
+    except KeyboardInterrupt:
+        pass
+    except:
+        print('')
+        print(' %s%s: %sERROR: %s%s%s' %
+              (term.green + term.bold, NAME, term.red + term.bold,
+               term.normal + term.bold, str(sys.exc_info()[1]), term.normal))
 
     # Failure
     return None

@@ -81,6 +81,8 @@ def main():
 
     # Read configuration
     jobs = reader(options)
+    if not jobs:
+        sys.exit(1)
 
     # Header
     print(' ', flush=True)
