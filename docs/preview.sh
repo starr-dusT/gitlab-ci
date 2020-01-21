@@ -6,13 +6,13 @@ for i in $(seq 1 30); do
 done
 
 # Delay
-sleep 5
+sleep 3
 
 # Previewer
 function previewer()
 {
   # Variables
-  command=${1}
+  command=("${@}")
 
   # Prompt
   echo ''
@@ -20,15 +20,15 @@ function previewer()
   sleep 1
 
   # Input
-  if [ ! -z "${command}" ]; then
-    echo -n "${command} "
+  if [ ! -z "${command[*]}" ]; then
+    echo -n "${command[*]} "
     sleep 1
   fi
 
   # Execution
-  if [ ! -z "${command}" ]; then
+  if [ ! -z "${command[*]}" ]; then
     echo ''
-    ${command}
+    "${command[@]//\"/}"
   else
     sleep 1
     echo ''
@@ -36,25 +36,25 @@ function previewer()
 }
 
 # Help
-previewer 'gitlabci-local -h'
+previewer gitlabci-local -h
 
 # Jobs selector
-previewer 'cd ./examples/'
-previewer 'gitlabci-local'
+previewer cd ./examples/
+previewer gitlabci-local
 
 # Job selector
-previewer 'gitlabci-local -c ./.gitlab-ci.yml -l'
+previewer gitlabci-local -c ./.gitlab-ci.yml -l
 
 # Job runner
-previewer 'gitlabci-local -b -a "Job 1 - 3"'
+previewer gitlabci-local -b -a \"Job\ 1\ -\ 3\"
 
 # Pipeline runner
-previewer 'cd ../tests/failures/'
-previewer 'gitlabci-local -b -a -p'
+previewer cd ../tests/failures/
+previewer gitlabci-local -b -a -p
 
 # Stages runner
-previewer 'cd ../stages/'
-previewer 'gitlabci-local -p one two'
+previewer cd ../stages/
+previewer gitlabci-local -p one two
 
 # Delay
 previewer ''
