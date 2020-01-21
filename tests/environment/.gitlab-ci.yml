@@ -13,3 +13,15 @@ stages:
   image: ${IMAGE_REFERENCE_2}
   script:
     - echo 'Job 2'
+
+'Job 3':
+  stage: build
+  variables:
+    VALUE_1: ${VALUE_1}
+    VALUE_2: ${VALUE_2}
+  script:
+    - echo 'Job 3'
+    - echo "USER = ${USER}"
+    - echo "VALUE_1 = ${VALUE_1}"
+    - echo "VALUE_2 = ${VALUE_2}"
+    - echo "VALUE_3 = ${VALUE_3}"

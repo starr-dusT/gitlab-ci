@@ -15,6 +15,22 @@ from .menu import configurator
 # Reader
 def reader(options):
 
+    # Variables
+    environment = dict()
+
+    # Prepare environment
+    if options.env:
+        for env in [env for env in options.env]:
+            env_parsed = env.split('=', 1)
+            if len(env_parsed) == 2:
+                variable = env_parsed[0]
+                value = env_parsed[1]
+                os.environ[variable] = value
+                environment[variable] = value
+            else:
+                variable = env
+                environment[variable] = os.environ[variable]
+
     # Read environment variables
     for environment_file in [Path(options.path) / '.env']:
         if environment_file.is_file():
@@ -24,7 +40,7 @@ def reader(options):
     try:
         with open(options.configuration, 'r') as configuration_data:
             data = yaml.safe_load(configuration_data)
-            return parser(options, data)
+            return parser(options, data, environment)
     except yaml.YAMLError as exc:
         print('')
         print(' %s%s: %sERROR: %s%s%s' %
@@ -42,7 +58,7 @@ def reader(options):
     return None
 
 # Parser
-def parser(options, data):
+def parser(options, data, environment):
 
     # Variables
     configurations = dict()
@@ -54,6 +70,10 @@ def parser(options, data):
     })
     jobs = dict()
     stages = dict()
+
+    # Prepare global variables
+    if environment:
+        global_values['variables'].update(environment)
 
     # Filter .configurations node
     if '.configurations' in data and data['.configurations']:
