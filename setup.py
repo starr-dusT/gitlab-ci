@@ -22,6 +22,10 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type='text/markdown',
     url='https://gitlab.com/AdrianDC/gitlabci-local',
+    project_urls={
+        'Changelog': (
+            'https://gitlab.com/AdrianDC/gitlabci-local/blob/master/CHANGELOG.md')
+    },
     packages=setuptools.find_packages(exclude=['tests']),
     setup_requires=['setuptools_scm'],
     install_requires=requirements,

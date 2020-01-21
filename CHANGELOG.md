@@ -13,6 +13,7 @@
 
 ### Feat
 
+* implement [#11](https://gitlab.com/AdrianDC/gitlabci-local/issues/11): add Changelog link on PyPI releases
 * implement [#10](https://gitlab.com/AdrianDC/gitlabci-local/issues/10): support local job tag as being manual jobs
 * implement [#7](https://gitlab.com/AdrianDC/gitlabci-local/issues/7): load .env local environment variables
 * resolve [#6](https://gitlab.com/AdrianDC/gitlabci-local/issues/6): allow menu selections while using --pipeline
