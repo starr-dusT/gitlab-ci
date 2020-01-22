@@ -40,6 +40,19 @@ stages:
   only:
     - local
 
+'Development':
+  stage: build
+  image: local
+  script:
+    - sudo rm -rf build dist *.egg-info .eggs
+    - python3 setup.py bdist_wheel
+    - pip3 install --upgrade --no-deps dist/*.whl
+    - gitlabci-local 'Build' 'Unit Tests'
+  tags:
+    - local
+  only:
+    - local
+
 'Unit Tests':
   stage: test
   services:
