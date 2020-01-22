@@ -59,6 +59,8 @@ def main():
         ('\', \''.join(tagsDefault)))
     parser.add_argument('-v', dest='volume', action='append',
                         help='Mount VOLUME or HOST:TARGET in Docker containers')
+    parser.add_argument('-w', dest='workdir',
+                        help='Override the container\'s working path')
 
     # Arguments exclusive definitions
     group = parser.add_mutually_exclusive_group()

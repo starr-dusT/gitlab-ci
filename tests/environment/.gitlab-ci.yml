@@ -13,6 +13,7 @@ stages:
   image: ${IMAGE_REFERENCE_2}
   script:
     - ls -la ${FOLDER:-/opt}/
+    - pwd
 
 'Job 3':
   stage: build

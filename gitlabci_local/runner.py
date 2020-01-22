@@ -69,6 +69,12 @@ def runner(options, job_data, last_result):
     pathProject = options.path
     pathParent = str(Path(pathProject).parent)
 
+    # Prepare working directory
+    if options.workdir:
+        pathWorkDir = os.path.abspath(options.workdir)
+    else:
+        pathWorkDir = pathProject
+
     # Prepare entrypoint and scripts
     entrypoint = 'sh -ex'
     scripts = []
@@ -139,7 +145,7 @@ def runner(options, job_data, last_result):
                 job_data['image'], auto_remove=True, command=script.name, detach=True,
                 entrypoint=entrypoint, environment=variables, network_mode='bridge',
                 stdout=True, stderr=True, stream=True, volumes=volumes,
-                working_dir=pathProject)
+                working_dir=pathWorkDir)
 
             # Create interruption handler
             def interruptHandler(signal, frame):
