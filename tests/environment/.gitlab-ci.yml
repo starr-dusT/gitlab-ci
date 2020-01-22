@@ -12,7 +12,7 @@ stages:
   stage: build
   image: ${IMAGE_REFERENCE_2}
   script:
-    - echo 'Job 2'
+    - ls -la ${FOLDER:-/opt}/
 
 'Job 3':
   stage: build

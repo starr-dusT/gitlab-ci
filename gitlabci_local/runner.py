@@ -102,6 +102,27 @@ def runner(options, job_data, last_result):
             }
         }
 
+        # Extend mounts
+        if options.volume:
+            for volume in options.volume:
+                volume_nodes = volume.split(':', 1)
+
+                # Parse HOST:TARGET
+                if len(volume_nodes) == 2:
+                    volume_host = os.path.abspath(volume_nodes[0])
+                    volume_target = volume_nodes[1]
+
+                # Parse VOLUME
+                else:
+                    volume_host = os.path.abspath(volume)
+                    volume_target = os.path.abspath(volume)
+
+                # Append volume mounts
+                volumes[volume_host] = {
+                    'bind': volume_target,
+                    'mode': 'rw'
+                }
+
         # Prepare variables
         variables = dict()
         for variable in job_data['variables']:

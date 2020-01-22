@@ -57,6 +57,8 @@ def main():
         '-t', dest='tags', action='append',
         help='Handle listed tags as manual jobs\nDefault list: [\'%s\']' %
         ('\', \''.join(tagsDefault)))
+    parser.add_argument('-v', dest='volume', action='append',
+                        help='Mount VOLUME or HOST:TARGET in Docker containers')
 
     # Arguments exclusive definitions
     group = parser.add_mutually_exclusive_group()
