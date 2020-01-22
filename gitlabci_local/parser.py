@@ -2,7 +2,7 @@
 
 # Libraries
 import collections
-from dotenv import load_dotenv
+from dotenv import dotenv_values
 import os
 from pathlib import Path
 import oyaml as yaml
@@ -16,9 +16,17 @@ from .menu import configurator
 def reader(options):
 
     # Variables
-    environment = dict()
+    environment = {
+        'default': dict(),
+        'parameters': dict(),
+    }
 
-    # Prepare environment
+    # Parse environment files
+    for environment_file in [Path(options.path) / '.env']:
+        if environment_file.is_file():
+            environment['default'] = dotenv_values(dotenv_path=environment_file)
+
+    # Parse environment options
     if options.env:
         for env in [env for env in options.env]:
             env_parsed = env.split('=', 1)
@@ -26,18 +34,13 @@ def reader(options):
                 variable = env_parsed[0]
                 value = env_parsed[1]
                 os.environ[variable] = value
-                environment[variable] = value
+                environment['parameters'][variable] = value
             else:
                 variable = env
                 if variable in os.environ:
-                    environment[variable] = os.environ[variable]
+                    environment['parameters'][variable] = os.environ[variable]
                 else:
-                    environment[variable] = ''
-
-    # Read environment variables
-    for environment_file in [Path(options.path) / '.env']:
-        if environment_file.is_file():
-            load_dotenv(dotenv_path=environment_file)
+                    environment['parameters'][variable] = ''
 
     # Read GitLab CI YAML
     try:
@@ -45,14 +48,14 @@ def reader(options):
             data = yaml.safe_load(configuration_data)
             return parser(options, data, environment)
     except yaml.YAMLError as exc:
-        print('')
+        print(' ')
         print(' %s%s: %sERROR: %s%s%s' %
               (term.green + term.bold, NAME, term.red + term.bold,
                term.normal + term.bold, exc, term.normal))
     except KeyboardInterrupt:
         pass
     except:
-        print('')
+        print(' ')
         print(' %s%s: %sERROR: %s%s%s' %
               (term.green + term.bold, NAME, term.red + term.bold,
                term.normal + term.bold, str(sys.exc_info()[1]), term.normal))
@@ -74,15 +77,23 @@ def parser(options, data, environment):
     jobs = dict()
     stages = dict()
 
-    # Prepare global variables
-    if environment:
-        global_values['variables'].update(environment)
+    # Prepare parameters variables
+    if environment['parameters']:
+        global_values['variables'].update(environment['parameters'])
 
     # Filter .configurations node
     if '.configurations' in data and data['.configurations']:
         configurations = data['.configurations']
         configuredVariables = configurator(options, configurations)
         global_values['variables'].update(configuredVariables)
+
+    # Prepare default variables
+    if environment['default']:
+        for default in environment['default']:
+            if default not in global_values['variables']:
+                global_values['variables'][default] = environment['default'][default]
+            if default not in os.environ:
+                os.environ[default] = environment['default'][default]
 
     # Iterate through stages
     for node in data:
