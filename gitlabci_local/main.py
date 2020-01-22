@@ -52,7 +52,7 @@ def main():
     parser.add_argument('-p', '--pipeline', dest='pipeline', action='store_true',
                         help='Run complete stages rather than jobs')
     parser.add_argument('-e', dest='env', action='append',
-                        help='Define VARIABLE=value or pass VARIABLE environment')
+                        help='Define VARIABLE=value, pass VARIABLE or ENV file')
     parser.add_argument(
         '-t', dest='tags', action='append',
         help='Handle listed tags as manual jobs\nDefault list: [\'%s\']' %

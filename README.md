@@ -45,7 +45,7 @@ gitlabci-runner-local: Launch .gitlab-ci.yml jobs locally
 | -b, --before         | Enable before_script executions                                                   |
 | -a, --after          | Enable after_script executions                                                    |
 | -m, --manual         | Allow manual jobs to be used                                                      |
-| -e ENV               | Define VARIABLE=value or pass VARIABLE environment                                |
+| -e ENV               | Define VARIABLE=value, pass VARIABLE or ENV file                                  |
 | -t TAGS              | Handle listed tags as manual jobs<br>Default list: ['deploy', 'local', 'publish'] |
 | -p, --pipeline       | Run complete stages rather than jobs                                              |
 | -d, --dump           | Dump parsed .gitlab-ci.yml configuration                                          |
@@ -83,8 +83,11 @@ gitlabci-local uses the variables defined in .gitlab-ci.yml,
 parses the simple environment variables file named `.env`  
 and the configurations selected through `.configurations`.
 
-If specific environment variables are to be used in the job's container,  
-the `-e VARIABLE` or `-e VARIABLE=value` parameters can be used.
+If specific environment variables are to be used in the job's container:
+
+- `-e VARIABLE`: pass an environment variable
+- `-e VARIABLE=value`: set a variable to a specific value
+- `-e ENVIRONMENT_FILE`: parse a file as default variables
 
 For example, `-e TERM=ansi` may enable colored terminal outputs.
 

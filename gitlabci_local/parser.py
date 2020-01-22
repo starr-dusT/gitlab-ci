@@ -18,29 +18,48 @@ def reader(options):
     # Variables
     environment = {
         'default': dict(),
+        'files': [],
         'parameters': dict(),
     }
-
-    # Parse environment files
-    for environment_file in [Path(options.path) / '.env']:
-        if environment_file.is_file():
-            environment['default'] = dotenv_values(dotenv_path=environment_file)
 
     # Parse environment options
     if options.env:
         for env in [env for env in options.env]:
             env_parsed = env.split('=', 1)
+
+            # Parse VARIABLE=value
             if len(env_parsed) == 2:
                 variable = env_parsed[0]
                 value = env_parsed[1]
                 os.environ[variable] = value
                 environment['parameters'][variable] = value
+
+            # Parse ENVIRONMENT_FILE
+            elif os.path.isfile(env):
+                environment['files'] += [Path(os.path.abspath(env))]
+
+            # Parse VARIABLE
             else:
                 variable = env
                 if variable in os.environ:
                     environment['parameters'][variable] = os.environ[variable]
                 else:
                     environment['parameters'][variable] = ''
+
+    # Iterate through environment files
+    environment['files'] += [Path(options.path) / '.env']
+    for environment_file in environment['files']:
+        if not environment_file.is_file():
+            continue
+
+        # Parse environment files
+        environment_file_values = dotenv_values(dotenv_path=environment_file)
+        for variable in environment_file_values:
+
+            # Defile default environment variable
+            if variable in environment['default']:
+                continue
+            environment['default'][variable] = environment_file_values[variable]
 
     # Read GitLab CI YAML
     try:
