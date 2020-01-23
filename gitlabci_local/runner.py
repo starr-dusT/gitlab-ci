@@ -129,7 +129,7 @@ def runner(options, job_data, last_result):
         # Prepare variables
         variables = dict()
         for variable in job_data['variables']:
-            variables[variable] = os.path.expandvars(job_data['variables'][variable])
+            variables[variable] = os.path.expandvars(str(job_data['variables'][variable]))
 
         # Prepare image
         image = job_data['image']

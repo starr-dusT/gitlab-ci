@@ -1,5 +1,9 @@
 image: ${IMAGE_REFERENCE_1}
 
+variables:
+  CONSTANT_1: 1
+  CONSTANT_2: '2'
+
 stages:
   - build
 
@@ -23,6 +27,9 @@ stages:
   script:
     - echo 'Job 3'
     - echo "USER = ${USER}"
+    - echo "CONSTANT_1 = ${CONSTANT_1}"
+    - echo "CONSTANT_2 = ${CONSTANT_2}"
+    - echo "CONSTANT_3 = ${CONSTANT_3}"
     - echo "VALUE_1 = ${VALUE_1}"
     - echo "VALUE_2 = ${VALUE_2}"
     - echo "VALUE_3 = ${VALUE_3}"
