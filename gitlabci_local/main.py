@@ -19,6 +19,7 @@ term = Terminal(force_styling=force_styling)
 from .dumper import dumper
 from .menu import selector
 from .parser import reader
+from .puller import puller
 from .runner import launcher
 
 # Main
@@ -70,6 +71,8 @@ def main():
                        help='Force jobs selection from enumerated names')
     group.add_argument('-l', '--list', dest='list', action='store_true',
                        help='Select one job to run (implies --manual)')
+    group.add_argument('--pull', dest='pull', action='store_true',
+                       help='Pull Docker images from all jobs')
 
     # Arguments positional definitions
     parser.add_argument('names', nargs='*',
@@ -101,6 +104,10 @@ def main():
     # Dump configuration
     if options.dump:
         result = dumper(options, jobs)
+
+    # Pull jobs images
+    elif options.pull:
+        result = puller(options, jobs)
 
     # Select job
     elif options.list and interactive:

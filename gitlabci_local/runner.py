@@ -124,10 +124,7 @@ def runner(options, job_data, last_result):
                     volume_target = os.path.abspath(volume)
 
                 # Append volume mounts
-                volumes[volume_host] = {
-                    'bind': volume_target,
-                    'mode': 'rw'
-                }
+                volumes[volume_host] = {'bind': volume_target, 'mode': 'rw'}
 
         # Prepare variables
         variables = dict()
