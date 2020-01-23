@@ -142,9 +142,9 @@ def runner(options, job_data, last_result):
 
             # Launch container
             container = client.containers.run(
-                job_data['image'], auto_remove=True, command=script.name, detach=True,
+                job_data['image'], command=script.name, detach=True,
                 entrypoint=entrypoint, environment=variables, network_mode='bridge',
-                stdout=True, stderr=True, stream=True, volumes=volumes,
+                remove=True, stdout=True, stderr=True, stream=True, volumes=volumes,
                 working_dir=pathWorkDir)
 
             # Create interruption handler
@@ -163,27 +163,32 @@ def runner(options, job_data, last_result):
 
             # Execution wrapper
             success = False
-            try:
 
-                # Show container logs
+            # Show container logs
+            try:
                 for line in container.logs(stream=True):
                     print(line.decode('utf-8'), end='', flush=True)
+            except:
+                pass
 
-                # Check container status
+            # Check container status
+            try:
                 wait = container.wait()
                 success = (wait['StatusCode'] == 0)
-
-                # Stop container
-                container.stop(timeout=0)
-
-            # Intercept execution failures
             except:
+                pass
 
-                # Stop container
-                try:
-                    container.stop(timeout=0)
-                except:
-                    pass
+            # Stop container
+            try:
+                container.stop(timeout=0)
+            except:
+                pass
+
+            # Remove container
+            try:
+                container.remove(force=True)
+            except:
+                pass
 
             # Unregister interruption handler
             signal.signal(signal.SIGINT, originalInterruptionHandler)
