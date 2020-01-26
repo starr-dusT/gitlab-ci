@@ -77,7 +77,7 @@ For specific local purposes where the native host context is wished,
 where the host tools, folders or credentials are required,  
 `image: local` can be used to run the scripts natively.
 
-An example usage can be found in the local CHANGELOG job: [.gitlab-ci.yml](https://gitlab.com/AdrianDC/gitlabci-local/blob/master/.gitlab-ci.yml)
+An example usage can be found in the local `Changelog` job: [.gitlab-ci.yml](https://gitlab.com/AdrianDC/gitlabci-local/blob/master/.gitlab-ci.yml)
 
 ---
 
