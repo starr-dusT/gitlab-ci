@@ -10,6 +10,7 @@ import tempfile
 
 # Components
 from .main import NAME, term
+from .puller import pull
 
 # Launcher
 def launcher(options, jobs):
@@ -151,6 +152,12 @@ def runner(options, job_data, last_result):
 
     # Container execution
     if image not in ['local']:
+
+        # Image validation
+        try:
+            client.images.get(image)
+        except docker.errors.ImageNotFound:
+            pull(image)
 
         # Launch container
         container = client.containers.run(
