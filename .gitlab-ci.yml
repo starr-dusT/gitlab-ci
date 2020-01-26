@@ -1,23 +1,13 @@
 image: python:3
 
 stages:
+  - prepare
   - build
   - test
   - deploy
 
-'Build':
-  stage: build
-  script:
-    - pip install -r requirements_dev.txt --upgrade
-    - pip install -r requirements.txt --upgrade
-    - rm -rf build dist *.egg-info .eggs
-    - python setup.py bdist_wheel
-  artifacts:
-    paths:
-      - dist/
-
 'Changelog':
-  stage: build
+  stage: prepare
   image: local
   script:
     - set +x
@@ -42,7 +32,7 @@ stages:
     - local
 
 'Codestyle':
-  stage: build
+  stage: prepare
   image: local
   script:
     - yapf -i ./docs/*.py ./gitlabci_local/*.py ./setup.py
@@ -51,6 +41,17 @@ stages:
     - local
   only:
     - local
+
+'Build':
+  stage: build
+  script:
+    - pip install -r requirements_dev.txt --upgrade
+    - pip install -r requirements.txt --upgrade
+    - rm -rf build dist *.egg-info .eggs
+    - python setup.py bdist_wheel
+  artifacts:
+    paths:
+      - dist/
 
 'Development':
   stage: build
