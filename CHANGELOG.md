@@ -1,4 +1,43 @@
 
+<a name="1.0.4"></a>
+## [1.0.4](https://gitlab.com/AdrianDC/gitlabci-local/compare/1.0.3...1.0.4) (2020-01-26)
+
+### CHANGELOG
+
+* regenerate release tag changes history
+
+### Chore
+
+* codestyle: pass all Python files through unify with "'"
+* codestyle: pass all Python sources through YAPF
+* codestyle: add an automated YAPF local job wrapper
+* requirements: add YAPF as a development requirement
+* requirements: unify and add missing developement items
+* development: only rebuild in the Development local stage
+
+### Feat
+
+* implement [#3](https://gitlab.com/AdrianDC/gitlabci-local/issues/3): support job retry values upon executions
+* implement [#38](https://gitlab.com/AdrianDC/gitlabci-local/issues/38): pull Docker images if missing upon execution
+* implement [#37](https://gitlab.com/AdrianDC/gitlabci-local/issues/37): use low-level Docker pull with streamed logs
+* implement [#32](https://gitlab.com/AdrianDC/gitlabci-local/issues/32): add --pull mode for Docker images
+
+### Fix
+
+* resolve [#4](https://gitlab.com/AdrianDC/gitlabci-local/issues/4): fix list view separator in PyInquirer
+* resolve [#39](https://gitlab.com/AdrianDC/gitlabci-local/issues/39): resolve Docker Python random exceptions
+* resolve [#36](https://gitlab.com/AdrianDC/gitlabci-local/issues/36): support overriding image entrypoint with none
+* resolve [#31](https://gitlab.com/AdrianDC/gitlabci-local/issues/31): hardcode the README GIF preview with tags
+* resolve [#36](https://gitlab.com/AdrianDC/gitlabci-local/issues/36): preserve original image and CI YAML entrypoints
+* resolve [#33](https://gitlab.com/AdrianDC/gitlabci-local/issues/33) support integer variables definitiionz type
+* resolve [#13](https://gitlab.com/AdrianDC/gitlabci-local/issues/13): fix rare container wait random failures
+
+### README
+
+* resolve Changelog job reference for 'image: local'
+* add pexpect references for docs/ automated preview script
+
+
 <a name="1.0.3"></a>
 ## [1.0.3](https://gitlab.com/AdrianDC/gitlabci-local/compare/1.0.2...1.0.3) (2020-01-23)
 
