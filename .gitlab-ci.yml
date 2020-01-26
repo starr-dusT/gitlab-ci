@@ -46,6 +46,7 @@ stages:
   image: local
   script:
     - yapf -i ./docs/*.py ./gitlabci_local/*.py ./setup.py
+    - unify -i --quote "'" ./docs/*.py ./gitlabci_local/*.py ./setup.py
   tags:
     - local
   only:
