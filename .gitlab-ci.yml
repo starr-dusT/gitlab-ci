@@ -8,8 +8,8 @@ stages:
 'Build':
   stage: build
   script:
-    - pip install -U setuptools wheel
-    - pip install -r requirements.txt
+    - pip install -r requirements_dev.txt --upgrade
+    - pip install -r requirements.txt --upgrade
     - rm -rf build dist *.egg-info .eggs
     - python setup.py bdist_wheel
   artifacts:
@@ -65,7 +65,7 @@ stages:
   script:
     - mkdir -p ./.tmp/
     - pip install dist/*.whl
-    - pip install --upgrade --no-deps dist/*.whl
+    - pip install --no-deps --upgrade dist/*.whl
     - pip show gitlabci-local
     - gitlabci-local -h
     - gitlabci-local -c unknown/.gitlab-ci.yml && exit 1 || true
@@ -104,7 +104,7 @@ stages:
   variables:
     TWINE_PASSWORD_TEST: ${TWINE_PASSWORD_TEST}
   script:
-    - pip install -U twine setuptools wheel
+    - pip install -r requirements_dev.txt --upgrade
     - python setup.py bdist_wheel
     - twine upload -u '__token__' -p "${TWINE_PASSWORD_TEST}" --repository testpypi dist/*
   only:
@@ -116,7 +116,7 @@ stages:
   variables:
     TWINE_PASSWORD: ${TWINE_PASSWORD}
   script:
-    - pip install -U twine setuptools wheel
+    - pip install -r requirements_dev.txt --upgrade
     - python setup.py bdist_wheel
     - twine upload -u '__token__' -p "${TWINE_PASSWORD}" dist/*
   only:
