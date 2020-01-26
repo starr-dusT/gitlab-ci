@@ -7,6 +7,7 @@ from pathlib import Path
 import signal
 import stat
 import tempfile
+import time
 
 # Components
 from .main import NAME, term
@@ -160,7 +161,7 @@ def runner(options, job_data, last_result):
         # Launch container
         container = client.containers.run(
             image, command=scriptFile.name, detach=True, entrypoint=entrypoint,
-            environment=variables, network_mode='bridge', remove=True, stdout=True,
+            environment=variables, network_mode='bridge', remove=False, stdout=True,
             stderr=True, stream=True, volumes=volumes, working_dir=pathWorkDir)
 
         # Create interruption handler
@@ -188,23 +189,15 @@ def runner(options, job_data, last_result):
             pass
 
         # Check container status
-        try:
-            wait = container.wait()
-            success = (wait['StatusCode'] == 0)
-        except:
-            pass
+        wait = container.wait()
+        success = (wait['StatusCode'] == 0)
 
         # Stop container
-        try:
-            container.stop(timeout=0)
-        except:
-            pass
+        container.stop(timeout=0)
+        time.sleep(0.1)
 
         # Remove container
-        try:
-            container.remove(force=True)
-        except:
-            pass
+        container.remove(force=True)
 
         # Unregister interruption handler
         signal.signal(signal.SIGINT, originalInterruptionHandler)
