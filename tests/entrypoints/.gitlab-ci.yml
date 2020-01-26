@@ -1,0 +1,61 @@
+image:
+  name: alpine:3
+  entrypoint: ['/bin/sh', '-c']
+
+stages:
+  - entrypoints
+
+'Job 1':
+  stage: entrypoints
+  image: alpine:3
+  script:
+    - uname -a
+
+'Job 2':
+  stage: entrypoints
+  script:
+    - uname -a
+
+'Job 3':
+  stage: entrypoints
+  image:
+    name: alpine:3
+    entrypoint: ['linux32']
+  script:
+    - uname -a
+
+'Job 4':
+  stage: entrypoints
+  image:
+    name: alpine:3
+    entrypoint: ['linux32', '/bin/sh']
+  script:
+    - uname -a
+
+'Job 5':
+  stage: entrypoints
+  image:
+    name: alpine:3
+    entrypoint: ['linux32', '/bin/sh', '-c']
+  script:
+    - uname -a
+
+'Job 6':
+  stage: entrypoints
+  image:
+    name: alpine:3
+    entrypoint: ['']
+  script:
+    - uname -a
+
+'Job 7':
+  stage: entrypoints
+  image: alpine:3
+  script:
+    - uname -a
+
+'Job 8':
+  stage: entrypoints
+  image: toopher/centos-i386:centos6
+  script:
+    - uname -a

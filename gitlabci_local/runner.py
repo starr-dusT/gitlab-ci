@@ -5,6 +5,7 @@ import docker
 import os
 from pathlib import Path
 import signal
+import stat
 import tempfile
 
 # Components
@@ -54,12 +55,15 @@ def runner(options, job_data, last_result):
     if not last_result and job_data['when'] not in ['on_failure']:
         return last_result
 
+    # Prepare image
+    image = job_data['image']
+
     # Header
     if not options.quiet:
         print(' %s===[ %s%s: %s%s %s(%s) %s]===%s' %
               (term.green + term.bold, term.yellow + term.bold, job_data['stage'],
-               term.yellow + term.bold, job_data['name'], term.cyan + term.bold,
-               job_data['image'], term.green + term.bold, term.normal))
+               term.yellow + term.bold, job_data['name'], term.cyan + term.bold, image,
+               term.green + term.bold, term.normal))
         print(' ', flush=True)
 
     # Create Docker client
@@ -76,7 +80,9 @@ def runner(options, job_data, last_result):
         pathWorkDir = pathProject
 
     # Prepare entrypoint and scripts
-    entrypoint = 'sh -ex'
+    entrypoint = None
+    if len(job_data['entrypoint']) > 0:
+        entrypoint = job_data['entrypoint']
     scripts = []
 
     # Append before_scripts, scripts, after_scripts
@@ -87,128 +93,140 @@ def runner(options, job_data, last_result):
         scripts += job_data['after_script']
 
     # Prepare commands
-    with tempfile.NamedTemporaryFile(mode='w') as script:
-        script.write('\n'.join(scripts))
-        script.flush()
+    scriptFile = tempfile.NamedTemporaryFile(delete=True)
+    with open(scriptFile.name,  mode='w') as scriptStream:
 
-        # Prepare mounts
-        temp_dir = tempfile.gettempdir()
-        volumes = {
-            pathParent: {
-                'bind': pathParent,
-                'mode': 'rw'
-            },
-            temp_dir: {
-                'bind': temp_dir,
-                'mode': 'rw'
-            },
-            '/var/run/docker.sock': {
-                'bind': '/var/run/docker.sock',
-                'mode': 'rw'
-            }
+        # Prepare script context
+        scriptStream.write('#!/bin/sh\n')
+        scriptStream.write('set -ex\n')
+
+        # Prepare script commands
+        scriptStream.write('\n'.join(scripts))
+        scriptStream.flush()
+
+    # Prepare script execution
+    script_stat = os.stat(scriptStream.name)
+    os.chmod(scriptStream.name, script_stat.st_mode | stat.S_IEXEC)
+    scriptFile.file.close()
+
+    # Prepare mounts
+    temp_dir = tempfile.gettempdir()
+    volumes = {
+        pathParent: {
+            'bind': pathParent,
+            'mode': 'rw'
+        },
+        temp_dir: {
+            'bind': temp_dir,
+            'mode': 'rw'
+        },
+        '/var/run/docker.sock': {
+            'bind': '/var/run/docker.sock',
+            'mode': 'rw'
         }
+    }
 
-        # Extend mounts
-        if options.volume:
-            for volume in options.volume:
-                volume_nodes = volume.split(':', 1)
+    # Extend mounts
+    if options.volume:
+        for volume in options.volume:
+            volume_nodes = volume.split(':', 1)
 
-                # Parse HOST:TARGET
-                if len(volume_nodes) == 2:
-                    volume_host = os.path.abspath(volume_nodes[0])
-                    volume_target = volume_nodes[1]
+            # Parse HOST:TARGET
+            if len(volume_nodes) == 2:
+                volume_host = os.path.abspath(volume_nodes[0])
+                volume_target = volume_nodes[1]
 
-                # Parse VOLUME
-                else:
-                    volume_host = os.path.abspath(volume)
-                    volume_target = os.path.abspath(volume)
+            # Parse VOLUME
+            else:
+                volume_host = os.path.abspath(volume)
+                volume_target = os.path.abspath(volume)
 
-                # Append volume mounts
-                volumes[volume_host] = {'bind': volume_target, 'mode': 'rw'}
+            # Append volume mounts
+            volumes[volume_host] = {'bind': volume_target, 'mode': 'rw'}
 
-        # Prepare variables
-        variables = dict()
-        for variable in job_data['variables']:
-            variables[variable] = os.path.expandvars(str(job_data['variables'][variable]))
+    # Prepare variables
+    variables = dict()
+    for variable in job_data['variables']:
+        variables[variable] = os.path.expandvars(str(job_data['variables'][variable]))
 
-        # Prepare image
-        image = job_data['image']
+    # Container execution
+    if image not in ['local']:
 
-        # Container execution
-        if image not in ['local']:
+        # Launch container
+        container = client.containers.run(
+            image, command=scriptFile.name, detach=True, entrypoint=entrypoint,
+            environment=variables, network_mode='bridge', remove=True, stdout=True,
+            stderr=True, stream=True, volumes=volumes, working_dir=pathWorkDir)
 
-            # Launch container
-            container = client.containers.run(
-                job_data['image'], command=script.name, detach=True,
-                entrypoint=entrypoint, environment=variables, network_mode='bridge',
-                remove=True, stdout=True, stderr=True, stream=True, volumes=volumes,
-                working_dir=pathWorkDir)
+        # Create interruption handler
+        def interruptHandler(signal, frame):
+            print(' ')
+            print(' ')
+            print(
+                ' %s> WARNING: %sUser interruption detected, stopping the container...%s'
+                % (term.yellow + term.bold, term.normal + term.bold, term.normal))
+            print(' ', flush=True)
+            container.stop(timeout=0)
 
-            # Create interruption handler
-            def interruptHandler(signal, frame):
-                print(' ')
-                print(' ')
-                print(
-                    ' %s> WARNING: %sUser interruption detected, stopping the container...%s'
-                    % (term.yellow + term.bold, term.normal + term.bold, term.normal))
-                print(' ', flush=True)
-                container.stop(timeout=0)
+        # Register interruption handler
+        originalInterruptionHandler = signal.getsignal(signal.SIGINT)
+        signal.signal(signal.SIGINT, interruptHandler)
 
-            # Register interruption handler
-            originalInterruptionHandler = signal.getsignal(signal.SIGINT)
-            signal.signal(signal.SIGINT, interruptHandler)
+        # Execution wrapper
+        success = False
 
-            # Execution wrapper
-            success = False
+        # Show container logs
+        try:
+            for line in container.logs(stream=True):
+                print(line.decode('utf-8'), end='', flush=True)
+        except:
+            pass
 
-            # Show container logs
-            try:
-                for line in container.logs(stream=True):
-                    print(line.decode('utf-8'), end='', flush=True)
-            except:
-                pass
+        # Check container status
+        try:
+            wait = container.wait()
+            success = (wait['StatusCode'] == 0)
+        except:
+            pass
 
-            # Check container status
-            try:
-                wait = container.wait()
-                success = (wait['StatusCode'] == 0)
-            except:
-                pass
+        # Stop container
+        try:
+            container.stop(timeout=0)
+        except:
+            pass
 
-            # Stop container
-            try:
-                container.stop(timeout=0)
-            except:
-                pass
+        # Remove container
+        try:
+            container.remove(force=True)
+        except:
+            pass
 
-            # Remove container
-            try:
-                container.remove(force=True)
-            except:
-                pass
+        # Unregister interruption handler
+        signal.signal(signal.SIGINT, originalInterruptionHandler)
 
-            # Unregister interruption handler
-            signal.signal(signal.SIGINT, originalInterruptionHandler)
+        # Result evaluation
+        if job_data['when'] in ['on_failure', 'always']:
+            result = last_result
+        elif success:
+            result = True
 
-            # Result evaluation
-            if job_data['when'] in ['on_failure', 'always']:
-                result = last_result
-            elif success:
-                result = True
+    # Native execution
+    else:
+
+        # Prepare environment
+        _environ = dict(os.environ) # or os.environ.copy()
+        os.environ.update(variables)
 
         # Native execution
-        else:
+        scripts = []
+        if entrypoint:
+            scripts += entrypoint
+        scripts += [scriptFile.name]
+        result = (os.system(' '.join(scripts)) == 0)
 
-            # Prepare environment
-            _environ = dict(os.environ) # or os.environ.copy()
-            os.environ.update(variables)
-
-            # Native execution
-            result = (os.system(' '.join([entrypoint, script.name])) == 0)
-
-            # Restore environment
-            os.environ.clear()
-            os.environ.update(_environ)
+        # Restore environment
+        os.environ.clear()
+        os.environ.update(_environ)
 
     # Footer
     print(' ', flush=True)
