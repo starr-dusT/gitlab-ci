@@ -40,7 +40,9 @@ def pull(image):
         # Layer progress logs
         if 'progress' in data:
             if sys.stdout.isatty():
-                print('\r\033[K%s: %s %s' % (data['id'], data['status'], data['progress']), end='', flush=True)
+                print(
+                    '\r\033[K%s: %s %s' % (data['id'], data['status'], data['progress']),
+                    end='', flush=True)
 
         # Layer event logs
         elif 'progressDetail' in data:

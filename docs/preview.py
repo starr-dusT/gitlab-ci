@@ -26,7 +26,8 @@ class executor:
 
     # Prompter
     def prompt(self, command):
-        print('\033[32m%s@preview \033[33mgitlabci-local\033[0m $ ' % (getpass.getuser()), end='', flush=True)
+        print('\033[32m%s@preview \033[33mgitlabci-local\033[0m $ ' % (getpass.getuser()),
+              end='', flush=True)
         time.sleep(1)
         if command:
             print('%s ' % (command), end='', flush=True)

@@ -15,12 +15,11 @@ class InquirerControl(TokenListControl):
         self.answered = False
         self.choices = choices
         self._init_choices(choices)
-        super(InquirerControl, self).__init__(self._get_choice_tokens,
-                                              **kwargs)
+        super(InquirerControl, self).__init__(self._get_choice_tokens, **kwargs)
 
     def _init_choices(self, choices, default=None):
         # helper to convert from question format to internal format
-        self.choices = []  # list (name, value, disabled)
+        self.choices = [] # list (name, value, disabled)
         searching_first_choice = True
         for i, c in enumerate(choices):
             if isinstance(c, Separator):
@@ -34,7 +33,7 @@ class InquirerControl(TokenListControl):
                     disabled = c.get('disabled', None)
                     self.choices.append((name, value, disabled))
                 if searching_first_choice:
-                    self.selected_option_index = i  # found the first choice
+                    self.selected_option_index = i # found the first choice
                     searching_first_choice = False
 
     @property
@@ -58,26 +57,26 @@ class InquirerControl(TokenListControl):
             if isinstance(choice[0], Separator):
                 tokens.append((T.Separator, '  %s\n' % choice[0]))
             else:
-                tokens.append((T.Pointer if selected else T, ' \u276f ' if selected
-                else '   '))
+                tokens.append(
+                    (T.Pointer if selected else T, ' \u276f ' if selected else '   '))
                 if selected:
                     tokens.append((Token.SetCursorPosition, ''))
-                if choice[2]:  # disabled
+                if choice[2]: # disabled
                     tokens.append((T.Selected if selected else T,
                                    '- %s (%s)' % (choice[0], choice[2])))
                 else:
                     try:
-                        tokens.append((T.Selected if selected else T, str(choice[0]),
-                                    select_item))
+                        tokens.append(
+                            (T.Selected if selected else T, str(choice[0]), select_item))
                     except:
-                        tokens.append((T.Selected if selected else T, choice[0],
-                                    select_item))
+                        tokens.append(
+                            (T.Selected if selected else T, choice[0], select_item))
                 tokens.append((T, '\n'))
 
         # prepare the select choices
         for i, choice in enumerate(self.choices):
             append(i, choice)
-        tokens.pop()  # Remove last newline.
+        tokens.pop() # Remove last newline.
         return tokens
 
     def get_selection(self):
