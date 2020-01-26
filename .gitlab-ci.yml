@@ -111,6 +111,7 @@ stages:
     - gitlabci-local -c ./tests/environment/.gitlab-ci.yml -e FOLDER=${PWD} -v ./ 'Job 2'
     - gitlabci-local -c ./tests/environment/.gitlab-ci.yml -v ./:/opt 'Job 2'
     - gitlabci-local -c ./tests/environment/.gitlab-ci.yml -v ./:/opt -w /opt/ 'Job 2'
+    - gitlabci-local -c ./tests/entrypoints/.gitlab-ci.yml --pull
     - gitlabci-local -c ./tests/entrypoints/.gitlab-ci.yml -d
     - gitlabci-local -c ./tests/entrypoints/.gitlab-ci.yml -p
     - gitlabci-local -c ./tests/retry/.gitlab-ci.yml -p failure && exit 1 || true
