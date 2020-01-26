@@ -41,6 +41,16 @@ stages:
   only:
     - local
 
+'Codestyle':
+  stage: build
+  image: local
+  script:
+    - yapf -i ./docs/*.py ./gitlabci_local/*.py ./setup.py
+  tags:
+    - local
+  only:
+    - local
+
 'Development':
   stage: build
   image: local
