@@ -10,6 +10,7 @@ import sys
 
 # Components
 from .main import NAME, term
+from .patcher import InquirerControl
 from .runner import launcher
 from .utils import dictGet
 
