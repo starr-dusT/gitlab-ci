@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 
 # Libraries
+import docker
 import os
+import sys
 
 # Puller
 def puller(options, jobs):
@@ -21,8 +23,37 @@ def puller(options, jobs):
     if images:
         images.sort()
         for image in images:
-            os.system('docker pull %s' % (image))
-            print(' ', flush=True)
+            pull(image)
 
     # Result
     return result
+
+# Pull
+def pull(image):
+
+    # Create Docker client
+    client = docker.from_env()
+
+    # Pull image with logs stream
+    for data in client.api.pull(image, stream=True, decode=True):
+
+        # Layer progress logs
+        if 'progress' in data:
+            if sys.stdout.isatty():
+                print('\r\033[K%s: %s %s' % (data['id'], data['status'], data['progress']), end='', flush=True)
+
+        # Layer event logs
+        elif 'progressDetail' in data:
+            if sys.stdout.isatty():
+                print('\r\033[K%s: %s' % (data['id'], data['status']), end='', flush=True)
+
+        # Layer completion logs
+        elif 'id' in data:
+            print('\r\033[K%s: %s' % (data['id'], data['status']), flush=True)
+
+        # Image logs
+        else:
+            print('\r\033[K%s' % (data['status']), flush=True)
+
+    # Footer
+    print(' ', flush=True)
