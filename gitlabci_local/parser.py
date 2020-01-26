@@ -91,7 +91,7 @@ def parser(options, data, environment):
         'after_script': [],
         'before_script': [],
         'image': '',
-        'entrypoint': [],
+        'entrypoint': None,
         'variables': dict()
     })
     jobs = dict()
@@ -127,15 +127,13 @@ def parser(options, data, environment):
             image_data = data[node]
             if isinstance(image_data, dict):
                 global_values['image'] = os.path.expandvars(image_data['name'])
-                if 'entrypoint' in image_data and len(
-                        image_data['entrypoint']) > 0 and len(
-                            image_data['entrypoint'][0]) > 0:
+                if 'entrypoint' in image_data and len(image_data['entrypoint']) > 0:
                     global_values['entrypoint'] = image_data['entrypoint'][:]
                 else:
-                    global_values['entrypoint'] = []
+                    global_values['entrypoint'] = None
             else:
                 global_values['image'] = os.path.expandvars(image_data)
-                global_values['entrypoint'] = []
+                global_values['entrypoint'] = None
             continue
 
         # Filter before_script node
@@ -191,7 +189,7 @@ def stager(options, job_name, job_data, global_values):
     job['name'] = job_name
     job['stage'] = job_data['stage']
     job['image'] = global_values['image']
-    job['entrypoint'] = global_values['entrypoint'][:]
+    job['entrypoint'] = global_values['entrypoint'][:] if global_values['entrypoint'] else None
     job['variables'] = dict(global_values['variables'])
     job['before_script'] = global_values['before_script'][:]
     job['script'] = []
@@ -204,14 +202,13 @@ def stager(options, job_name, job_data, global_values):
         image_data = job_data['image']
         if isinstance(image_data, dict):
             job['image'] = os.path.expandvars(image_data['name'])
-            if 'entrypoint' in image_data and len(image_data['entrypoint']) > 0 and len(
-                    image_data['entrypoint'][0]) > 0:
+            if 'entrypoint' in image_data and len(image_data['entrypoint']) > 0:
                 job['entrypoint'] = image_data['entrypoint'][:]
             else:
-                job['entrypoint'] = []
+                job['entrypoint'] = None
         else:
             job['image'] = os.path.expandvars(image_data)
-            job['entrypoint'] = []
+            job['entrypoint'] = None
 
     # Extract job variables
     if 'variables' in job_data and job_data['variables']:

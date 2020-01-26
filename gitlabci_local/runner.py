@@ -81,9 +81,7 @@ def runner(options, job_data, last_result):
         pathWorkDir = pathProject
 
     # Prepare entrypoint and scripts
-    entrypoint = None
-    if len(job_data['entrypoint']) > 0:
-        entrypoint = job_data['entrypoint']
+    entrypoint = job_data['entrypoint']
     scripts = []
 
     # Append before_scripts, scripts, after_scripts
