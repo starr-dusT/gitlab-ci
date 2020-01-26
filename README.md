@@ -112,4 +112,5 @@ For example, `-e TERM=ansi` may enable colored terminal outputs.
 - [.gitlab-ci.yml](https://docs.gitlab.com/ee/ci/yaml/): GitLab CI/CD Pipeline Configuration Reference
 - [git-chglog](https://github.com/git-chglog/git-chglog): CHANGELOG generator
 - [peek](https://github.com/phw/peek): Simple GIF screen recorder
+- [pexpect](https://pypi.org/project/pexpect/): Interactive console applications controller
 - [PyPI](https://pypi.org/): The Python Package Index
