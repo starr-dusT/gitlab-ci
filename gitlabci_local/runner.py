@@ -40,7 +40,15 @@ def launcher(options, jobs):
             result = True
 
         # Run job
+        attempt = 0
+        expected = result
         result = runner(options, jobs[job], result)
+
+        # Retry job if allowed
+        if expected and not result and jobs[job]['retry'] > 0:
+            while not result and attempt < jobs[job]['retry']:
+                attempt += 1
+                result = runner(options, jobs[job], expected)
 
     # Result
     return True if result else False
@@ -94,7 +102,7 @@ def runner(options, job_data, last_result):
 
     # Prepare commands
     scriptFile = tempfile.NamedTemporaryFile(delete=True)
-    with open(scriptFile.name,  mode='w') as scriptStream:
+    with open(scriptFile.name, mode='w') as scriptStream:
 
         # Prepare script context
         scriptStream.write('#!/bin/sh\n')

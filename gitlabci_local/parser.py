@@ -189,11 +189,13 @@ def stager(options, job_name, job_data, global_values):
     job['name'] = job_name
     job['stage'] = job_data['stage']
     job['image'] = global_values['image']
-    job['entrypoint'] = global_values['entrypoint'][:] if global_values['entrypoint'] else None
+    job['entrypoint'] = global_values['entrypoint'][:] if global_values[
+        'entrypoint'] else None
     job['variables'] = dict(global_values['variables'])
     job['before_script'] = global_values['before_script'][:]
     job['script'] = []
     job['after_script'] = global_values['after_script'][:]
+    job['retry'] = 0
     job['when'] = 'on_success'
     job['tags'] = []
 
@@ -225,6 +227,14 @@ def stager(options, job_name, job_data, global_values):
     # Extract job after_script
     if 'after_script' in job_data and job_data['after_script']:
         job['after_script'] = job_data['after_script'][:]
+
+    # Extract job retry
+    if 'retry' in job_data:
+        retry_data = job_data['retry']
+        if isinstance(retry_data, dict):
+            job['retry'] = int(retry_data['max'])
+        else:
+            job['retry'] = int(retry_data)
 
     # Extract job when
     if 'when' in job_data and job_data['when'] in [

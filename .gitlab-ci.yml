@@ -101,6 +101,8 @@ stages:
     - gitlabci-local -c ./tests/environment/.gitlab-ci.yml -v ./:/opt -w /opt/ 'Job 2'
     - gitlabci-local -c ./tests/entrypoints/.gitlab-ci.yml -d
     - gitlabci-local -c ./tests/entrypoints/.gitlab-ci.yml -p
+    - gitlabci-local -c ./tests/retry/.gitlab-ci.yml -p failure && exit 1 || true
+    - gitlabci-local -c ./tests/retry/.gitlab-ci.yml -p success
 
 'Deploy Test':
   stage: deploy
