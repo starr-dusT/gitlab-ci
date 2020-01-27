@@ -28,7 +28,7 @@ is the common and unique interface between GitLab CI and gitlabci-local.
 ```shell
 usage: gitlabci-runner-local [-h] [-q] [-c CONFIGURATION] [-b] [-a] [-m] [-p]
                              [-e ENV] [-t TAGS] [-v VOLUME] [-w WORKDIR]
-                             [--defaults] [-d | -s | -l | --pull]
+                             [--all] [--defaults] [-d | -s | -l | --pull]
                              [names [names ...]]
 
 gitlabci-runner-local: Launch .gitlab-ci.yml jobs locally
@@ -51,6 +51,7 @@ gitlabci-runner-local: Launch .gitlab-ci.yml jobs locally
 | -p, --pipeline       | Run complete stages rather than jobs                                              |
 | -v VOLUME            | Mount VOLUME or HOST:TARGET in Docker containers                                  |
 | -w WORKDIR           | Override the container's working path                                             |
+| --all                | Enable all jobs by default in selections                                          |
 | --defaults           | Use default variables for .local:configurations                                   |
 | -d, --dump           | Dump parsed .gitlab-ci.yml configuration                                          |
 | -s, --select         | Force jobs selection from enumerated names                                        |

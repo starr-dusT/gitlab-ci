@@ -56,6 +56,8 @@ def main():
                         help='Mount VOLUME or HOST:TARGET in Docker containers')
     parser.add_argument('-w', dest='workdir',
                         help='Override the container\'s working path')
+    parser.add_argument('--all', dest='all', action='store_true',
+                        help='Enable all jobs by default in selections')
     parser.add_argument('--defaults', dest='defaults', action='store_true',
                         help='Use default variables for .local:configurations')
 
@@ -125,6 +127,11 @@ def main():
     # Select jobs
     elif interactive:
         result = selector(options, jobs)
+
+    # Launch all jobs
+    elif options.all:
+        options.pipeline = True
+        result = launcher(options, jobs)
 
     # Unsupported case
     else:

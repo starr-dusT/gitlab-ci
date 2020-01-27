@@ -39,6 +39,7 @@ ConfigurationsTheme = PyInquirer.style_from_dict({
 def selector(options, jobs):
 
     # Variables
+    default_check = options.all
     jobs_available = False
     jobs_choices = []
     jobs_index = 0
@@ -87,7 +88,7 @@ def selector(options, jobs):
             # 'key': str(jobs_index),
             'name': '%s%s%s' % (jobs[job]['name'], tags, when),
             'value': job,
-            'checked': False,
+            'checked': default_check,
             'disabled': disabled
         }]
 
