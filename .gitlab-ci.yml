@@ -15,6 +15,9 @@ stages:
     - ls ./.tmp/git-chglog >/dev/null 2>&1 || wget -O ./.tmp/git-chglog -q https://github.com/git-chglog/git-chglog/releases/download/0.9.1/git-chglog_linux_amd64
     - chmod +x ./.tmp/git-chglog
     - echo ''
+    - 'echo -n " > Current commit : "'
+    - git describe --always
+    - echo ''
     - 'read -p " > Release tag : " -r tag'
     - git tag -f -m '' "${tag}"
     - ./.tmp/git-chglog -o ./CHANGELOG.md
