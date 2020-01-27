@@ -1,4 +1,37 @@
 
+<a name="1.0.5"></a>
+## [1.0.5](https://gitlab.com/AdrianDC/gitlabci-local/compare/1.0.4...1.0.5) (2020-01-28)
+
+### CHANGELOG
+
+* regenerate release tag changes history
+
+### Chore
+
+* changelog: add current commit hint with git describe
+* prepare [#34](https://gitlab.com/AdrianDC/gitlabci-local/issues/34): add 'winpty' references for Windows in README
+* resolve [#44](https://gitlab.com/AdrianDC/gitlabci-local/issues/44): restrict Python to versions 3.6, 3.7 and 3.8
+* setup: add 'Documentation' reference to README.md
+* prepare [#44](https://gitlab.com/AdrianDC/gitlabci-local/issues/44): add Python 3.6, 3.7, 3.8 and local tests
+* requirements: rename _dev.txt to requirements-dev.txt
+* docs: refactor preview.sh Executor class with constants
+* tests: add --pull feature validation upon entrypoints test
+* gitlab-ci: isolate local preparation jobs to prepare stage
+
+### Feat
+
+* implement [#43](https://gitlab.com/AdrianDC/gitlabci-local/issues/43): allow enabling all jobs with --all
+* implement [#41](https://gitlab.com/AdrianDC/gitlabci-local/issues/41): add support for local volumes definitions
+* prepare [#41](https://gitlab.com/AdrianDC/gitlabci-local/issues/41): support overriding a bound volume with another
+* prepare [#41](https://gitlab.com/AdrianDC/gitlabci-local/issues/41): add support for :ro and :rw volume mounts flags
+* implement [#42](https://gitlab.com/AdrianDC/gitlabci-local/issues/42): disable configurations with --defaults
+* implement [#40](https://gitlab.com/AdrianDC/gitlabci-local/issues/40): migrate to .local unified configurations node
+
+### Fix
+
+* prepare [#34](https://gitlab.com/AdrianDC/gitlabci-local/issues/34): migrate from Blessings to Colored library
+
+
 <a name="1.0.4"></a>
 ## [1.0.4](https://gitlab.com/AdrianDC/gitlabci-local/compare/1.0.3...1.0.4) (2020-01-26)
 
