@@ -30,15 +30,19 @@ setuptools.setup(
     setup_requires=['setuptools_scm'],
     install_requires=requirements,
     classifiers=[
-        'Programming Language :: Python :: 3',
+        'Environment :: Console',
+        'Intended Audience :: Developers',
         'License :: OSI Approved :: Apache Software License',
         'Operating System :: OS Independent',
-        'Intended Audience :: Developers',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
         'Topic :: Software Development',
         'Topic :: Utilities',
     ],
     keywords='gitlab-ci local pipeline',
-    python_requires='>=3',
+    python_requires='>=3, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, !=3.5.*',
     entry_points={
         'console_scripts': [
             'gitlabci-local = gitlabci_local.main:main',
