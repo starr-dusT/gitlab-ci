@@ -65,7 +65,7 @@ stages:
   only:
     - local
 
-'Unit Tests':
+.unit-tests-template: &unit-tests-template
   stage: test
   services:
     - docker:dind
@@ -116,6 +116,26 @@ stages:
     - gitlabci-local -c ./tests/entrypoints/.gitlab-ci.yml -p
     - gitlabci-local -c ./tests/retry/.gitlab-ci.yml -p failure && exit 1 || true
     - gitlabci-local -c ./tests/retry/.gitlab-ci.yml -p success
+
+'Unit Tests (3.6)':
+  <<: *unit-tests-template
+  image: python:3.6
+
+'Unit Tests (3.7)':
+  <<: *unit-tests-template
+  image: python:3.7
+
+'Unit Tests (3.8)':
+  <<: *unit-tests-template
+  image: python:3.8
+
+'Unit Tests (Local)':
+  <<: *unit-tests-template
+  image: local
+  tags:
+    - local
+  only:
+    - local
 
 'Deploy Test':
   stage: deploy
