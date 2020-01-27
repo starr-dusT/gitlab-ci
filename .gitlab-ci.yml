@@ -106,6 +106,7 @@ stages:
     - VARIABLE_8=value8 gitlabci-local -c ./tests/configurations/.gitlab-ci.yml -p </dev/null && exit 1 || true
     - VARIABLE_8= VARIABLE_11=value11 gitlabci-local -c ./tests/configurations/.gitlab-ci.yml -p </dev/null
     - gitlabci-local -c ./tests/configurations/.gitlab-ci.yml -e VARIABLE_8=value8 -e VARIABLE_11=value11 -p </dev/null
+    - gitlabci-local -c ./tests/configurations/.gitlab-ci.yml -e VARIABLE_8=value8 -e VARIABLE_11=value11 --defaults -p
     - gitlabci-local -c ./tests/environment/.gitlab-ci.yml -p
     - gitlabci-local -c ./tests/environment/.gitlab-ci.yml -e USER -e VALUE_1=set1 -e VALUE_2=set2 -e VALUE_3=set3 -p
     - gitlabci-local -c ./tests/environment/.gitlab-ci.yml -e FOLDER=${PWD} -v ./ 'Job 2'

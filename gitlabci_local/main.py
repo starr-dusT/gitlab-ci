@@ -56,6 +56,8 @@ def main():
                         help='Mount VOLUME or HOST:TARGET in Docker containers')
     parser.add_argument('-w', dest='workdir',
                         help='Override the container\'s working path')
+    parser.add_argument('--defaults', dest='defaults', action='store_true',
+                        help='Use default variables for .local:configurations')
 
     # Arguments exclusive definitions
     group = parser.add_mutually_exclusive_group()

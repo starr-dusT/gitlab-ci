@@ -272,7 +272,7 @@ def configurator(options, configurations):
             variable_set = True
 
         # Request configuration selection
-        if not sys.stdin.isatty() or variable_set:
+        if not sys.stdin.isatty() or variable_set or options.defaults:
             result[variable] = str(variable_default)
             print(' %s%s  %s%s%s' %
                   (colored.fg('yellow') + colored.attr('bold'), configuration_prompt[0]['message'],
