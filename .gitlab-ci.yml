@@ -45,7 +45,7 @@ stages:
 'Build':
   stage: build
   script:
-    - pip install -r requirements_dev.txt --upgrade
+    - pip install -r requirements-dev.txt --upgrade
     - pip install -r requirements.txt --upgrade
     - rm -rf build dist *.egg-info .eggs
     - python setup.py bdist_wheel
@@ -122,7 +122,7 @@ stages:
   variables:
     TWINE_PASSWORD_TEST: ${TWINE_PASSWORD_TEST}
   script:
-    - pip install -r requirements_dev.txt --upgrade
+    - pip install -r requirements-dev.txt --upgrade
     - python setup.py bdist_wheel
     - twine upload -u '__token__' -p "${TWINE_PASSWORD_TEST}" --repository testpypi dist/*
   only:
@@ -134,7 +134,7 @@ stages:
   variables:
     TWINE_PASSWORD: ${TWINE_PASSWORD}
   script:
-    - pip install -r requirements_dev.txt --upgrade
+    - pip install -r requirements-dev.txt --upgrade
     - python setup.py bdist_wheel
     - twine upload -u '__token__' -p "${TWINE_PASSWORD}" dist/*
   only:
