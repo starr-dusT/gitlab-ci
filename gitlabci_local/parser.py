@@ -102,11 +102,14 @@ def parser(options, data, environment):
     if environment['parameters']:
         global_values['variables'].update(environment['parameters'])
 
-    # Filter .configurations node
-    if '.configurations' in data and data['.configurations']:
-        configurations = data['.configurations']
-        configuredVariables = configurator(options, configurations)
-        global_values['variables'].update(configuredVariables)
+    # Filter .local node
+    if '.local' in data and data['.local']:
+        local = data['.local']
+
+        # Parse configurations
+        if 'configurations' in local:
+            configuredVariables = configurator(options, local['configurations'])
+            global_values['variables'].update(configuredVariables)
 
     # Prepare default variables
     if environment['default']:
@@ -162,8 +165,8 @@ def parser(options, data, environment):
         if 'stage' not in data[node]:
             continue
 
-        # Filter .configurations node
-        if node == '.configurations':
+        # Filter .local node
+        if node == '.local':
             continue
 
         # Ignore template stage

@@ -58,7 +58,7 @@ gitlabci-runner-local: Launch .gitlab-ci.yml jobs locally
 
 ---
 
-## User configurations with ".configurations"
+## User configurations with ".local:configurations"
 
 gitlabci-local implements support for specific user configurations  
 allowing simple and interactive local pipeline configurations.
@@ -85,7 +85,7 @@ An example usage can be found in the local `Changelog` job: [.gitlab-ci.yml](htt
 
 gitlabci-local uses the variables defined in .gitlab-ci.yml,  
 parses the simple environment variables file named `.env`  
-and the configurations selected through `.configurations`.
+and the configurations selected through `.local:configurations`.
 
 If specific environment variables are to be used in the job's container:
 
