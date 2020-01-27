@@ -98,6 +98,14 @@ For example, `-e TERM=ansi` may enable colored terminal outputs.
 
 ---
 
+## Windows compatibility
+
+In order to access the interactive terminal user interfaces,
+Windows users may need to allocate an interactive PTY context
+through the `winpty` wrapper, for example `winpty gitlabci-local`.
+
+---
+
 ## Dependencies
 
 - [colored](https://pypi.org/project/colored/): Terminal colors and styles
@@ -115,3 +123,4 @@ For example, `-e TERM=ansi` may enable colored terminal outputs.
 - [peek](https://github.com/phw/peek): Simple GIF screen recorder
 - [pexpect](https://pypi.org/project/pexpect/): Interactive console applications controller
 - [PyPI](https://pypi.org/): The Python Package Index
+- [winpty](https://github.com/rprichard/winpty): Windows PTY interface wrapper
