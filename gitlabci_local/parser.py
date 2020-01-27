@@ -106,10 +106,16 @@ def parser(options, data, environment):
     if '.local' in data and data['.local']:
         local = data['.local']
 
-        # Parse configurations
+        # Parse local configurations
         if 'configurations' in local:
             configuredVariables = configurator(options, local['configurations'])
             global_values['variables'].update(configuredVariables)
+
+        # Parse local volumes
+        if 'volumes' in local:
+            if not options.volume:
+                options.volume = []
+            options.volume = local['volumes'] + options.volume
 
     # Prepare default variables
     if environment['default']:

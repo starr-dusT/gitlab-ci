@@ -1,0 +1,18 @@
+image: alpine:3
+
+stages:
+  - volumes
+
+.local:
+  volumes:
+    - .:/opt/src
+    - ./tests:/opt/src/tests
+    - ../:/opt/parent:ro
+
+'Job':
+  stage: volumes
+  script:
+    - ls -la /opt/src/
+    - ls -la /opt/src/tests/
+    - ls -la /opt/parent/
+    - touch /opt/parent/test && exit 1 || true
