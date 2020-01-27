@@ -158,6 +158,11 @@ def runner(options, job_data, last_result):
                 volume_target = os.path.abspath(volume)
                 volume_mode = 'rw'
 
+            # Clear volume overrides
+            for volume in list(volumes.keys()):
+                if volume_target == volumes[volume]['bind']:
+                    volumes.pop(volume)
+
             # Append volume mounts
             volumes[volume_host] = {'bind': volume_target, 'mode': volume_mode}
 
