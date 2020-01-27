@@ -2,18 +2,12 @@
 
 # Libraries
 import argparse
-from blessings import Terminal
+import colored
 import os
 import sys
 
 # Constants
 NAME = 'gitlabci-runner-local'
-
-# Terminal
-force_styling = False
-if os.environ.get('FORCE_STYLING') is not None:
-    force_styling = True
-term = Terminal(force_styling=force_styling)
 
 # Components
 from .dumper import dumper
@@ -133,8 +127,8 @@ def main():
     # Unsupported case
     else:
         print(' %s%s: %sERROR: %sUnsupported non-interactive context...%s' %
-              (term.green + term.bold, NAME, term.red + term.bold,
-               term.normal + term.bold, term.normal))
+              (colored.fg('green') + colored.attr('bold'), NAME, colored.fg('red') + colored.attr('bold'),
+               colored.attr('reset') + colored.attr('bold'), colored.attr('reset')))
         print(' ', flush=True)
 
     # Result

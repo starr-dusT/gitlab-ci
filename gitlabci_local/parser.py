@@ -2,6 +2,7 @@
 
 # Libraries
 import collections
+import colored
 from dotenv import dotenv_values
 import os
 from pathlib import Path
@@ -9,7 +10,7 @@ import oyaml as yaml
 import sys
 
 # Components
-from .main import NAME, term
+from .main import NAME
 from .menu import configurator
 
 # Reader
@@ -69,15 +70,15 @@ def reader(options):
     except yaml.YAMLError as exc:
         print(' ')
         print(' %s%s: %sERROR: %s%s%s' %
-              (term.green + term.bold, NAME, term.red + term.bold,
-               term.normal + term.bold, exc, term.normal))
+              (colored.fg('green') + colored.attr('bold'), NAME, colored.fg('red') + colored.attr('bold'),
+               colored.attr('reset') + colored.attr('bold'), exc, colored.attr('reset')))
     except KeyboardInterrupt:
         pass
     except:
         print(' ')
         print(' %s%s: %sERROR: %s%s%s' %
-              (term.green + term.bold, NAME, term.red + term.bold,
-               term.normal + term.bold, str(sys.exc_info()[1]), term.normal))
+              (colored.fg('green') + colored.attr('bold'), NAME, colored.fg('red') + colored.attr('bold'),
+               colored.attr('reset') + colored.attr('bold'), str(sys.exc_info()[1]), colored.attr('reset')))
 
     # Failure
     return None

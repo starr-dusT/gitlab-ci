@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 # Libraries
+import colored
 import docker
 import os
 from pathlib import Path
@@ -10,7 +11,7 @@ import tempfile
 import time
 
 # Components
-from .main import NAME, term
+from .main import NAME
 from .puller import pull
 
 # Launcher
@@ -71,9 +72,9 @@ def runner(options, job_data, last_result):
     # Header
     if not options.quiet:
         print(' %s===[ %s%s: %s%s %s(%s) %s]===%s' %
-              (term.green + term.bold, term.yellow + term.bold, job_data['stage'],
-               term.yellow + term.bold, job_data['name'], term.cyan + term.bold, image,
-               term.green + term.bold, term.normal))
+              (colored.fg('green') + colored.attr('bold'), colored.fg('yellow') + colored.attr('bold'), job_data['stage'],
+               colored.fg('yellow') + colored.attr('bold'), job_data['name'], colored.fg('cyan') + colored.attr('bold'), image,
+               colored.fg('green') + colored.attr('bold'), colored.attr('reset')))
         print(' ', flush=True)
 
     # Create Docker client
@@ -178,7 +179,7 @@ def runner(options, job_data, last_result):
             print(' ')
             print(
                 ' %s> WARNING: %sUser interruption detected, stopping the container...%s'
-                % (term.yellow + term.bold, term.normal + term.bold, term.normal))
+                % (colored.fg('yellow') + colored.attr('bold'), colored.attr('reset') + colored.attr('bold'), colored.attr('reset')))
             print(' ', flush=True)
             container.stop(timeout=0)
 
@@ -238,8 +239,8 @@ def runner(options, job_data, last_result):
     print(' ', flush=True)
     if not options.quiet:
         print(' %s> Result: %s%s' %
-              (term.yellow + term.bold, term.green + term.bold +
-               'Success' if result else term.red + term.bold + 'Failure', term.normal))
+              (colored.fg('yellow') + colored.attr('bold'), colored.fg('green') + colored.attr('bold') +
+               'Success' if result else colored.fg('red') + colored.attr('bold') + 'Failure', colored.attr('reset')))
         print(' ')
         print(' ', flush=True)
 

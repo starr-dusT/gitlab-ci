@@ -1,4 +1,4 @@
-blessings>=1.7
+colored>=1.4.2
 docker>=4.1.0
 oyaml>=0.9
 PyInquirer>=1.0.3

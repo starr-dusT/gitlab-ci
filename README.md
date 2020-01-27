@@ -99,7 +99,7 @@ For example, `-e TERM=ansi` may enable colored terminal outputs.
 
 ## Dependencies
 
-- [blessings](https://pypi.org/project/blessings/): Terminal colors and styles
+- [colored](https://pypi.org/project/colored/): Terminal colors and styles
 - [docker](https://pypi.org/project/docker/): Docker Engine API
 - [oyaml](https://pypi.org/project/oyaml/): Ordered YAML dictionnaries
 - [PyInquirer](https://pypi.org/project/PyInquirer/): Interactive terminal user interfaces

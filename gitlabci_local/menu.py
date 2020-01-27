@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 # Libraries
+import colored
 import json
 import os
 import oyaml as yaml
@@ -9,7 +10,7 @@ import PyInquirer
 import sys
 
 # Components
-from .main import NAME, term
+from .main import NAME
 from .patcher import InquirerControl
 from .runner import launcher
 from .utils import dictGet
@@ -106,8 +107,8 @@ def selector(options, jobs):
     else:
         print(
             ' %s%s: %sERROR: %sNo jobs found for selection%s' %
-            (term.green + term.bold, NAME, term.red + term.bold, term.normal + term.bold,
-             term.normal), flush=True)
+            (colored.fg('green') + colored.attr('bold'), NAME, colored.fg('red') + colored.attr('bold'), colored.attr('reset') + colored.attr('bold'),
+             colored.attr('reset')), flush=True)
         answers = None
 
     # Parse jobs selection
@@ -139,8 +140,8 @@ def configurator(options, configurations):
     # Header
     print(' ')
     print(' %s===[ %sConfigurations menu %s]===%s' %
-          (term.green + term.bold, term.yellow + term.bold, term.green + term.bold,
-           term.normal))
+          (colored.fg('green') + colored.attr('bold'), colored.fg('yellow') + colored.attr('bold'), colored.fg('green') + colored.attr('bold'),
+           colored.attr('reset')))
     print(' ', flush=True)
 
     # Walk through configurations
@@ -261,8 +262,8 @@ def configurator(options, configurations):
         else:
             print(' ')
             print(' %s%s: %sERROR: %sUnsupported configuration type "%s"...%s' %
-                  (term.green + term.bold, NAME, term.red + term.bold,
-                   term.normal + term.bold, variable_type, term.normal))
+                  (colored.fg('green') + colored.attr('bold'), NAME, colored.fg('red') + colored.attr('bold'),
+                   colored.attr('reset') + colored.attr('bold'), variable_type, colored.attr('reset')))
             print(' ', flush=True)
 
         # Extract environment variable
@@ -274,8 +275,8 @@ def configurator(options, configurations):
         if not sys.stdin.isatty() or variable_set:
             result[variable] = str(variable_default)
             print(' %s%s  %s%s%s' %
-                  (term.yellow + term.bold, configuration_prompt[0]['message'],
-                   term.cyan + term.bold, result[variable], term.normal))
+                  (colored.fg('yellow') + colored.attr('bold'), configuration_prompt[0]['message'],
+                   colored.fg('cyan') + colored.attr('bold'), result[variable], colored.attr('reset')))
         else:
             answers = PyInquirer.prompt(configuration_prompt, style=ConfigurationsTheme)
             if not answers:
