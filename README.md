@@ -71,6 +71,18 @@ Examples for each of these can be found in the `configurations` unit tests: [tes
 
 ---
 
+## Additional features in ".local"
+
+gitlabci-local implements further support of most parameters  
+inside the `.local` to ease default parameters definitions.
+
+Supported local values include `after`, `all`, `before`, `configurations`,  
+`defaults`, `image`, `manual`, `pipeline`, `quiet`, `tags`, `volumes`, `workdir`.
+
+Examples for each of these can be found in the `local` unit tests: [tests/local](https://gitlab.com/AdrianDC/gitlabci-local/blob/master/tests/local/.gitlab-ci.yml)
+
+---
+
 ## Job execution in native context
 
 gitlabci-local runs every jobs in the specified Docker image.

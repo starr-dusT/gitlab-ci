@@ -106,16 +106,67 @@ def parser(options, data, environment):
     if '.local' in data and data['.local']:
         local = data['.local']
 
-        # Parse local configurations
-        if 'configurations' in local:
-            configuredVariables = configurator(options, local['configurations'])
-            global_values['variables'].update(configuredVariables)
+        # Parse local after
+        if 'after' in local:
+            if not options.after:
+                options.after = local['after']
+
+        # Parse local all
+        if 'all' in local:
+            if not options.all:
+                options.all = local['all']
+
+        # Parse local before
+        if 'before' in local:
+            if not options.before:
+                options.before = local['before']
+
+        # Parse local defaults
+        if 'defaults' in local:
+            if not options.defaults:
+                options.defaults = local['defaults']
+
+        # Parse local image
+        if 'image' in local:
+            if not options.image:
+                options.image = local['image']
+
+        # Parse local manual
+        if 'manual' in local:
+            if not options.manual:
+                options.manual = local['manual']
+
+        # Parse local pipeline
+        if 'pipeline' in local:
+            if not options.pipeline and not options.names:
+                options.pipeline = local['pipeline']
+
+        # Parse local quiet
+        if 'quiet' in local:
+            if not options.quiet:
+                options.quiet = local['quiet']
+
+        # Parse local tags
+        if 'tags' in local:
+            if options.tags_default:
+                options.tags = local['tags'][:]
+                options.tags_default = False
 
         # Parse local volumes
         if 'volumes' in local:
             if not options.volume:
                 options.volume = []
             options.volume = local['volumes'] + options.volume
+
+        # Parse local workdir
+        if 'workdir' in local:
+            if not options.workdir:
+                options.workdir = local['workdir']
+
+        # Parse local configurations
+        if 'configurations' in local:
+            configuredVariables = configurator(options, local['configurations'])
+            global_values['variables'].update(configuredVariables)
 
     # Prepare default variables
     if environment['default']:
@@ -124,6 +175,18 @@ def parser(options, data, environment):
                 global_values['variables'][default] = environment['default'][default]
             if default not in os.environ:
                 os.environ[default] = environment['default'][default]
+
+    # Prepare global values
+    if options.image:
+        if isinstance(options.image, dict):
+            global_values['image'] = os.path.expandvars(options.image['name'])
+            if 'entrypoint' in options.image and len(options.image['entrypoint']) > 0:
+                global_values['entrypoint'] = options.image['entrypoint'][:]
+            else:
+                global_values['entrypoint'] = None
+        else:
+            global_values['image'] = os.path.expandvars(options.image)
+            global_values['entrypoint'] = None
 
     # Iterate through stages
     for node in data:
@@ -134,16 +197,17 @@ def parser(options, data, environment):
 
         # Filter image node
         if node == 'image':
-            image_data = data[node]
-            if isinstance(image_data, dict):
-                global_values['image'] = os.path.expandvars(image_data['name'])
-                if 'entrypoint' in image_data and len(image_data['entrypoint']) > 0:
-                    global_values['entrypoint'] = image_data['entrypoint'][:]
+            if not global_values['image']:
+                image_data = data[node]
+                if isinstance(image_data, dict):
+                    global_values['image'] = os.path.expandvars(image_data['name'])
+                    if 'entrypoint' in image_data and len(image_data['entrypoint']) > 0:
+                        global_values['entrypoint'] = image_data['entrypoint'][:]
+                    else:
+                        global_values['entrypoint'] = None
                 else:
+                    global_values['image'] = os.path.expandvars(image_data)
                     global_values['entrypoint'] = None
-            else:
-                global_values['image'] = os.path.expandvars(image_data)
-                global_values['entrypoint'] = None
             continue
 
         # Filter before_script node

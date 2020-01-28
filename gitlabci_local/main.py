@@ -52,6 +52,7 @@ def main():
         '-t', dest='tags', action='append',
         help='Handle listed tags as manual jobs\nDefault list: [\'%s\']' %
         ('\', \''.join(tagsDefault)))
+    parser.add_argument('--tags-default', dest='tags_default', action='store_true', help=argparse.SUPPRESS)
     parser.add_argument('-v', dest='volume', action='append',
                         help='Mount VOLUME or HOST:TARGET in Docker containers')
     parser.add_argument('-w', dest='workdir',
@@ -60,6 +61,7 @@ def main():
                         help='Enable all jobs by default in selections')
     parser.add_argument('--defaults', dest='defaults', action='store_true',
                         help='Use default variables for .local:configurations')
+    parser.add_argument('--image', dest='image', help=argparse.SUPPRESS)
 
     # Arguments exclusive definitions
     group = parser.add_mutually_exclusive_group()
@@ -90,6 +92,7 @@ def main():
     # Prepare tags
     if not options.tags:
         options.tags = tagsDefault
+        options.tags_default = True
 
     # Read configuration
     jobs = reader(options)
