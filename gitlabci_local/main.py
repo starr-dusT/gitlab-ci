@@ -31,6 +31,9 @@ def main():
     # Arguments default definitions
     tagsDefault = ['deploy', 'local', 'publish']
 
+    # Arguments enumerations definitions
+    networksEnum = ['bridge', 'host', 'none']
+
     # Arguments optional definitions
     parser.add_argument('-h', dest='help', action='store_true',
                         help='Show this help message')
@@ -44,6 +47,10 @@ def main():
                         help='Enable after_script executions')
     parser.add_argument('-m', '--manual', dest='manual', action='store_true',
                         help='Allow manual jobs to be used')
+    parser.add_argument(
+        '-n', dest='network',
+        help='Configure the network mode used\nChoices: %s. Default: %s' %
+        (', '.join(networksEnum), networksEnum[0]))
     parser.add_argument('-p', '--pipeline', dest='pipeline', action='store_true',
                         help='Run complete stages rather than jobs')
     parser.add_argument('-e', dest='env', action='append',
@@ -52,7 +59,8 @@ def main():
         '-t', dest='tags', action='append',
         help='Handle listed tags as manual jobs\nDefault list: [\'%s\']' %
         ('\', \''.join(tagsDefault)))
-    parser.add_argument('--tags-default', dest='tags_default', action='store_true', help=argparse.SUPPRESS)
+    parser.add_argument('--tags-default', dest='tags_default', action='store_true',
+                        help=argparse.SUPPRESS)
     parser.add_argument('-v', dest='volume', action='append',
                         help='Mount VOLUME or HOST:TARGET in Docker containers')
     parser.add_argument('-w', dest='workdir',
@@ -139,7 +147,8 @@ def main():
     # Unsupported case
     else:
         print(' %s%s: %sERROR: %sUnsupported non-interactive context...%s' %
-              (colored.fg('green') + colored.attr('bold'), NAME, colored.fg('red') + colored.attr('bold'),
+              (colored.fg('green') + colored.attr('bold'), NAME,
+               colored.fg('red') + colored.attr('bold'),
                colored.attr('reset') + colored.attr('bold'), colored.attr('reset')))
         print(' ', flush=True)
 

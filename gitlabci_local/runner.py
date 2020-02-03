@@ -69,6 +69,11 @@ def runner(options, job_data, last_result):
     # Prepare image
     image = job_data['image']
 
+    # Prepare network
+    network = 'bridge'
+    if options.network:
+        network = options.network
+
     # Header
     if not options.quiet:
         print(' %s===[ %s%s: %s%s %s(%s) %s]===%s' %
@@ -183,7 +188,7 @@ def runner(options, job_data, last_result):
         # Launch container
         container = client.containers.run(
             image, command=scriptFile.name, detach=True, entrypoint=entrypoint,
-            environment=variables, network_mode='bridge', remove=False, stdout=True,
+            environment=variables, network_mode=network, remove=False, stdout=True,
             stderr=True, stream=True, volumes=volumes, working_dir=pathWorkDir)
 
         # Create interruption handler

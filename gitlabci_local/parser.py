@@ -136,6 +136,11 @@ def parser(options, data, environment):
             if not options.manual:
                 options.manual = local['manual']
 
+        # Parse local network
+        if 'network' in local:
+            if not options.network:
+                options.network = local['network']
+
         # Parse local pipeline
         if 'pipeline' in local:
             if not options.pipeline and not options.names:

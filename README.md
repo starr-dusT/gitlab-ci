@@ -46,9 +46,10 @@ gitlabci-runner-local: Launch .gitlab-ci.yml jobs locally
 | -b, --before         | Enable before_script executions                                                   |
 | -a, --after          | Enable after_script executions                                                    |
 | -m, --manual         | Allow manual jobs to be used                                                      |
+| -n NETWORK           | Configure the network mode used<br>Choices: bridge, host, none. Default: bridge   |
+| -p, --pipeline       | Run complete stages rather than jobs                                              |
 | -e ENV               | Define VARIABLE=value, pass VARIABLE or ENV file                                  |
 | -t TAGS              | Handle listed tags as manual jobs<br>Default list: ['deploy', 'local', 'publish'] |
-| -p, --pipeline       | Run complete stages rather than jobs                                              |
 | -v VOLUME            | Mount VOLUME or HOST:TARGET in Docker containers                                  |
 | -w WORKDIR           | Override the container's working path                                             |
 | --all                | Enable all jobs by default in selections                                          |

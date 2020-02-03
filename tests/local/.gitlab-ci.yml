@@ -29,6 +29,7 @@ stages:
     entrypoint:
       - linux32
   manual: true
+  network: host
   pipeline: true
   quiet: true
   tags:
@@ -62,6 +63,7 @@ stages:
     - touch /opt/parent/test && exit 1 || true
     - cat /etc/alpine-release
     - uname -a
+    - ip a
   after_script:
     - echo '__AFTER__'
 
