@@ -70,15 +70,17 @@ def reader(options):
     except yaml.YAMLError as exc:
         print(' ')
         print(' %s%s: %sERROR: %s%s%s' %
-              (colored.fg('green') + colored.attr('bold'), NAME, colored.fg('red') + colored.attr('bold'),
+              (colored.fg('green') + colored.attr('bold'), NAME,
+               colored.fg('red') + colored.attr('bold'),
                colored.attr('reset') + colored.attr('bold'), exc, colored.attr('reset')))
     except KeyboardInterrupt:
         pass
     except:
         print(' ')
         print(' %s%s: %sERROR: %s%s%s' %
-              (colored.fg('green') + colored.attr('bold'), NAME, colored.fg('red') + colored.attr('bold'),
-               colored.attr('reset') + colored.attr('bold'), str(sys.exc_info()[1]), colored.attr('reset')))
+              (colored.fg('green') + colored.attr('bold'), NAME, colored.fg('red') +
+               colored.attr('bold'), colored.attr('reset') + colored.attr('bold'),
+               str(sys.exc_info()[1]), colored.attr('reset')))
 
     # Failure
     return None

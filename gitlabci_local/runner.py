@@ -77,8 +77,10 @@ def runner(options, job_data, last_result):
     # Header
     if not options.quiet:
         print(' %s===[ %s%s: %s%s %s(%s) %s]===%s' %
-              (colored.fg('green') + colored.attr('bold'), colored.fg('yellow') + colored.attr('bold'), job_data['stage'],
-               colored.fg('yellow') + colored.attr('bold'), job_data['name'], colored.fg('cyan') + colored.attr('bold'), image,
+              (colored.fg('green') + colored.attr('bold'),
+               colored.fg('yellow') + colored.attr('bold'), job_data['stage'],
+               colored.fg('yellow') + colored.attr('bold'), job_data['name'],
+               colored.fg('cyan') + colored.attr('bold'), image,
                colored.fg('green') + colored.attr('bold'), colored.attr('reset')))
         print(' ', flush=True)
 
@@ -197,7 +199,8 @@ def runner(options, job_data, last_result):
             print(' ')
             print(
                 ' %s> WARNING: %sUser interruption detected, stopping the container...%s'
-                % (colored.fg('yellow') + colored.attr('bold'), colored.attr('reset') + colored.attr('bold'), colored.attr('reset')))
+                % (colored.fg('yellow') + colored.attr('bold'),
+                   colored.attr('reset') + colored.attr('bold'), colored.attr('reset')))
             print(' ', flush=True)
             container.stop(timeout=0)
 
@@ -257,8 +260,9 @@ def runner(options, job_data, last_result):
     print(' ', flush=True)
     if not options.quiet:
         print(' %s> Result: %s%s' %
-              (colored.fg('yellow') + colored.attr('bold'), colored.fg('green') + colored.attr('bold') +
-               'Success' if result else colored.fg('red') + colored.attr('bold') + 'Failure', colored.attr('reset')))
+              (colored.fg('yellow') + colored.attr('bold'), colored.fg('green') +
+               colored.attr('bold') + 'Success' if result else colored.fg('red') +
+               colored.attr('bold') + 'Failure', colored.attr('reset')))
         print(' ')
         print(' ', flush=True)
 

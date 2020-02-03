@@ -108,8 +108,10 @@ def selector(options, jobs):
     else:
         print(
             ' %s%s: %sERROR: %sNo jobs found for selection%s' %
-            (colored.fg('green') + colored.attr('bold'), NAME, colored.fg('red') + colored.attr('bold'), colored.attr('reset') + colored.attr('bold'),
-             colored.attr('reset')), flush=True)
+            (colored.fg('green') + colored.attr('bold'), NAME,
+             colored.fg('red') + colored.attr('bold'),
+             colored.attr('reset') + colored.attr('bold'), colored.attr('reset')),
+            flush=True)
         answers = None
 
     # Parse jobs selection
@@ -141,8 +143,9 @@ def configurator(options, configurations):
     # Header
     print(' ')
     print(' %s===[ %sConfigurations menu %s]===%s' %
-          (colored.fg('green') + colored.attr('bold'), colored.fg('yellow') + colored.attr('bold'), colored.fg('green') + colored.attr('bold'),
-           colored.attr('reset')))
+          (colored.fg('green') + colored.attr('bold'),
+           colored.fg('yellow') + colored.attr('bold'),
+           colored.fg('green') + colored.attr('bold'), colored.attr('reset')))
     print(' ', flush=True)
 
     # Walk through configurations
@@ -263,8 +266,9 @@ def configurator(options, configurations):
         else:
             print(' ')
             print(' %s%s: %sERROR: %sUnsupported configuration type "%s"...%s' %
-                  (colored.fg('green') + colored.attr('bold'), NAME, colored.fg('red') + colored.attr('bold'),
-                   colored.attr('reset') + colored.attr('bold'), variable_type, colored.attr('reset')))
+                  (colored.fg('green') + colored.attr('bold'), NAME, colored.fg('red') +
+                   colored.attr('bold'), colored.attr('reset') + colored.attr('bold'),
+                   variable_type, colored.attr('reset')))
             print(' ', flush=True)
 
         # Extract environment variable
@@ -276,8 +280,9 @@ def configurator(options, configurations):
         if not sys.stdin.isatty() or variable_set or options.defaults:
             result[variable] = str(variable_default)
             print(' %s%s  %s%s%s' %
-                  (colored.fg('yellow') + colored.attr('bold'), configuration_prompt[0]['message'],
-                   colored.fg('cyan') + colored.attr('bold'), result[variable], colored.attr('reset')))
+                  (colored.fg('yellow') + colored.attr('bold'),
+                   configuration_prompt[0]['message'], colored.fg('cyan') +
+                   colored.attr('bold'), result[variable], colored.attr('reset')))
         else:
             answers = PyInquirer.prompt(configuration_prompt, style=ConfigurationsTheme)
             if not answers:
