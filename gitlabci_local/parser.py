@@ -175,11 +175,15 @@ def parser(options, data, environment):
 
     # Prepare default variables
     if environment['default']:
-        for default in environment['default']:
-            if default not in global_values['variables']:
-                global_values['variables'][default] = environment['default'][default]
-            if default not in os.environ:
-                os.environ[default] = environment['default'][default]
+        for variable in environment['default']:
+            if variable in global_values['variables']:
+                pass
+            elif variable in os.environ:
+                global_values['variables'][variable] = os.environ[variable]
+            else:
+                global_values['variables'][variable] = environment['default'][variable]
+            if variable not in os.environ:
+                os.environ[variable] = global_values['variables'][variable]
 
     # Prepare global values
     if options.image:
