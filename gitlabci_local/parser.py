@@ -239,7 +239,9 @@ def parser(options, data, environment):
 
         # Filter variables node
         if node == 'variables':
-            global_values['variables'].update(data['variables'])
+            for variable in data['variables']:
+                if variable not in global_values['variables']:
+                    global_values['variables'][variable] = data['variables'][variable]
             continue
 
         # Validate job node
