@@ -149,20 +149,20 @@ def runner(options, job_data, last_result):
 
             # Parse HOST:TARGET:MODE
             if len(volume_nodes) == 3:
-                volume_host = os.path.abspath(volume_nodes[0])
-                volume_target = volume_nodes[1]
+                volume_host = os.path.abspath(os.path.expandvars(volume_nodes[0]))
+                volume_target = os.path.expandvars(volume_nodes[1])
                 volume_mode = volume_nodes[2]
 
             # Parse HOST:TARGET
             elif len(volume_nodes) == 2:
-                volume_host = os.path.abspath(volume_nodes[0])
-                volume_target = volume_nodes[1]
+                volume_host = os.path.abspath(os.path.expandvars(volume_nodes[0]))
+                volume_target = os.path.expandvars(volume_nodes[1])
                 volume_mode = 'rw'
 
             # Parse VOLUME
             else:
-                volume_host = os.path.abspath(volume)
-                volume_target = os.path.abspath(volume)
+                volume_host = os.path.abspath(os.path.expandvars(volume))
+                volume_target = os.path.abspath(os.path.expandvars(volume))
                 volume_mode = 'rw'
 
             # Clear volume overrides
