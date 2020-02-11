@@ -24,6 +24,11 @@ stages:
         - 'value2'
         - 'value3'
   defaults: true
+  env:
+    - LOGNAME
+    - VARIABLE_CI=SECOND_VALUE_EXPECTED
+    - VARIABLE_SET=1
+    - folder/environment.env
   image:
     name: local
     entrypoint:
@@ -39,6 +44,10 @@ stages:
     - ./tests:/opt/src/tests
     - ../:/opt/parent:ro
   workdir: .
+
+variables:
+  VARIABLE_CI: 'FIRST_VALUE_NOT_EXPECTED'
+  VARIABLE_GLOBAL: 'GLOBAL_VALUE'
 
 'Job 1':
   stage: local
@@ -101,3 +110,13 @@ stages:
     - echo '__AFTER__'
   tags:
     - publish
+
+'Job 6':
+  stage: local
+  image: alpine:3
+  script:
+    - echo "HOSTNAME=${HOSTNAME}"
+    - echo "VARIABLE_CI=${VARIABLE_CI}"
+    - echo "VARIABLE_ENV_FILE=${VARIABLE_ENV_FILE}"
+    - echo "VARIABLE_GLOBAL=${VARIABLE_GLOBAL}"
+    - echo "VARIABLE_SET=${VARIABLE_SET}"

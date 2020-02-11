@@ -36,8 +36,8 @@ def reader(options):
                 environment['parameters'][variable] = value
 
             # Parse ENVIRONMENT_FILE
-            elif os.path.isfile(env):
-                environment['files'] += [Path(os.path.abspath(env))]
+            elif os.path.isfile(Path(options.path) / env):
+                environment['files'] += [Path(options.path) / env]
 
             # Parse VARIABLE
             else:
@@ -57,7 +57,7 @@ def reader(options):
         environment_file_values = dotenv_values(dotenv_path=environment_file)
         for variable in environment_file_values:
 
-            # Defile default environment variable
+            # Define default environment variable
             if variable in environment['default']:
                 continue
             environment['default'][variable] = environment_file_values[variable]
@@ -126,6 +126,42 @@ def parser(options, data, environment):
         if 'defaults' in local:
             if not options.defaults:
                 options.defaults = local['defaults']
+
+        # Parse local env
+        if 'env' in local:
+            for env in local['env']:
+                env_parsed = env.split('=', 1)
+
+                # Parse VARIABLE=value
+                if len(env_parsed) == 2:
+                    variable = env_parsed[0]
+                    value = env_parsed[1]
+                    if variable not in global_values['variables']:
+                        os.environ[variable] = value
+                        global_values['variables'][variable] = value
+
+                # Parse ENVIRONMENT_FILE
+                elif os.path.isfile(Path(options.path) / env):
+                    environment_file = Path(options.path) / env
+                    if not environment_file.is_file():
+                        continue
+
+                    # Parse environment files
+                    environment_file_values = dotenv_values(dotenv_path=environment_file)
+                    for variable in environment_file_values:
+
+                        # Define default environment variable
+                        if variable not in global_values['variables']:
+                            global_values['variables'][variable] = environment_file_values[variable]
+
+                # Parse VARIABLE
+                else:
+                    variable = env
+                    if variable not in global_values['variables']:
+                        if variable in os.environ:
+                            global_values['variables'][variable] = os.environ[variable]
+                        else:
+                            global_values['variables'][variable] = ''
 
         # Parse local image
         if 'image' in local:
