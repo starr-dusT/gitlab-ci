@@ -89,7 +89,6 @@ def reader(options):
 def parser(options, data, environment):
 
     # Variables
-    configurations = dict()
     global_values = dict({
         'after_script': [],
         'before_script': [],
