@@ -92,8 +92,9 @@ stages:
     - gitlabci-local -c ./tests/simple/.gitlab-ci.yml -q -p
     - gitlabci-local -c ./tests/unsorted/.gitlab-ci.yml -p
     - gitlabci-local -c ./tests/unsorted/.gitlab-ci.yml --all </dev/null
-    - gitlabci-local -b -a -c ./tests/templates/.gitlab-ci.yml 'Job 1' 'Job 2' 'Job 3'
-    - gitlabci-local -b -a -c ./tests/failures/.gitlab-ci.yml -p && exit 1 || true
+    - gitlabci-local -c ./tests/templates/.gitlab-ci.yml 'Job 1' 'Job 2' 'Job 3'
+    - gitlabci-local -B -A -c ./tests/templates/.gitlab-ci.yml 'Job 1' 'Job 2' 'Job 3'
+    - gitlabci-local -c ./tests/failures/.gitlab-ci.yml -p && exit 1 || true
     - gitlabci-local -c ./tests/failures/.gitlab-ci.yml 'Job 1' 'Job 2'
     - gitlabci-local -c ./tests/stages/.gitlab-ci.yml unknown_job && exit 1 || true
     - gitlabci-local -c ./tests/stages/.gitlab-ci.yml -p unknown_stage && exit 1 || true

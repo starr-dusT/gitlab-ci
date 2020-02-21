@@ -109,7 +109,7 @@ def parser(options, data, environment):
 
         # Parse local after
         if 'after' in local:
-            if not options.after:
+            if options.after:
                 options.after = local['after']
 
         # Parse local all
@@ -119,7 +119,7 @@ def parser(options, data, environment):
 
         # Parse local before
         if 'before' in local:
-            if not options.before:
+            if options.before:
                 options.before = local['before']
 
         # Parse local defaults

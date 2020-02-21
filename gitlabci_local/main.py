@@ -41,10 +41,10 @@ def main():
                         help='Hide jobs execution context')
     parser.add_argument('-c', dest='configuration', default='.gitlab-ci.yml',
                         help='Path to the .gitlab-ci.yml configuration')
-    parser.add_argument('-b', '--before', dest='before', action='store_true',
-                        help='Enable before_script executions')
-    parser.add_argument('-a', '--after', dest='after', action='store_true',
-                        help='Enable after_script executions')
+    parser.add_argument('-B', '--no-before', dest='before', action='store_false',
+                        help='Disable before_script executions')
+    parser.add_argument('-A', '--no-after', dest='after', action='store_false',
+                        help='Disable after_script executions')
     parser.add_argument('-m', '--manual', dest='manual', action='store_true',
                         help='Allow manual jobs to be used')
     parser.add_argument(

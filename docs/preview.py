@@ -125,11 +125,11 @@ Executor('gitlabci-local -l').\
     finish()
 
 # Job runner
-Executor('gitlabci-local -b -a "Job 1 - 3"').\
+Executor('gitlabci-local "Job 1 - 3"').\
     finish()
 
 # Pipeline runner
-Executor('gitlabci-local -b -a -p', '../tests/failures/').\
+Executor('gitlabci-local -p', '../tests/failures/').\
     finish()
 
 # Stage runner

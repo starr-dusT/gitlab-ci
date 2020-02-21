@@ -26,7 +26,7 @@ is the common and unique interface between GitLab CI and gitlabci-local.
 ## Usage
 
 ```shell
-usage: gitlabci-runner-local [-h] [-q] [-c CONFIGURATION] [-b] [-a] [-m] [-p]
+usage: gitlabci-runner-local [-h] [-q] [-c CONFIGURATION] [-B] [-A] [-m] [-p]
                              [-e ENV] [-t TAGS] [-v VOLUME] [-w WORKDIR]
                              [--all] [--defaults] [-d | -s | -l | --pull]
                              [names [names ...]]
@@ -43,8 +43,8 @@ gitlabci-runner-local: Launch .gitlab-ci.yml jobs locally
 | -h                   | Show this help message                                                            |
 | -q, --quiet          | Hide jobs execution context                                                       |
 | -c CONFIGURATION     | Path to the .gitlab-ci.yml configuration                                          |
-| -b, --before         | Enable before_script executions                                                   |
-| -a, --after          | Enable after_script executions                                                    |
+| -B, --no-before      | Disable before_script executions                                                  |
+| -A, --no-after       | Disable after_script executions                                                   |
 | -m, --manual         | Allow manual jobs to be used                                                      |
 | -n NETWORK           | Configure the network mode used<br>Choices: bridge, host, none. Default: bridge   |
 | -p, --pipeline       | Run complete stages rather than jobs                                              |
