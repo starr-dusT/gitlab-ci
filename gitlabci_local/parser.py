@@ -199,7 +199,7 @@ def parser(options, data, environment):
             global_values['image'] = os.path.expandvars(options.image)
             global_values['entrypoint'] = None
 
-    # Iterate through stages
+    # Iterate through nodes
     for node in data:
 
         # Filter services node
@@ -244,12 +244,11 @@ def parser(options, data, environment):
                     global_values['variables'][variable] = data['variables'][variable]
             continue
 
+    # Iterate through stages
+    for node in data:
+
         # Validate job node
         if 'stage' not in data[node]:
-            continue
-
-        # Filter .local node
-        if node == '.local':
             continue
 
         # Ignore template stage
