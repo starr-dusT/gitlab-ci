@@ -79,10 +79,11 @@ stages:
     FORCE_STYLING: 'true'
     TEMP: .tmp
     TERM: ansi
-  script:
+  before_script:
     - mkdir -p ./.tmp/
     - pip install dist/*.whl
     - pip install --no-deps --upgrade dist/*.whl
+  script:
     - pip show gitlabci-local
     - gitlabci-local -h
     - gitlabci-local -c unknown/.gitlab-ci.yml && exit 1 || true
@@ -140,6 +141,14 @@ stages:
 'Unit Tests (3.8)':
   <<: *unit-tests-template
   image: python:3.8
+
+'Unit Tests (PyPI)':
+  <<: *unit-tests-template
+  image: python:3.8
+  before_script:
+    - echo "VERSION=${VERSION:-latest}"
+    - pip install "gitlabci-local${VERSION:+==}${VERSION}"
+  when: manual
 
 'Unit Tests (Local)':
   <<: *unit-tests-template
