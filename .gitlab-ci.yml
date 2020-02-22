@@ -129,6 +129,7 @@ stages:
     - gitlabci-local -c ./tests/local/.gitlab-ci.yml -n bridge 'Job 2'
     - gitlabci-local -c ./tests/local/.gitlab-ci.yml -n host 'Job 2'
     - gitlabci-local -c ./tests/local/.gitlab-ci.yml -n none 'Job 2'
+    - gitlabci-local -c ./tests/includes/.gitlab-ci.yml -p
 
 'Unit Tests (3.6)':
   <<: *unit-tests-template
