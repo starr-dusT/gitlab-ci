@@ -1,4 +1,39 @@
 
+<a name="1.0.6"></a>
+## [1.0.6](https://gitlab.com/AdrianDC/gitlabci-local/compare/1.0.5...1.0.6) (2020-02-23)
+
+### CHANGELOG
+
+* regenerate release tag changes history
+
+### Chore
+
+* finish [#54](https://gitlab.com/AdrianDC/gitlabci-local/issues/54): add missing tests/includes unit tests call
+* resolve [#56](https://gitlab.com/AdrianDC/gitlabci-local/issues/56): document all supported .gitlab-ci.yml features
+* finish [#47](https://gitlab.com/AdrianDC/gitlabci-local/issues/47): add '.local:env' mention in README.md
+* refresh preview GIF for latest features and parameters
+* remove unused configurations variable in parser.py
+* ensure Unit Tests jobs timeout after 10 minutes
+* resolve colored codestyle with YAPF
+
+### Feat
+
+* study [#55](https://gitlab.com/AdrianDC/gitlabci-local/issues/55): add 'Unit Tests (PyPI)' manual customized job
+* implement [#54](https://gitlab.com/AdrianDC/gitlabci-local/issues/54): initial support for include:local nodes
+* resolve [#47](https://gitlab.com/AdrianDC/gitlabci-local/issues/47): add support for env parsing in .local node
+* implement [#50](https://gitlab.com/AdrianDC/gitlabci-local/issues/50): always enable before/after_script by default
+* resolve [#52](https://gitlab.com/AdrianDC/gitlabci-local/issues/52): expand volume paths containing variables
+* implement [#48](https://gitlab.com/AdrianDC/gitlabci-local/issues/48): add support for a network mode configuration
+* implement [#46](https://gitlab.com/AdrianDC/gitlabci-local/issues/46): implement most parameters in .local nodes
+
+### Fix
+
+* resolve [#55](https://gitlab.com/AdrianDC/gitlabci-local/issues/55): use stable docker:19.03.5-dind image service
+* resolve [#53](https://gitlab.com/AdrianDC/gitlabci-local/issues/53): parse complete context before parsing stages
+* resolve [#51](https://gitlab.com/AdrianDC/gitlabci-local/issues/51): handle global variables as default values only
+* resolve [#49](https://gitlab.com/AdrianDC/gitlabci-local/issues/49): preserve environment variables when set in .env
+
+
 <a name="1.0.5"></a>
 ## [1.0.5](https://gitlab.com/AdrianDC/gitlabci-local/compare/1.0.4...1.0.5) (2020-01-28)
 
