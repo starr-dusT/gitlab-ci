@@ -99,6 +99,18 @@ def parser(options, data, environment):
     jobs = dict()
     stages = dict()
 
+    # Parse nested include
+    if 'include' in data and data['include']:
+        for include_node in data['include']:
+
+            # Parse local nodes
+            if 'local' in include_node:
+                file_path = include_node['local'].lstrip('/')
+                if os.path.isfile(Path(options.path) / file_path):
+                    with open(Path(options.path) / file_path, 'r') as include_data:
+                        include_additions = yaml.safe_load(include_data)
+                        data.update(include_additions)
+
     # Prepare parameters variables
     if environment['parameters']:
         global_values['variables'].update(environment['parameters'])
