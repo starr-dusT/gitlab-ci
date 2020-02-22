@@ -120,6 +120,47 @@ through the `winpty` wrapper, for example `winpty gitlabci-local`.
 
 ---
 
+## Supported .gitlab-ci.yml features
+
+- **image:** IMAGE_NAME
+- **image:**
+  * **name:** IMAGE_NAME
+  * **entrypoint:** ['COMMANDS']
+- **include:**
+  * **local:** FILE_PATH
+- **variables:**
+  * VARIABLE: value
+- .TEMPLATE: &TEMPLATE
+- **stages:**
+  * STAGE_NAMES
+- **before_script:**
+  * COMMANDS
+- **after_script:**
+  * COMMANDS
+- JOB_NAME:
+  * **stage:** STAGE_NAME
+  * **image:** IMAGE_NAME
+  * **image:**
+    + **name:** IMAGE_NAME
+    + **entrypoint:** ['COMMANDS']
+  * **<<:** *TEMPLATE
+  * **variables:**
+    + **VARIABLE:** value
+  * **before_script:**
+    + COMMANDS
+  * **script:**
+    + COMMANDS
+  * **after_script:**
+    + COMMANDS
+  * **retry:** RETRY_COUNT
+  * **retry:**
+    + **max:** RETRY_COUNT
+  * **tags:**
+    + MANUAL_TAGS
+  * **when:** on\_success/manual/on\_failure/always/
+
+---
+
 ## Dependencies
 
 - [colored](https://pypi.org/project/colored/): Terminal colors and styles
