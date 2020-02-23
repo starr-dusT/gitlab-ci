@@ -26,12 +26,12 @@ is the common and unique interface between GitLab CI and gitlabci-local.
 ## Usage
 
 ```shell
-usage: gitlabci-runner-local [-h] [-q] [-c CONFIGURATION] [-B] [-A] [-m] [-p]
+usage: gitlabci-local [-h] [-q] [-c CONFIGURATION] [-B] [-A] [-m] [-p]
                              [-e ENV] [-t TAGS] [-v VOLUME] [-w WORKDIR]
                              [--all] [--defaults] [-d | -s | -l | --pull]
                              [names [names ...]]
 
-gitlabci-runner-local: Launch .gitlab-ci.yml jobs locally
+gitlabci-local: Launch .gitlab-ci.yml jobs locally
 ```
 
 | positional arguments |                                                    |

@@ -7,7 +7,7 @@ import os
 import sys
 
 # Constants
-NAME = 'gitlabci-runner-local'
+NAME = 'gitlabci-local'
 
 # Components
 from .dumper import dumper
