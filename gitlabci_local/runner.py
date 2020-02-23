@@ -250,19 +250,31 @@ def runner(options, job_data, last_result):
         if entrypoint:
             scripts += entrypoint
         scripts += [scriptFile.name]
-        result = (os.system(' '.join(scripts)) == 0)
+        success = (os.system(' '.join(scripts)) == 0)
+
+        # Result evaluation
+        if job_data['when'] in ['on_failure', 'always']:
+            result = last_result
+        elif success:
+            result = True
 
         # Restore environment
         os.environ.clear()
         os.environ.update(_environ)
 
+    # Prepare when details
+    when_details = ''
+    if job_data['when'] not in ['on_success']:
+        when_details = ' (when: %s)' % (job_data['when'])
+
     # Footer
     print(' ', flush=True)
     if not options.quiet:
-        print(' %s> Result: %s%s' %
+        print(' %s> Result: %s%s%s' %
               (colored.fg('yellow') + colored.attr('bold'), colored.fg('green') +
                colored.attr('bold') + 'Success' if result else colored.fg('red') +
-               colored.attr('bold') + 'Failure', colored.attr('reset')))
+               colored.attr('bold') + 'Failure', colored.fg('cyan') +
+               colored.attr('bold') + when_details, colored.attr('reset')))
         print(' ')
         print(' ', flush=True)
 
