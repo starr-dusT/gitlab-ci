@@ -127,10 +127,10 @@ through the `winpty` wrapper, for example `winpty gitlabci-local`.
   * **name:** IMAGE_NAME
   * **entrypoint:** ['COMMANDS']
 - **include:**
-  * **local:** FILE_PATH
+  * **local:** FILE_PATHS
 - **variables:**
-  * VARIABLE: value
-- .TEMPLATE: &TEMPLATE
+  * VARIABLES: VALUES
+- .TEMPLATES: &TEMPLATES
 - **stages:**
   * STAGE_NAMES
 - **before_script:**
@@ -143,9 +143,9 @@ through the `winpty` wrapper, for example `winpty gitlabci-local`.
   * **image:**
     + **name:** IMAGE_NAME
     + **entrypoint:** ['COMMANDS']
-  * **<<:** *TEMPLATE
+  * **<<:** *TEMPLATES
   * **variables:**
-    + **VARIABLE:** value
+    + **VARIABLES:** VALUES
   * **before_script:**
     + COMMANDS
   * **script:**
@@ -157,7 +157,7 @@ through the `winpty` wrapper, for example `winpty gitlabci-local`.
     + **max:** RETRY_COUNT
   * **tags:**
     + MANUAL_TAGS
-  * **when:** on\_success/manual/on\_failure/always/
+  * **when:** on\_success/manual/on\_failure/always
 
 ---
 
