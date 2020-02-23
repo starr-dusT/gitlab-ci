@@ -97,6 +97,7 @@ def parser(options, data, environment):
         'variables': dict()
     })
     jobs = dict()
+    names_local = False
     stages = dict()
 
     # Parse nested include
@@ -185,6 +186,12 @@ def parser(options, data, environment):
             if not options.manual:
                 options.manual = local['manual']
 
+        # Parse local names
+        if 'names' in local:
+            if not options.names and not options.pipeline:
+                names_local = True
+                options.names = local['names']
+
         # Parse local network
         if 'network' in local:
             if not options.network:
@@ -192,7 +199,7 @@ def parser(options, data, environment):
 
         # Parse local pipeline
         if 'pipeline' in local:
-            if not options.pipeline and not options.names:
+            if not options.pipeline and (not options.names or names_local):
                 options.pipeline = local['pipeline']
 
         # Parse local quiet

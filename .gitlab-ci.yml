@@ -124,7 +124,10 @@ stages:
     - gitlabci-local -c ./tests/entrypoints/.gitlab-ci.yml -p
     - gitlabci-local -c ./tests/retry/.gitlab-ci.yml -p failure && exit 1 || true
     - gitlabci-local -c ./tests/retry/.gitlab-ci.yml -p success
+    - gitlabci-local -c ./tests/local/.gitlab-ci.yml
     - gitlabci-local -c ./tests/local/.gitlab-ci.yml -p
+    - gitlabci-local -c ./tests/local/.gitlab-ci.yml 'Job 1'
+    - gitlabci-local -c ./tests/local/.gitlab-ci.yml -p local_first
     - gitlabci-local -c ./tests/local/.gitlab-ci.yml -v ./tests/configurations:/opt/src/tests:ro -p
     - gitlabci-local -c ./tests/local/.gitlab-ci.yml -n bridge 'Job 2'
     - gitlabci-local -c ./tests/local/.gitlab-ci.yml -n host 'Job 2'

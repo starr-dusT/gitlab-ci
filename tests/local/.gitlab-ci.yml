@@ -1,7 +1,13 @@
 image: alpine:3
 
 stages:
-  - local
+  - local_first
+  - local_second
+  - local_third
+  - local_forth
+  - local_fifth
+  - local_sixth
+  - local_seventh
 
 .local:
   after: true
@@ -34,6 +40,13 @@ stages:
     entrypoint:
       - linux32
   manual: true
+  names:
+    - local_first
+    - local_second
+    - local_third
+    - local_forth
+    - local_fifth
+    - local_sixth
   network: host
   pipeline: true
   quiet: true
@@ -50,7 +63,7 @@ variables:
   VARIABLE_GLOBAL: 'GLOBAL_VALUE'
 
 'Job 1':
-  stage: local
+  stage: local_first
   before_script:
     - echo '__BEFORE__'
   script:
@@ -61,7 +74,7 @@ variables:
     - echo '__AFTER__'
 
 'Job 2':
-  stage: local
+  stage: local_second
   image: alpine:3
   before_script:
     - echo '__BEFORE__'
@@ -77,7 +90,7 @@ variables:
     - echo '__AFTER__'
 
 'Job 3':
-  stage: local
+  stage: local_third
   image: alpine:3
   before_script:
     - echo '__BEFORE__'
@@ -88,7 +101,7 @@ variables:
   when: manual
 
 'Job 4':
-  stage: local
+  stage: local_forth
   image: alpine:3
   before_script:
     - echo '__BEFORE__'
@@ -100,7 +113,7 @@ variables:
     - deploy
 
 'Job 5':
-  stage: local
+  stage: local_fifth
   image: alpine:3
   before_script:
     - echo '__BEFORE__'
@@ -112,7 +125,7 @@ variables:
     - publish
 
 'Job 6':
-  stage: local
+  stage: local_sixth
   image: alpine:3
   script:
     - echo "HOSTNAME=${HOSTNAME}"
@@ -120,3 +133,9 @@ variables:
     - echo "VARIABLE_ENV_FILE=${VARIABLE_ENV_FILE}"
     - echo "VARIABLE_GLOBAL=${VARIABLE_GLOBAL}"
     - echo "VARIABLE_SET=${VARIABLE_SET}"
+
+'Job 7':
+  stage: local_seventh
+  image: alpine:3
+  script:
+    - echo "__NO_EXPECTED__"
