@@ -1,13 +1,19 @@
 
-<a name="1.0.6"></a>
-## [1.0.6](https://gitlab.com/AdrianDC/gitlabci-local/compare/1.0.5...1.0.6) (2020-02-23)
+<a name="1.1.0"></a>
+## [1.1.0](https://gitlab.com/AdrianDC/gitlabci-local/compare/1.0.5...1.1.0) (2020-02-23)
 
 ### CHANGELOG
 
 * regenerate release tag changes history
+* regenerate release tag changes history
 
 ### Chore
 
+* finish [#48](https://gitlab.com/AdrianDC/gitlabci-local/issues/48): add missing '.local:network' mention in README
+* regenerate preview GIF documentation
+* finish [#56](https://gitlab.com/AdrianDC/gitlabci-local/issues/56): cleanup supported .gitlab-ci.yml features
+* refresh the README usage helper parameters list
+* fix the README and helper tool name to 'gitlabci-local'
 * finish [#54](https://gitlab.com/AdrianDC/gitlabci-local/issues/54): add missing tests/includes unit tests call
 * resolve [#56](https://gitlab.com/AdrianDC/gitlabci-local/issues/56): document all supported .gitlab-ci.yml features
 * finish [#47](https://gitlab.com/AdrianDC/gitlabci-local/issues/47): add '.local:env' mention in README.md
@@ -16,8 +22,14 @@
 * ensure Unit Tests jobs timeout after 10 minutes
 * resolve colored codestyle with YAPF
 
+### Docs
+
+* regenerate preview GIF with latest changes for 'failures'
+
 ### Feat
 
+* add support for 'names' in .local node configurations
+* add support for 'when:' result details for clarity
 * study [#55](https://gitlab.com/AdrianDC/gitlabci-local/issues/55): add 'Unit Tests (PyPI)' manual customized job
 * implement [#54](https://gitlab.com/AdrianDC/gitlabci-local/issues/54): initial support for include:local nodes
 * resolve [#47](https://gitlab.com/AdrianDC/gitlabci-local/issues/47): add support for env parsing in .local node
