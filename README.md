@@ -26,10 +26,10 @@ is the common and unique interface between GitLab CI and gitlabci-local.
 ## Usage
 
 ```shell
-usage: gitlabci-local [-h] [-q] [-c CONFIGURATION] [-B] [-A] [-m] [-p]
-                             [-e ENV] [-t TAGS] [-v VOLUME] [-w WORKDIR]
-                             [--all] [--defaults] [-d | -s | -l | --pull]
-                             [names [names ...]]
+usage: gitlabci-local [-h] [-q] [-c CONFIGURATION] [-B] [-A] [-m] [-n NETWORK]
+                      [-p] [-e ENV] [-t TAGS] [-v VOLUME] [-w WORKDIR] [--all]
+                      [--defaults] [-d | -s | -l | --pull]
+                      [names [names ...]]
 
 gitlabci-local: Launch .gitlab-ci.yml jobs locally
 ```
