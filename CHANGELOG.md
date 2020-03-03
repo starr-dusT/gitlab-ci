@@ -1,4 +1,17 @@
 
+<a name="1.1.1"></a>
+## [1.1.1](https://gitlab.com/AdrianDC/gitlabci-local/compare/1.1.0...1.1.1) (2020-03-03)
+
+### CHANGELOG
+
+* regenerate release tag changes history
+
+### Feat
+
+* implement [#57](https://gitlab.com/AdrianDC/gitlabci-local/issues/57): add --debug support to keep runner execution
+* implement [#58](https://gitlab.com/AdrianDC/gitlabci-local/issues/58): handle SIGTERM as an interruption
+
+
 <a name="1.1.0"></a>
 ## [1.1.0](https://gitlab.com/AdrianDC/gitlabci-local/compare/1.0.5...1.1.0) (2020-02-23)
 
