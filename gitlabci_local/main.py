@@ -67,6 +67,8 @@ def main():
                         help='Override the container\'s working path')
     parser.add_argument('--all', dest='all', action='store_true',
                         help='Enable all jobs by default in selections')
+    parser.add_argument('--debug', dest='debug', action='store_true',
+                        help='Keep runners active for debugging purposes')
     parser.add_argument('--defaults', dest='defaults', action='store_true',
                         help='Use default variables for .local:configurations')
     parser.add_argument('--image', dest='image', help=argparse.SUPPRESS)

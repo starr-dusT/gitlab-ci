@@ -14,6 +14,9 @@ import time
 from .main import NAME
 from .puller import pull
 
+# Constants
+marker_debug = '__GITLAB_CI_LOCAL_DEBUG__'
+
 # Launcher
 def launcher(options, jobs):
 
@@ -58,6 +61,7 @@ def launcher(options, jobs):
 def runner(options, job_data, last_result):
 
     # Variables
+    local_runner = False
     result = False
 
     # Filter when
@@ -68,6 +72,10 @@ def runner(options, job_data, last_result):
 
     # Prepare image
     image = job_data['image']
+
+    # Prepare local runner
+    if image in ['local']:
+        local_runner = True
 
     # Prepare network
     network = 'bridge'
@@ -107,6 +115,10 @@ def runner(options, job_data, last_result):
     scripts += job_data['script']
     if options.after:
         scripts += job_data['after_script']
+
+    # Append debug scripts
+    if not local_runner and options.debug:
+        scripts += ['echo "' + marker_debug + '"', 'tail -f /dev/null']
 
     # Prepare commands
     scriptFile = tempfile.NamedTemporaryFile(delete=True)
@@ -179,7 +191,7 @@ def runner(options, job_data, last_result):
         variables[variable] = os.path.expandvars(str(job_data['variables'][variable]))
 
     # Container execution
-    if image not in ['local']:
+    if not local_runner:
 
         # Image validation
         try:
@@ -216,9 +228,22 @@ def runner(options, job_data, last_result):
         # Show container logs
         try:
             for line in container.logs(stream=True):
-                print(line.decode('utf-8'), end='', flush=True)
+                output = line.decode('utf-8')
+                if marker_debug in output:
+                    break
+                print(output, end='', flush=True)
         except:
             pass
+
+        # Runner debug mode
+        if options.debug:
+            print(' ')
+            print(
+                ' %s> INFORMATION: %sUse \'%sdocker exec -it %s sh%s\' commands for debugging. Interrupt with Ctrl+C...%s'
+                % (colored.fg('yellow') + colored.attr('bold'), colored.attr('reset') +
+                   colored.attr('bold'), colored.fg('cyan'), container.name,
+                   colored.attr('reset') + colored.attr('bold'), colored.attr('reset')))
+            print(' ', flush=True)
 
         # Check container status
         wait = container.wait()

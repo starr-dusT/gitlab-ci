@@ -135,6 +135,11 @@ def parser(options, data, environment):
             if options.before:
                 options.before = local['before']
 
+        # Parse local debug
+        if 'debug' in local:
+            if not options.debug:
+                options.debug = local['debug']
+
         # Parse local defaults
         if 'defaults' in local:
             if not options.defaults:

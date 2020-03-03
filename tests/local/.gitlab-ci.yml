@@ -29,6 +29,7 @@ stages:
         - 'value1'
         - 'value2'
         - 'value3'
+  debug: false
   defaults: true
   env:
     - LOGNAME

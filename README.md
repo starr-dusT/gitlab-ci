@@ -28,7 +28,7 @@ is the common and unique interface between GitLab CI and gitlabci-local.
 ```shell
 usage: gitlabci-local [-h] [-q] [-c CONFIGURATION] [-B] [-A] [-m] [-n NETWORK]
                       [-p] [-e ENV] [-t TAGS] [-v VOLUME] [-w WORKDIR] [--all]
-                      [--defaults] [-d | -s | -l | --pull]
+                      [--debug] [--defaults] [-d | -s | -l | --pull]
                       [names [names ...]]
 
 gitlabci-local: Launch .gitlab-ci.yml jobs locally
@@ -53,6 +53,7 @@ gitlabci-local: Launch .gitlab-ci.yml jobs locally
 | -v VOLUME            | Mount VOLUME or HOST:TARGET in Docker containers                                  |
 | -w WORKDIR           | Override the container's working path                                             |
 | --all                | Enable all jobs by default in selections                                          |
+| --debug              | Keep runners active for debugging purposes                                        |
 | --defaults           | Use default variables for .local:configurations                                   |
 | -d, --dump           | Dump parsed .gitlab-ci.yml configuration                                          |
 | -s, --select         | Force jobs selection from enumerated names                                        |
@@ -77,7 +78,7 @@ Examples for each of these can be found in the `configurations` unit tests: [tes
 gitlabci-local implements further support of most parameters  
 inside the `.local` to ease default parameters definitions.
 
-Supported local values include `after`, `all`, `before`, `configurations`, `defaults`,  
+Supported local values include `after`, `all`, `before`, `configurations`, `debug`, `defaults`,  
 `env`, `image`, `manual`, `names`, `network`, `pipeline`, `quiet`, `tags`, `volumes`, `workdir`.
 
 Examples for each of these can be found in the `local` unit tests: [tests/local](https://gitlab.com/AdrianDC/gitlabci-local/blob/master/tests/local/.gitlab-ci.yml)
