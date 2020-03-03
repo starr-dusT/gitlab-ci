@@ -205,8 +205,10 @@ def runner(options, job_data, last_result):
             container.stop(timeout=0)
 
         # Register interruption handler
-        originalInterruptionHandler = signal.getsignal(signal.SIGINT)
+        originalINTHandler = signal.getsignal(signal.SIGINT)
+        originalTERMHandler = signal.getsignal(signal.SIGTERM)
         signal.signal(signal.SIGINT, interruptHandler)
+        signal.signal(signal.SIGTERM, interruptHandler)
 
         # Execution wrapper
         success = False
@@ -230,7 +232,8 @@ def runner(options, job_data, last_result):
         container.remove(force=True)
 
         # Unregister interruption handler
-        signal.signal(signal.SIGINT, originalInterruptionHandler)
+        signal.signal(signal.SIGINT, originalINTHandler)
+        signal.signal(signal.SIGTERM, originalTERMHandler)
 
         # Result evaluation
         if job_data['when'] in ['on_failure', 'always']:
