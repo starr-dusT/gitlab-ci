@@ -108,6 +108,7 @@ def runner(options, job_data, last_result):
     # Prepare entrypoint and scripts
     entrypoint = job_data['entrypoint']
     scripts = []
+    scriptsDebug = []
 
     # Append before_scripts, scripts, after_scripts
     if options.before:
@@ -118,19 +119,39 @@ def runner(options, job_data, last_result):
 
     # Append debug scripts
     if not local_runner and options.debug:
-        scripts += ['echo "' + marker_debug + '"', 'tail -f /dev/null']
+        scriptsDebug += ['echo "' + marker_debug + '"', 'tail -f /dev/null']
 
     # Prepare commands
     scriptFile = tempfile.NamedTemporaryFile(delete=True)
     with open(scriptFile.name, mode='w') as scriptStream:
 
         # Prepare script context
-        scriptStream.write('#!/bin/sh\n')
-        scriptStream.write('set -ex\n')
+        scriptStream.write('#!/bin/sh')
+        scriptStream.write('\n')
+        scriptStream.write('(')
+        scriptStream.write('\n')
+        scriptStream.write('set -ex')
+        scriptStream.write('\n')
 
         # Prepare script commands
         scriptStream.write('\n'.join(scripts))
+        scriptStream.write('\n')
+        scriptStream.write(')')
         scriptStream.flush()
+
+        # Prepare debug script commands
+        if len(scriptsDebug) > 0:
+            scriptStream.write('; ');
+            scriptStream.write('(');
+            scriptStream.write('\n')
+            scriptStream.write('set -x')
+            scriptStream.write('\n')
+
+            # Prepare script commands
+            scriptStream.write('\n'.join(scriptsDebug))
+            scriptStream.write('\n')
+            scriptStream.write(')')
+            scriptStream.flush()
 
     # Prepare script execution
     script_stat = os.stat(scriptStream.name)
