@@ -139,4 +139,4 @@ variables:
   stage: local_seventh
   image: alpine:3
   script:
-    - echo "__NO_EXPECTED__"
+    - echo "__NOT_EXPECTED__"
