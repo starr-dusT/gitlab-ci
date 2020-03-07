@@ -1,4 +1,17 @@
 
+<a name="1.1.2"></a>
+## [1.1.2](https://gitlab.com/AdrianDC/gitlabci-local/compare/1.1.1...1.1.2) (2020-03-07)
+
+### CHANGELOG
+
+* regenerate release tag changes history
+
+### Fix
+
+* tests: minor local test output syntax cleanup
+* finish [#57](https://gitlab.com/AdrianDC/gitlabci-local/issues/57): ensure --debug works upon runner failures too
+
+
 <a name="1.1.1"></a>
 ## [1.1.1](https://gitlab.com/AdrianDC/gitlabci-local/compare/1.1.0...1.1.1) (2020-03-03)
 
