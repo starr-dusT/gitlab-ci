@@ -1,4 +1,26 @@
 
+<a name="1.1.3"></a>
+## [1.1.3](https://gitlab.com/AdrianDC/gitlabci-local/compare/1.1.2...1.1.3) (2020-03-10)
+
+### CHANGELOG
+
+* regenerate release tag changes history
+
+### Chore
+
+* add 'Dependencies' development requirements local job
+
+### Feat
+
+* implement [#59](https://gitlab.com/AdrianDC/gitlabci-local/issues/59): add support for bash in debug mode
+* implement [#60](https://gitlab.com/AdrianDC/gitlabci-local/issues/60): adapt debug command if bash exists
+
+### Fix
+
+* implement [#61](https://gitlab.com/AdrianDC/gitlabci-local/issues/61): handle before_script and after_script like CI
+* resolve Python codestyle with YAPF in parser and runner
+
+
 <a name="1.1.2"></a>
 ## [1.1.2](https://gitlab.com/AdrianDC/gitlabci-local/compare/1.1.1...1.1.2) (2020-03-07)
 
