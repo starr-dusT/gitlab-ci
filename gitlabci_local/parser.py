@@ -170,7 +170,8 @@ def parser(options, data, environment):
 
                         # Define default environment variable
                         if variable not in global_values['variables']:
-                            global_values['variables'][variable] = environment_file_values[variable]
+                            global_values['variables'][
+                                variable] = environment_file_values[variable]
 
                 # Parse VARIABLE
                 else:

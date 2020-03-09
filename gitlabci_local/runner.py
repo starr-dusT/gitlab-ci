@@ -141,8 +141,8 @@ def runner(options, job_data, last_result):
 
         # Prepare debug script commands
         if len(scriptsDebug) > 0:
-            scriptStream.write('; ');
-            scriptStream.write('(');
+            scriptStream.write('; ')
+            scriptStream.write('(')
             scriptStream.write('\n')
             scriptStream.write('set -x')
             scriptStream.write('\n')
@@ -223,8 +223,9 @@ def runner(options, job_data, last_result):
         # Launch container
         container = client.containers.run(
             image, command=scriptFile.name, detach=True, entrypoint=entrypoint,
-            environment=variables, network_mode=network, remove=False, stdout=True,
-            stderr=True, stream=True, volumes=volumes, working_dir=pathWorkDir)
+            environment=variables, network_mode=network, privileged=True, remove=False,
+            stdout=True, stderr=True, stream=True, volumes=volumes,
+            working_dir=pathWorkDir)
 
         # Create interruption handler
         def interruptHandler(signal, frame):
