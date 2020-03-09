@@ -45,6 +45,17 @@ stages:
   only:
     - local
 
+'Dependencies':
+  stage: prepare
+  image: local
+  script:
+    - sudo pip3 install -r requirements-dev.txt --upgrade
+    - sudo pip3 install -r requirements.txt --upgrade
+  tags:
+    - local
+  only:
+    - local
+
 'Build':
   stage: build
   script:
