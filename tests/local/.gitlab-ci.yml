@@ -12,6 +12,7 @@ stages:
 .local:
   after: true
   all: true
+  bash: false
   before: true
   configurations:
     VARIABLE_1:

@@ -119,7 +119,9 @@ def runner(options, job_data, last_result):
     # Prepare scripts
     scriptsCommands += job_data['script']
     if not local_runner:
-        if options.debug:
+        if options.bash:
+            scriptsCommands = []
+        if options.bash or options.debug:
             scriptsDebug += ['echo "' + marker_debug + '"', 'tail -f /dev/null']
 
     # Prepare after_scripts
@@ -296,8 +298,8 @@ def runner(options, job_data, last_result):
         except:
             pass
 
-        # Runner debug mode
-        if options.debug:
+        # Runner bash or debug mode
+        if options.bash or options.debug:
             print(' ')
             exit_code, output = container.exec_run('which bash')
             shell = 'sh'

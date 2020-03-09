@@ -130,6 +130,11 @@ def parser(options, data, environment):
             if not options.all:
                 options.all = local['all']
 
+        # Parse local bash
+        if 'bash' in local:
+            if not options.bash:
+                options.bash = local['bash']
+
         # Parse local before
         if 'before' in local:
             if options.before:

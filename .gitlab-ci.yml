@@ -144,6 +144,7 @@ stages:
     - gitlabci-local -c ./tests/local/.gitlab-ci.yml -n host 'Job 2'
     - gitlabci-local -c ./tests/local/.gitlab-ci.yml -n none 'Job 2'
     - gitlabci-local -c ./tests/includes/.gitlab-ci.yml -p
+    - timeout 5 gitlabci-local -c ./tests/simple/.gitlab-ci.yml 'Job 1' --bash && exit 1 || true
     - timeout 5 gitlabci-local -c ./tests/simple/.gitlab-ci.yml 'Job 1' --debug && exit 1 || true
 
 'Unit Tests (3.6)':
