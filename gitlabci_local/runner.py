@@ -260,10 +260,14 @@ def runner(options, job_data, last_result):
         # Runner debug mode
         if options.debug:
             print(' ')
+            exit_code, output = container.exec_run('which bash')
+            shell = 'sh'
+            if exit_code == 0:
+                shell = 'bash'
             print(
-                ' %s> INFORMATION: %sUse \'%sdocker exec -it %s sh%s\' commands for debugging. Interrupt with Ctrl+C...%s'
+                ' %s> INFORMATION: %sUse \'%sdocker exec -it %s %s%s\' commands for debugging. Interrupt with Ctrl+C...%s'
                 % (colored.fg('yellow') + colored.attr('bold'), colored.attr('reset') +
-                   colored.attr('bold'), colored.fg('cyan'), container.name,
+                   colored.attr('bold'), colored.fg('cyan'), container.name, shell,
                    colored.attr('reset') + colored.attr('bold'), colored.attr('reset')))
             print(' ', flush=True)
 
