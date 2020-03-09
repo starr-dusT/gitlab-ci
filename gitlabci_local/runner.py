@@ -107,51 +107,90 @@ def runner(options, job_data, last_result):
 
     # Prepare entrypoint and scripts
     entrypoint = job_data['entrypoint']
-    scripts = []
+    scriptsAfter = []
+    scriptsBefore = []
+    scriptsCommands = []
     scriptsDebug = []
 
-    # Append before_scripts, scripts, after_scripts
+    # Prepare before_scripts
     if options.before:
-        scripts += job_data['before_script']
-    scripts += job_data['script']
-    if options.after:
-        scripts += job_data['after_script']
+        scriptsBefore += job_data['before_script']
 
-    # Append debug scripts
-    if not local_runner and options.debug:
-        scriptsDebug += ['echo "' + marker_debug + '"', 'tail -f /dev/null']
+    # Prepare scripts
+    scriptsCommands += job_data['script']
+    if not local_runner:
+        if options.debug:
+            scriptsDebug += ['echo "' + marker_debug + '"', 'tail -f /dev/null']
+
+    # Prepare after_scripts
+    if options.after:
+        scriptsAfter += job_data['after_script']
 
     # Prepare commands
     scriptFile = tempfile.NamedTemporaryFile(delete=True)
     with open(scriptFile.name, mode='w') as scriptStream:
 
-        # Prepare script context
+        # Prepare execution context
         scriptStream.write('#!/bin/sh')
         scriptStream.write('\n')
-        scriptStream.write('(')
-        scriptStream.write('\n')
-        scriptStream.write('set -ex')
+        scriptStream.write('result=1')
         scriptStream.write('\n')
 
+        # Prepare before_script commands
+        if len(scriptsBefore) > 0:
+            scriptStream.write('(')
+            scriptStream.write('\n')
+            scriptStream.write('set -ex')
+            scriptStream.write('\n')
+            scriptStream.write('\n'.join(scriptsBefore))
+            scriptStream.write('\n')
+            scriptStream.write(') && ')
+            scriptStream.flush()
+
         # Prepare script commands
-        scriptStream.write('\n'.join(scripts))
-        scriptStream.write('\n')
-        scriptStream.write(')')
-        scriptStream.flush()
+        if len(scriptsCommands) > 0:
+            scriptStream.write('(')
+            scriptStream.write('\n')
+            scriptStream.write('set -ex')
+            scriptStream.write('\n')
+            scriptStream.write('\n'.join(scriptsCommands))
+            scriptStream.write('\n')
+            scriptStream.write(')')
+            scriptStream.write('\n')
+            scriptStream.write('result=${?}')
+            scriptStream.flush()
+        else:
+            scriptStream.write('true')
+            scriptStream.flush()
 
         # Prepare debug script commands
         if len(scriptsDebug) > 0:
-            scriptStream.write('; ')
+            scriptStream.write('\n')
             scriptStream.write('(')
             scriptStream.write('\n')
             scriptStream.write('set -x')
             scriptStream.write('\n')
-
-            # Prepare script commands
             scriptStream.write('\n'.join(scriptsDebug))
             scriptStream.write('\n')
             scriptStream.write(')')
             scriptStream.flush()
+
+        # Prepare after_script commands
+        if len(scriptsAfter) > 0:
+            scriptStream.write('\n')
+            scriptStream.write('(')
+            scriptStream.write('\n')
+            scriptStream.write('set -ex')
+            scriptStream.write('\n')
+            scriptStream.write('\n'.join(scriptsAfter))
+            scriptStream.write('\n')
+            scriptStream.write(')')
+            scriptStream.flush()
+
+        # Prepare execution result
+        scriptStream.write('\n')
+        scriptStream.write('exit "${result}"')
+        scriptStream.write('\n')
 
     # Prepare script execution
     script_stat = os.stat(scriptStream.name)
