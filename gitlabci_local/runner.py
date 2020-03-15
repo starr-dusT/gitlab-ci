@@ -138,32 +138,39 @@ def runner(options, job_data, last_result):
         scriptStream.write('result=1')
         scriptStream.write('\n')
 
+        # Prepare before_script/script context
+        scriptStream.write('(')
+        scriptStream.write('\n')
+        scriptStream.write('set -ex')
+        scriptStream.write('\n')
+
         # Prepare before_script commands
         if len(scriptsBefore) > 0:
-            scriptStream.write('(')
-            scriptStream.write('\n')
-            scriptStream.write('set -ex')
+            scriptStream.write('{')
             scriptStream.write('\n')
             scriptStream.write('\n'.join(scriptsBefore))
             scriptStream.write('\n')
-            scriptStream.write(') && ')
+            scriptStream.write('} && ')
             scriptStream.flush()
 
         # Prepare script commands
         if len(scriptsCommands) > 0:
-            scriptStream.write('(')
-            scriptStream.write('\n')
-            scriptStream.write('set -ex')
+            scriptStream.write('{')
             scriptStream.write('\n')
             scriptStream.write('\n'.join(scriptsCommands))
             scriptStream.write('\n')
-            scriptStream.write(')')
-            scriptStream.write('\n')
-            scriptStream.write('result=${?}')
+            scriptStream.write('}')
             scriptStream.flush()
         else:
-            scriptStream.write('true')
+            scriptStream.write('false')
             scriptStream.flush()
+
+        # Finish before_script/script context
+        scriptStream.write('\n')
+        scriptStream.write(')')
+        scriptStream.write('\n')
+        scriptStream.write('result=${?}')
+        scriptStream.flush()
 
         # Prepare debug script commands
         if len(scriptsDebug) > 0:
@@ -184,7 +191,11 @@ def runner(options, job_data, last_result):
             scriptStream.write('\n')
             scriptStream.write('set -ex')
             scriptStream.write('\n')
+            scriptStream.write('{')
+            scriptStream.write('\n')
             scriptStream.write('\n'.join(scriptsAfter))
+            scriptStream.write('\n')
+            scriptStream.write('}')
             scriptStream.write('\n')
             scriptStream.write(')')
             scriptStream.flush()
