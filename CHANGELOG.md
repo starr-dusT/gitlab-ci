@@ -1,4 +1,20 @@
 
+<a name="1.1.5"></a>
+## [1.1.5](https://gitlab.com/AdrianDC/gitlabci-local/compare/1.1.4...1.1.5) (2020-03-15)
+
+### CHANGELOG
+
+* regenerate release tag changes history
+
+### Chore
+
+* deprecate 'Deploy Test' and enforce automatic tags release
+
+### Fix
+
+* resolve UTF-8 stdout outputs from container logs stream
+
+
 <a name="1.1.4"></a>
 ## [1.1.4](https://gitlab.com/AdrianDC/gitlabci-local/compare/1.1.3...1.1.4) (2020-03-15)
 
