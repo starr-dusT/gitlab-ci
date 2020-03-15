@@ -175,26 +175,15 @@ stages:
   only:
     - local
 
-'Deploy Test':
-  stage: deploy
-  variables:
-    TWINE_PASSWORD_TEST: ${TWINE_PASSWORD_TEST}
-  script:
-    - pip install -r requirements-dev.txt --upgrade
-    - python setup.py bdist_wheel
-    - twine upload -u '__token__' -p "${TWINE_PASSWORD_TEST}" --repository testpypi dist/*
-  only:
-    - tags
-  when: manual
-
 'Deploy Release':
   stage: deploy
   variables:
     TWINE_PASSWORD: ${TWINE_PASSWORD}
+  before_script:
+    - if [ ! "${CI_COMMIT_REF_PROTECTED}" = 'true' ]; then echo '[ERROR] Please protect this tag...'; exit 1; fi
   script:
     - pip install -r requirements-dev.txt --upgrade
     - python setup.py bdist_wheel
     - twine upload -u '__token__' -p "${TWINE_PASSWORD}" dist/*
   only:
     - tags
-  when: manual
