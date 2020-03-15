@@ -1,4 +1,16 @@
 
+<a name="1.1.4"></a>
+## [1.1.4](https://gitlab.com/AdrianDC/gitlabci-local/compare/1.1.3...1.1.4) (2020-03-15)
+
+### CHANGELOG
+
+* regenerate release tag changes history
+
+### Fix
+
+* fix [#61](https://gitlab.com/AdrianDC/gitlabci-local/issues/61): handle before_script and script together like CI
+
+
 <a name="1.1.3"></a>
 ## [1.1.3](https://gitlab.com/AdrianDC/gitlabci-local/compare/1.1.2...1.1.3) (2020-03-10)
 
