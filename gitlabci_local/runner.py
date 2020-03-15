@@ -7,6 +7,7 @@ import os
 from pathlib import Path
 import signal
 import stat
+import sys
 import tempfile
 import time
 
@@ -302,10 +303,10 @@ def runner(options, job_data, last_result):
         # Show container logs
         try:
             for line in container.logs(stream=True):
-                output = line.decode('utf-8')
-                if marker_debug in output:
+                if marker_debug in line.decode():
                     break
-                print(output, end='', flush=True)
+                sys.stdout.buffer.write(line)
+                sys.stdout.buffer.flush()
         except:
             pass
 
