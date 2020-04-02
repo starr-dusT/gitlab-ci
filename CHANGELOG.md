@@ -1,4 +1,25 @@
 
+<a name="1.1.6"></a>
+## [1.1.6](https://gitlab.com/AdrianDC/gitlabci-local/compare/1.1.5...1.1.6) (2020-04-02)
+
+### CHANGELOG
+
+* regenerate release tag changes history
+
+### Chore
+
+* validate [#64](https://gitlab.com/AdrianDC/gitlabci-local/issues/64): ensure first failure drops the script
+
+### Feat
+
+* implement [#62](https://gitlab.com/AdrianDC/gitlabci-local/issues/62): add support for 'allow_failure: true' options
+* implement [#63](https://gitlab.com/AdrianDC/gitlabci-local/issues/63): add execution timings for every job
+
+### Fix
+
+* resolve [#65](https://gitlab.com/AdrianDC/gitlabci-local/issues/65): synchronize stdout and stderr runner outputs
+
+
 <a name="1.1.5"></a>
 ## [1.1.5](https://gitlab.com/AdrianDC/gitlabci-local/compare/1.1.4...1.1.5) (2020-03-15)
 

@@ -19,7 +19,7 @@ is the common and unique interface between GitLab CI and gitlabci-local.
 
 ## Preview
 
-![preview.gif](https://gitlab.com/AdrianDC/gitlabci-local/raw/1.1.5/docs/preview.gif)
+![preview.gif](https://gitlab.com/AdrianDC/gitlabci-local/raw/1.1.6/docs/preview.gif)
 
 ---
 
