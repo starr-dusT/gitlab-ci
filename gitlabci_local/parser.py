@@ -348,6 +348,7 @@ def stager(options, job_name, job_data, global_values):
     job['after_script'] = global_values['after_script'][:]
     job['retry'] = 0
     job['when'] = 'on_success'
+    job['allow_failure'] = False
     job['tags'] = []
 
     # Extract job image
@@ -392,6 +393,10 @@ def stager(options, job_name, job_data, global_values):
             'on_success', 'on_failure', 'always', 'manual'
     ]:
         job['when'] = job_data['when']
+
+    # Extract job allow_failure
+    if 'allow_failure' in job_data and job_data['allow_failure'] in [True, False]:
+        job['allow_failure'] = job_data['allow_failure']
 
     # Extract job tags
     if 'tags' in job_data and job_data['tags']:

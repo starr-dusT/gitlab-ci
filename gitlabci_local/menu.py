@@ -65,28 +65,39 @@ def selector(options, jobs):
             stage = jobs[job]['stage']
             jobs_choices += PyInquirer.Separator('\n Stage %s:' % (stage)),
 
+        # Initial job details
+        job_details = ''
+        job_details_list = []
+
         # Disabled jobs
         disabled = False
-        when = ''
         if jobs[job]['when'] in ['manual'] and not options.manual:
             disabled = 'Manual'
         else:
             if jobs[job]['when'] == 'manual':
-                when = ' (Manual)'
+                job_details_list += ['Manual']
             elif jobs[job]['when'] == 'on_failure':
-                when = ' (On failure)'
+                job_details_list += ['On failure']
             jobs_available = True
+
+        # Failure allowed jobs
+        if jobs[job]['allow_failure']:
+            job_details_list += ['Failure allowed']
 
         # Register job tags
         tags = ''
         if jobs[job]['tags']:
             tags = ' [%s]' % (','.join(jobs[job]['tags']))
 
+        # Prepare job details
+        if job_details_list:
+            job_details = ' (' + ', '.join(job_details_list) + ')'
+
         # Job choices
         jobs_index += 1
         jobs_choices += [{
             # 'key': str(jobs_index),
-            'name': '%s%s%s' % (jobs[job]['name'], tags, when),
+            'name': '%s%s%s' % (jobs[job]['name'], tags, job_details),
             'value': job,
             'checked': default_check,
             'disabled': disabled

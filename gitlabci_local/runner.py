@@ -370,10 +370,21 @@ def runner(options, job_data, last_result):
         os.environ.clear()
         os.environ.update(_environ)
 
+    # Initial job details
+    job_details = ''
+    job_details_list = []
+
     # Prepare when details
-    when_details = ''
     if job_data['when'] not in ['on_success']:
-        when_details = ' (when: %s)' % (job_data['when'])
+        job_details_list += ['when: %s' % (job_data['when'])]
+
+    # Prepare allow_failure details
+    if job_data['allow_failure']:
+        job_details_list += ['failure allowed']
+
+    # Prepare job details
+    if job_details_list:
+        job_details = ' (' + ', '.join(job_details_list) + ')'
 
     # Evalulate duration time
     time_duration = time.time() - time_start
@@ -392,9 +403,14 @@ def runner(options, job_data, last_result):
               (colored.fg('yellow') + colored.attr('bold'), colored.fg('green') +
                colored.attr('bold') + 'Success' if result else colored.fg('red') +
                colored.attr('bold') + 'Failure', time_string, colored.fg('cyan') +
-               colored.attr('bold') + when_details, colored.attr('reset')))
+               colored.attr('bold') + job_details, colored.attr('reset')))
         print(' ')
         print(' ', flush=True)
+
+    # Allowed failure result
+    if job_data['when'] not in ['on_failure', 'always'
+                                ] and not result and job_data['allow_failure']:
+        result = True
 
     # Result
     return result

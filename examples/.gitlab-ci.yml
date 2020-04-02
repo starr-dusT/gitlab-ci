@@ -66,6 +66,30 @@ after_script:
     - whoami
     - echo '__OVERRIDE_TEMPLATE_AFTER_SCRIPT__'
 
+'Job 2 - 4':
+  <<: *template-second
+  script:
+    - whoami
+    - 'false'
+    - date
+  allow_failure: true
+
+'Job 2 - 5':
+  <<: *template-second
+
+'Job 2 - 6':
+  <<: *template-second
+  script:
+    - whoami
+    - 'false'
+    - date
+  when: manual
+  allow_failure: true
+
+'Job 2 - 7':
+  <<: *template-second
+  when: manual
+
 'Job 3 - 1':
   stage: failure_stage
   script:

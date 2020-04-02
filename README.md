@@ -160,6 +160,7 @@ through the `winpty` wrapper, for example `winpty gitlabci-local`.
   * **tags:**
     + MANUAL_TAGS
   * **when:** on\_success/manual/on\_failure/always
+  * **allow_failure:** true/false
 
 ---
 
