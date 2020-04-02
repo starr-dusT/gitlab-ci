@@ -169,7 +169,7 @@ def runner(options, job_data, last_result):
 
         # Finish before_script/script context
         scriptStream.write('\n')
-        scriptStream.write(')')
+        scriptStream.write(') 2>&1')
         scriptStream.write('\n')
         scriptStream.write('result=${?}')
         scriptStream.flush()
@@ -183,7 +183,7 @@ def runner(options, job_data, last_result):
             scriptStream.write('\n')
             scriptStream.write('\n'.join(scriptsDebug))
             scriptStream.write('\n')
-            scriptStream.write(')')
+            scriptStream.write(') 2>&1')
             scriptStream.flush()
 
         # Prepare after_script commands
@@ -199,7 +199,7 @@ def runner(options, job_data, last_result):
             scriptStream.write('\n')
             scriptStream.write('}')
             scriptStream.write('\n')
-            scriptStream.write(')')
+            scriptStream.write(') 2>&1')
             scriptStream.flush()
 
         # Prepare execution result
