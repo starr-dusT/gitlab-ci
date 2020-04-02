@@ -4,21 +4,23 @@ stages:
   - failure_stage
 
 before_script:
-  - date
   - echo '__BEFORE_SCRIPT__'
+  - date
 
 after_script:
-  - date
   - echo '__AFTER_SCRIPT__'
+  - date
 
 'Job 1':
   stage: failure_stage
   script:
+    - echo '__SCRIPT__'
     - echo 'Job 1'
 
 'Job 2':
   stage: failure_stage
   script:
+    - echo '__SCRIPT__'
     - echo 'Job 2'
     - 'false'
     - echo '__SHOULD_NEVER_HAPPEN__'
