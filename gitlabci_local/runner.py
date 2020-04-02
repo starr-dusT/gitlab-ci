@@ -64,6 +64,7 @@ def runner(options, job_data, last_result):
     # Variables
     local_runner = False
     result = False
+    time_start = time.time()
 
     # Filter when
     if last_result and job_data['when'] not in ['on_success', 'manual', 'always']:
@@ -374,13 +375,23 @@ def runner(options, job_data, last_result):
     if job_data['when'] not in ['on_success']:
         when_details = ' (when: %s)' % (job_data['when'])
 
+    # Evalulate duration time
+    time_duration = time.time() - time_start
+    time_seconds = '%.0f second%s' % (time_duration % 60,
+                                      's' if time_duration % 60 > 1 else '')
+    time_minutes = ''
+    if time_duration >= 60:
+        time_minutes = '%.0f minute%s ' % (time_duration / 60,
+                                           's' if time_duration / 60 > 1 else '')
+    time_string = time_minutes + time_seconds
+
     # Footer
     print(' ', flush=True)
     if not options.quiet:
-        print(' %s> Result: %s%s%s' %
+        print(' %s> Result: %s in %s%s%s' %
               (colored.fg('yellow') + colored.attr('bold'), colored.fg('green') +
                colored.attr('bold') + 'Success' if result else colored.fg('red') +
-               colored.attr('bold') + 'Failure', colored.fg('cyan') +
+               colored.attr('bold') + 'Failure', time_string, colored.fg('cyan') +
                colored.attr('bold') + when_details, colored.attr('reset')))
         print(' ')
         print(' ', flush=True)
