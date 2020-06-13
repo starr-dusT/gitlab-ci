@@ -1,0 +1,4 @@
+.template_1:
+  image: alpine:3.11
+  before_script:
+    - echo 'Template 1 [BEFORE]'
