@@ -146,6 +146,9 @@ through the `winpty` wrapper, for example `winpty gitlabci-local`.
     + **name:** IMAGE_NAME
     + **entrypoint:** ['COMMANDS']
   * **<<:** *TEMPLATES
+  * **extends:** TEMPLATE
+  * **extends:**
+    + TEMPLATES
   * **variables:**
     + **VARIABLES:** VALUES
   * **before_script:**

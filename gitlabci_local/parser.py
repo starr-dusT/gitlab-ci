@@ -325,7 +325,7 @@ def parser(options, data, environment):
             continue
 
         # Validate job node
-        if 'stage' not in data[node]:
+        if 'stage' not in data[node] and 'extends' not in data[node]:
             continue
 
         # Ignore template stage
@@ -333,7 +333,7 @@ def parser(options, data, environment):
             continue
 
         # Register job
-        jobs[node] = stager(options, node, data[node], global_values)
+        jobs[node] = stager(options, node, data, global_values)
 
         # Validate job script
         if not jobs[node]['script']:
@@ -348,25 +348,91 @@ def parser(options, data, environment):
     return jobs
 
 # Stager
-def stager(options, job_name, job_data, global_values):
+def stager(options, job_name, data, global_values):
 
     # Variables
     job = dict()
+    job_data = data[job_name]
 
     # Prepare stage
     job['name'] = job_name
-    job['stage'] = job_data['stage']
-    job['image'] = global_values['image']
-    job['entrypoint'] = global_values['entrypoint'][:] if global_values[
-        'entrypoint'] else None
-    job['variables'] = dict(global_values['variables'])
-    job['before_script'] = global_values['before_script'][:]
-    job['script'] = []
-    job['after_script'] = global_values['after_script'][:]
-    job['retry'] = 0
-    job['when'] = 'on_success'
-    job['allow_failure'] = False
-    job['tags'] = []
+    job['stage'] = None
+    job['image'] = None
+    job['entrypoint'] = None
+    job['variables'] = None
+    job['before_script'] = None
+    job['script'] = None
+    job['after_script'] = None
+    job['retry'] = None
+    job['when'] = None
+    job['allow_failure'] = None
+    job['tags'] = None
+
+    # Extract job extends
+    if 'extends' in job_data and job_data['extends']:
+        if isinstance(job_data['extends'], list):
+            job_extends = job_data['extends']
+        else:
+            job_extends = [job_data['extends']]
+
+        # Iterate through extended jobs
+        for job_extend in reversed(job_extends):
+
+            # Parse extended job
+            if job_extend not in data:
+                raise ValueError(
+                    'Unknown "%s" template for "%s"' % (job_extend, job_name))
+            job_extended = stager(options, job_extend, data, None)
+
+            # Extract extended job
+            if job['stage'] is None:
+                job['stage'] = job_extended['stage']
+            if job['image'] is None:
+                job['image'] = job_extended['image']
+            if job['entrypoint'] is None:
+                job['entrypoint'] = job_extended['entrypoint']
+            if job['variables'] is None:
+                job['variables'] = job_extended['variables']
+            if job['before_script'] is None:
+                job['before_script'] = job_extended['before_script']
+            if job['script'] is None:
+                job['script'] = job_extended['script']
+            if job['after_script'] is None:
+                job['after_script'] = job_extended['after_script']
+            if job['retry'] is None:
+                job['retry'] = job_extended['retry']
+            if job['when'] is None:
+                job['when'] = job_extended['when']
+            if job['allow_failure'] is None:
+                job['allow_failure'] = job_extended['allow_failure']
+            if job['tags'] is None:
+                job['tags'] = job_extended['tags']
+
+    # Apply global values
+    if global_values:
+        if job['image'] is None:
+            job['image'] = global_values['image']
+        if job['entrypoint'] is None:
+            job['entrypoint'] = global_values['entrypoint'][:] if global_values[
+                'entrypoint'] else None
+        if job['variables'] is None:
+            job['variables'] = dict(global_values['variables'])
+        if job['before_script'] is None:
+            job['before_script'] = global_values['before_script'][:]
+        if job['script'] is None:
+            job['script'] = []
+        if job['after_script'] is None:
+            job['after_script'] = global_values['after_script'][:]
+        if job['retry'] is None:
+            job['retry'] = 0
+        if job['when'] is None:
+            job['when'] = 'on_success'
+        if job['allow_failure'] is None:
+            job['allow_failure'] = False
+
+    # Extract job stage
+    if 'stage' in job_data and job_data['stage']:
+        job['stage'] = job_data['stage']
 
     # Extract job image
     if 'image' in job_data and job_data['image']:
@@ -419,9 +485,12 @@ def stager(options, job_name, job_data, global_values):
     if 'tags' in job_data and job_data['tags']:
         job['tags'] = job_data['tags'][:]
 
-    # Configure job tags
-    if (set(job['tags']) & set(options.tags)):
-        job['when'] = 'manual'
+    # Finalize global values
+    if global_values:
+
+        # Configure job tags
+        if job['tags'] and (set(job['tags']) & set(options.tags)):
+            job['when'] = 'manual'
 
     # Result
     return job
