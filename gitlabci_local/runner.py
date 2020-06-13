@@ -269,6 +269,9 @@ def runner(options, job_data, last_result):
     if not local_runner:
 
         # Image validation
+        if not image:
+            raise ValueError(
+                'Missing image for "%s / %s"' % (job_data['stage'], job_data['name']))
         try:
             client.images.get(image)
         except docker.errors.ImageNotFound:
