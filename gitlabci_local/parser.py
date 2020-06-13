@@ -309,8 +309,14 @@ def parser(options, data, environment):
                     global_values['variables'][variable] = data['variables'][variable]
             continue
 
-    # Iterate through stages
+    # Iterate through nodes
     for node in data:
+
+        # Ignore global nodes
+        if node in [
+                'after_script', 'before_script', 'image', 'include', 'stages', 'variables'
+        ]:
+            continue
 
         # Validate job node
         if 'stage' not in data[node]:
