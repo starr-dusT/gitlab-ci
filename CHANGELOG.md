@@ -1,4 +1,27 @@
 
+<a name="1.2.0"></a>
+## [1.2.0](https://gitlab.com/AdrianDC/gitlabci-local/compare/1.1.6...1.2.0) (2020-06-13)
+
+### CHANGELOG
+
+* regenerate release tag changes history
+
+### Feat
+
+* implement [#66](https://gitlab.com/AdrianDC/gitlabci-local/issues/66): add support for 'extends' jobs in parser
+
+### Fix
+
+* prepare [#66](https://gitlab.com/AdrianDC/gitlabci-local/issues/66): respect included data order in 'include' nodes
+* prepare [#66](https://gitlab.com/AdrianDC/gitlabci-local/issues/66): ensure global keys will not be parsed as jobs
+* prepare [#66](https://gitlab.com/AdrianDC/gitlabci-local/issues/66): ensure missing 'script' required node detection
+* prepare [#66](https://gitlab.com/AdrianDC/gitlabci-local/issues/66): ensure missing 'image' key is properly detected
+
+### Tests
+
+* validate [#66](https://gitlab.com/AdrianDC/gitlabci-local/issues/66): ensure 'extends' full support is validated
+
+
 <a name="1.1.6"></a>
 ## [1.1.6](https://gitlab.com/AdrianDC/gitlabci-local/compare/1.1.5...1.1.6) (2020-04-02)
 
