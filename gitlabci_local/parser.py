@@ -323,6 +323,11 @@ def parser(options, data, environment):
         # Register job
         jobs[node] = stager(options, node, data[node], global_values)
 
+        # Validate job script
+        if not jobs[node]['script']:
+            raise ValueError('Missing "script" key for "%s / %s"' %
+                             (jobs[node]['stage'], jobs[node]['name']))
+
     # Sort jobs based on stages
     jobs = collections.OrderedDict(
         sorted(jobs.items(), key=lambda x: stages[x[1]['stage']]))
