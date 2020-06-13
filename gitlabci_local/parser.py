@@ -102,6 +102,7 @@ def parser(options, data, environment):
 
     # Parse nested include
     if 'include' in data and data['include']:
+        data_new = dict()
         for include_node in data['include']:
 
             # Parse local nodes
@@ -110,7 +111,12 @@ def parser(options, data, environment):
                 if os.path.isfile(Path(options.path) / file_path):
                     with open(Path(options.path) / file_path, 'r') as include_data:
                         include_additions = yaml.safe_load(include_data)
-                        data.update(include_additions)
+                        data_new.update(include_additions)
+
+        # Agregate included data
+        data_new.update(data)
+        data = data_new
+        data_new = None
 
     # Prepare parameters variables
     if environment['parameters']:
