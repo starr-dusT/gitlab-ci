@@ -94,6 +94,7 @@ stages:
     - gitlabci-local -c ./tests/simple/.gitlab-ci.yml </dev/null && exit 1 || true
     - gitlabci-local -c ./tests/simple/.gitlab-ci.yml -p
     - gitlabci-local -c ./tests/simple/.gitlab-ci.yml -q -p
+    - gcil -c ./tests/simple/.gitlab-ci.yml -p
     - gitlabci-local -c ./tests/unsorted/.gitlab-ci.yml -p
     - gitlabci-local -c ./tests/unsorted/.gitlab-ci.yml --all </dev/null
     - gitlabci-local -c ./tests/templates/.gitlab-ci.yml 'Job 1' 'Job 2' 'Job 3'
