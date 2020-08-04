@@ -27,16 +27,16 @@ is the common and unique interface between GitLab CI and gitlabci-local.
 
 ```shell
 usage: gitlabci-local [-h] [-q] [-c CONFIGURATION] [-B] [-A] [-m] [-n NETWORK]
-                      [-p] [-e ENV] [-t TAGS] [-v VOLUME] [-w WORKDIR] [--all]
-                      [--defaults] [--bash | --debug] [-d | -s | -l | --pull]
-                      [names [names ...]]
+                      [-p] [-e ENV] [-R] [-t TAGS] [-v VOLUME] [-w WORKDIR]
+                      [--all] [--defaults] [--bash | --debug]
+                      [-d | -s | -l | --pull] [names [names ...]]
 
 gitlabci-local: Launch .gitlab-ci.yml jobs locally (aliases: gcil)
 ```
 
-| positional arguments |                                                    |
-| -------------------- | -------------------------------------------------- |
-| names                | Names of specific jobs (or stages with --pipeline) |
+| positional arguments |                                                                                                          |
+| -------------------- | -------------------------------------------------------------------------------------------------------- |
+| names                | Names of specific jobs (or stages with --pipeline)<br>Regex names is supported unless --no-regex is used |
 
 | optional arguments   |                                                                                   |
 | -------------------- | --------------------------------------------------------------------------------- |
@@ -49,6 +49,7 @@ gitlabci-local: Launch .gitlab-ci.yml jobs locally (aliases: gcil)
 | -n NETWORK           | Configure the network mode used<br>Choices: bridge, host, none. Default: bridge   |
 | -p, --pipeline       | Run complete stages rather than jobs                                              |
 | -e ENV               | Define VARIABLE=value, pass VARIABLE or ENV file                                  |
+| -R, --no-regex       | Disable regex search of names                                                     |
 | -t TAGS              | Handle listed tags as manual jobs<br>Default list: ['deploy', 'local', 'publish'] |
 | -v VOLUME            | Mount VOLUME or HOST:TARGET in Docker containers                                  |
 | -w WORKDIR           | Override the container's working path                                             |

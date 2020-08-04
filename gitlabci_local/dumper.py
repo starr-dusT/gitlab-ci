@@ -3,6 +3,9 @@
 # Libraries
 import oyaml as yaml
 
+# Components
+from .utils import nameCheck
+
 # Dumper
 def dumper(options, jobs):
 
@@ -13,7 +16,7 @@ def dumper(options, jobs):
     # Prepare configuration results
     if options.names:
         for job in options.names:
-            if job in jobs:
+            if nameCheck(job, jobs, options.no_regex):
                 configuration[job] = jobs[job]
                 result = True
     else:

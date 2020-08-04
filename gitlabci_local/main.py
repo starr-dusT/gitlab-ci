@@ -56,6 +56,8 @@ def main():
                         help='Run complete stages rather than jobs')
     parser.add_argument('-e', dest='env', action='append',
                         help='Define VARIABLE=value, pass VARIABLE or ENV file')
+    parser.add_argument('-R', '--no-regex', dest='no_regex', action='store_true',
+                        help='Disable regex search of names')
     parser.add_argument(
         '-t', dest='tags', action='append',
         help='Handle listed tags as manual jobs\nDefault list: [\'%s\']' %
@@ -93,8 +95,10 @@ def main():
                        help='Pull Docker images from all jobs')
 
     # Arguments positional definitions
-    parser.add_argument('names', nargs='*',
-                        help='Names of specific jobs (or stages with --pipeline)')
+    parser.add_argument(
+        'names', nargs='*', help=
+        'Names of specific jobs (or stages with --pipeline)\nRegex names is supported unless --no-regex is used'
+    )
 
     # Arguments parser
     options = parser.parse_args()

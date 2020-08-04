@@ -13,7 +13,7 @@ import sys
 from .main import NAME
 from .patcher import InquirerControl
 from .runner import launcher
-from .utils import dictGet
+from .utils import dictGet, nameCheck
 
 # Selector theme
 SelectorTheme = PyInquirer.style_from_dict({
@@ -53,11 +53,13 @@ def selector(options, jobs):
         if options.names:
 
             # Filter jobs list
-            if not options.pipeline and job not in options.names:
+            if not options.pipeline and not nameCheck(job, options.names,
+                                                      options.no_regex):
                 continue
 
             # Filter stages list
-            if options.pipeline and jobs[job]['stage'] not in options.names:
+            if options.pipeline and not nameCheck(jobs[job]['stage'], options.names,
+                                                  options.no_regex):
                 continue
 
         # Stages separator

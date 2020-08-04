@@ -14,6 +14,7 @@ import time
 # Components
 from .main import NAME
 from .puller import pull
+from .utils import nameCheck
 
 # Constants
 marker_debug = '__GITLAB_CI_LOCAL_DEBUG__'
@@ -28,16 +29,18 @@ def launcher(options, jobs):
     for job in jobs:
 
         # Filter jobs list
-        if not options.pipeline and job not in options.names:
+        if not options.pipeline and not nameCheck(job, options.names, options.no_regex):
             continue
 
         # Filter stages list
-        if options.pipeline and options.names and jobs[job]['stage'] not in options.names:
+        if options.pipeline and options.names and not nameCheck(
+                jobs[job]['stage'], options.names, options.no_regex):
             continue
 
         # Filter manual jobs
         job_manual = (jobs[job]['when'] == 'manual')
-        if job_manual and not options.manual and job not in options.names:
+        if job_manual and not options.manual and not nameCheck(job, options.names,
+                                                               options.no_regex):
             continue
 
         # Raise initial result

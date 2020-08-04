@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 # Libraries
+import re
 import regex
 
 # Dictionnaries getter
@@ -45,3 +46,18 @@ def dictGet(data, path):
 
     # Result
     return result
+
+# Name checker
+def nameCheck(name, items, no_regex):
+
+    # Search without regex
+    if name in items:
+        return True
+
+    # Search with regex
+    for item in items:
+        if not no_regex and re.search(item, name):
+            return True
+
+    # Result
+    return False
