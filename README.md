@@ -31,7 +31,7 @@ usage: gitlabci-local [-h] [-q] [-c CONFIGURATION] [-B] [-A] [-m] [-n NETWORK]
                       [--defaults] [--bash | --debug] [-d | -s | -l | --pull]
                       [names [names ...]]
 
-gitlabci-local: Launch .gitlab-ci.yml jobs locally
+gitlabci-local: Launch .gitlab-ci.yml jobs locally (aliases: gcil)
 ```
 
 | positional arguments |                                                    |

@@ -7,6 +7,7 @@ import os
 import sys
 
 # Constants
+ALIAS = 'gcil'
 NAME = 'gitlabci-local'
 
 # Components
@@ -25,8 +26,8 @@ def main():
 
     # Arguments creation
     parser = argparse.ArgumentParser(
-        prog=NAME, description='%s: Launch .gitlab-ci.yml jobs locally' % (NAME),
-        add_help=False, formatter_class=argparse.RawTextHelpFormatter)
+        prog=NAME, description='%s: Launch .gitlab-ci.yml jobs locally (aliases: %s)' %
+        (NAME, ALIAS), add_help=False, formatter_class=argparse.RawTextHelpFormatter)
 
     # Arguments default definitions
     tagsDefault = ['deploy', 'local', 'publish']
