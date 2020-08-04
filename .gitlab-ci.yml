@@ -29,8 +29,6 @@ stages:
     - git add -v ./CHANGELOG.md
     - git commit --amend --no-edit
     - git tag -f -m '' "${tag}"
-  tags:
-    - local
   only:
     - local
 
@@ -40,8 +38,6 @@ stages:
   script:
     - yapf -i ./docs/*.py ./gitlabci_local/*.py ./setup.py
     - unify -i --quote "'" ./docs/*.py ./gitlabci_local/*.py ./setup.py
-  tags:
-    - local
   only:
     - local
 
@@ -51,8 +47,6 @@ stages:
   script:
     - sudo pip3 install -r requirements-dev.txt --upgrade
     - sudo pip3 install -r requirements.txt --upgrade
-  tags:
-    - local
   only:
     - local
 
@@ -74,8 +68,6 @@ stages:
     - sudo rm -rf build dist *.egg-info .eggs
     - python3 setup.py bdist_wheel
     - pip3 install --upgrade --no-deps dist/*.whl
-  tags:
-    - local
   only:
     - local
 
@@ -171,8 +163,6 @@ stages:
 'Unit Tests (Local)':
   <<: *unit-tests-template
   image: local
-  tags:
-    - local
   only:
     - local
 
