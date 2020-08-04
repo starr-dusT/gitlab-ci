@@ -338,9 +338,13 @@ def parser(options, data, environment):
         jobs[node] = stager(options, node, data, global_values)
 
         # Validate job script
-        if not jobs[node]['script']:
+        if not jobs[node]['parser_incomplete'] and not jobs[node]['script']:
             raise ValueError('Missing "script" key for "%s / %s"' %
                              (jobs[node]['stage'], jobs[node]['name']))
+
+        # Append unknown stage if required
+        if jobs[node]['parser_incomplete'] and 'unknown' not in stages:
+            stages['unknown'] = list(stages.values())[-1] + 1
 
     # Sort jobs based on stages
     jobs = collections.OrderedDict(
@@ -369,6 +373,7 @@ def stager(options, job_name, data, global_values):
     job['when'] = None
     job['allow_failure'] = None
     job['tags'] = None
+    job['parser_incomplete'] = None
 
     # Extract job extends
     if 'extends' in job_data and job_data['extends']:
@@ -382,8 +387,10 @@ def stager(options, job_name, data, global_values):
 
             # Parse extended job
             if job_extend not in data:
-                raise ValueError(
-                    'Unknown "%s" template for "%s"' % (job_extend, job_name))
+                job['parser_incomplete'] = '%s unknown' % (job_extend)
+                if job['stage'] is None:
+                    job['stage'] = 'unknown'
+                break
             job_extended = stager(options, job_extend, data, None)
 
             # Extract extended job

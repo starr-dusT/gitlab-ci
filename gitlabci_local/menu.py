@@ -82,6 +82,10 @@ def selector(options, jobs):
                 job_details_list += ['On failure']
             jobs_available = True
 
+        # Parser incomplete jobs
+        if jobs[job]['parser_incomplete']:
+            disabled = jobs[job]['parser_incomplete']
+
         # Failure allowed jobs
         if jobs[job]['allow_failure']:
             job_details_list += ['Failure allowed']
