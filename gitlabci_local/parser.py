@@ -395,6 +395,10 @@ def stager(options, job_name, data, global_values):
                 job['entrypoint'] = job_extended['entrypoint']
             if job['variables'] is None:
                 job['variables'] = job_extended['variables']
+            elif job_extended['variables']:
+                for variable in job_extended['variables']:
+                    if variable not in job['variables']:
+                        job['variables'][variable] = job_extended['variables'][variable]
             if job['before_script'] is None:
                 job['before_script'] = job_extended['before_script']
             if job['script'] is None:
@@ -419,6 +423,10 @@ def stager(options, job_name, data, global_values):
                 'entrypoint'] else None
         if job['variables'] is None:
             job['variables'] = dict(global_values['variables'])
+        else:
+            for variable in global_values['variables']:
+                if variable not in job['variables']:
+                    job['variables'][variable] = global_values['variables'][variable]
         if job['before_script'] is None:
             job['before_script'] = global_values['before_script'][:]
         if job['script'] is None:
@@ -431,6 +439,11 @@ def stager(options, job_name, data, global_values):
             job['when'] = 'on_success'
         if job['allow_failure'] is None:
             job['allow_failure'] = False
+
+    # Apply template values
+    else:
+        if job['variables'] is None:
+            job['variables'] = {}
 
     # Extract job stage
     if 'stage' in job_data and job_data['stage']:
