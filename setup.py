@@ -41,11 +41,12 @@ setuptools.setup(
         'Topic :: Software Development',
         'Topic :: Utilities',
     ],
-    keywords='gitlab-ci local pipeline',
+    keywords='gitlab-ci local gcil pipeline',
     python_requires='>=3, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, !=3.5.*',
     entry_points={
         'console_scripts': [
             'gitlabci-local = gitlabci_local.main:main',
+            'gcil = gitlabci_local.main:main',
         ],
     },
 )
