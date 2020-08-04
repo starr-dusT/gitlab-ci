@@ -1,4 +1,34 @@
 
+<a name="1.2.1"></a>
+## [1.2.1](https://gitlab.com/AdrianDC/gitlabci-local/compare/1.2.0...1.2.1) (2020-08-04)
+
+### CHANGELOG
+
+* regenerate release tag changes history
+
+### Chore
+
+* gitlab-ci: remove unnecessary 'tags: local' for local jobs
+
+### Feat
+
+* implement [#73](https://gitlab.com/AdrianDC/gitlabci-local/issues/73): add support for regex searches of names
+* resolve [#72](https://gitlab.com/AdrianDC/gitlabci-local/issues/72): add support for the --help parameter along -h
+* document [#71](https://gitlab.com/AdrianDC/gitlabci-local/issues/71): add 'gcil' alias references in help and README
+* implement [#71](https://gitlab.com/AdrianDC/gitlabci-local/issues/71): add a shorter "gcil" entrypoint wrapper
+* implement [#67](https://gitlab.com/AdrianDC/gitlabci-local/issues/67): define CI_LOCAL variable to detect local jobs
+
+### Fix
+
+* resolve [#70](https://gitlab.com/AdrianDC/gitlabci-local/issues/70): support disabling *script: nodes with extends:
+* resolve [#69](https://gitlab.com/AdrianDC/gitlabci-local/issues/69): propagate and cumulate extended jobs' variables
+* resolve [#68](https://gitlab.com/AdrianDC/gitlabci-local/issues/68): add empty footer lines upon error failures
+
+### Test
+
+* validate [#71](https://gitlab.com/AdrianDC/gitlabci-local/issues/71): check 'gcil' works on the 'simple' tests
+
+
 <a name="1.2.0"></a>
 ## [1.2.0](https://gitlab.com/AdrianDC/gitlabci-local/compare/1.1.6...1.2.0) (2020-06-13)
 
