@@ -3,3 +3,4 @@ docker>=4.1.0
 oyaml>=0.9
 PyInquirer>=1.0.3
 python-dotenv>=0.10.5
+setuptools>=45.1.0
