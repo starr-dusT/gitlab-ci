@@ -73,6 +73,7 @@ def reader(options):
               (colored.fg('green') + colored.attr('bold'), NAME,
                colored.fg('red') + colored.attr('bold'),
                colored.attr('reset') + colored.attr('bold'), exc, colored.attr('reset')))
+        print(' ')
     except KeyboardInterrupt:
         pass
     except:
@@ -81,6 +82,7 @@ def reader(options):
               (colored.fg('green') + colored.attr('bold'), NAME, colored.fg('red') +
                colored.attr('bold'), colored.attr('reset') + colored.attr('bold'),
                str(sys.exc_info()[1]), colored.attr('reset')))
+        print(' ')
 
     # Failure
     return None
