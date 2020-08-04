@@ -36,7 +36,7 @@ def main():
     networksEnum = ['bridge', 'host', 'none']
 
     # Arguments optional definitions
-    parser.add_argument('-h', dest='help', action='store_true',
+    parser.add_argument('-h', '--help', dest='help', action='store_true',
                         help='Show this help message')
     parser.add_argument('-q', '--quiet', dest='quiet', action='store_true',
                         help='Hide jobs execution context')

@@ -40,7 +40,7 @@ gitlabci-local: Launch .gitlab-ci.yml jobs locally (aliases: gcil)
 
 | optional arguments   |                                                                                   |
 | -------------------- | --------------------------------------------------------------------------------- |
-| -h                   | Show this help message                                                            |
+| -h, --help           | Show this help message                                                            |
 | -q, --quiet          | Hide jobs execution context                                                       |
 | -c CONFIGURATION     | Path to the .gitlab-ci.yml configuration                                          |
 | -B, --no-before      | Disable before_script executions                                                  |
