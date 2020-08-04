@@ -265,6 +265,9 @@ def runner(options, job_data, last_result):
     for variable in job_data['variables']:
         variables[variable] = os.path.expandvars(str(job_data['variables'][variable]))
 
+    # Configure local variables
+    variables['CI_LOCAL'] = 'true'
+
     # Container execution
     if not local_runner:
 

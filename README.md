@@ -112,6 +112,9 @@ If specific environment variables are to be used in the job's container:
 
 For example, `-e TERM=ansi` may enable colored terminal outputs.
 
+The variable `CI_LOCAL` is automatically defined to `true` by gitlabci-local  
+to allow specific conditions for local purposes in jobs' scripts.
+
 ---
 
 ## Windows compatibility
