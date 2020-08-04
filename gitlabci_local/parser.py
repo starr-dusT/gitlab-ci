@@ -467,16 +467,25 @@ def stager(options, job_name, data, global_values):
         job['variables'].update(job_data['variables'])
 
     # Extract job before_script
-    if 'before_script' in job_data and job_data['before_script']:
-        job['before_script'] = job_data['before_script'][:]
+    if 'before_script' in job_data:
+        if job_data['before_script']:
+            job['before_script'] = job_data['before_script'][:]
+        else:
+            job['before_script'] = []
 
     # Extract job script
-    if 'script' in job_data and job_data['script']:
-        job['script'] = job_data['script'][:]
+    if 'script' in job_data:
+        if job_data['script']:
+            job['script'] = job_data['script'][:]
+        else:
+            job['script'] = []
 
     # Extract job after_script
-    if 'after_script' in job_data and job_data['after_script']:
-        job['after_script'] = job_data['after_script'][:]
+    if 'after_script' in job_data:
+        if job_data['after_script']:
+            job['after_script'] = job_data['after_script'][:]
+        else:
+            job['after_script'] = []
 
     # Extract job retry
     if 'retry' in job_data:
