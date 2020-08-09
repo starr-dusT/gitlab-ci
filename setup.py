@@ -4,7 +4,7 @@ import setuptools
 # Requirements
 requirements = []
 with open('requirements.txt') as f:
-    requirements = f.read().splitlines()
+    requirements = [line for line in f.read().splitlines() if not line.startswith('#')]
 
 # Long description
 long_description = ''
