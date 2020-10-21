@@ -296,12 +296,18 @@ def parser(options, data, environment):
 
         # Filter before_script node
         if node == 'before_script':
-            global_values['before_script'] = data[node]
+            if isinstance(data[node], str):
+                global_values['before_script'] = [data[node]]
+            else:
+                global_values['before_script'] = data[node]
             continue
 
         # Filter after_script node
         if node == 'after_script':
-            global_values['after_script'] = data[node]
+            if isinstance(data[node], str):
+                global_values['after_script'] = [data[node]]
+            else:
+                global_values['after_script'] = data[node]
             continue
 
         # Filter stages node
@@ -476,21 +482,30 @@ def stager(options, job_name, data, global_values):
     # Extract job before_script
     if 'before_script' in job_data:
         if job_data['before_script']:
-            job['before_script'] = job_data['before_script'][:]
+            if isinstance(job_data['before_script'], str):
+                job['before_script'] = [job_data['before_script']]
+            else:
+                job['before_script'] = job_data['before_script'][:]
         else:
             job['before_script'] = []
 
     # Extract job script
     if 'script' in job_data:
         if job_data['script']:
-            job['script'] = job_data['script'][:]
+            if isinstance(job_data['script'], str):
+                job['script'] = [job_data['script']]
+            else:
+                job['script'] = job_data['script'][:]
         else:
             job['script'] = []
 
     # Extract job after_script
     if 'after_script' in job_data:
         if job_data['after_script']:
-            job['after_script'] = job_data['after_script'][:]
+            if isinstance(job_data['after_script'], str):
+                job['after_script'] = [job_data['after_script']]
+            else:
+                job['after_script'] = job_data['after_script'][:]
         else:
             job['after_script'] = []
 
