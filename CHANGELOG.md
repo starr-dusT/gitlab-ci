@@ -1,4 +1,29 @@
 
+<a name="1.3.0"></a>
+## [1.3.0](https://gitlab.com/AdrianDC/gitlabci-local/compare/1.2.1...1.3.0) (2020-10-21)
+
+### CHANGELOG
+
+* regenerate release tag changes history
+
+### Chore
+
+* setup: add support for comments in requirements.txt
+* requirements: bind setuptools for delivery rather than dev
+
+### Feat
+
+* resolve [#74](https://gitlab.com/AdrianDC/gitlabci-local/issues/74): disable incomplete jobs instead of failing
+
+### Fix
+
+* resolve [#77](https://gitlab.com/AdrianDC/gitlabci-local/issues/77): resolve standalone multiline scripts parser
+
+### Test
+
+* validate [#77](https://gitlab.com/AdrianDC/gitlabci-local/issues/77): check standalone multiline scripts parser
+
+
 <a name="1.2.1"></a>
 ## [1.2.1](https://gitlab.com/AdrianDC/gitlabci-local/compare/1.2.0...1.2.1) (2020-08-04)
 
