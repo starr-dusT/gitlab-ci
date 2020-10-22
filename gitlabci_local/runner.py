@@ -2,6 +2,7 @@
 
 # Libraries
 import colored
+import datetime
 import docker
 import os
 from pathlib import Path
@@ -23,6 +24,7 @@ marker_debug = '__GITLAB_CI_LOCAL_DEBUG__'
 def launcher(options, jobs):
 
     # Variables
+    time_launcher = time.time()
     result = None
 
     # Run selected jobs
@@ -50,19 +52,19 @@ def launcher(options, jobs):
         # Run job
         attempt = 0
         expected = result
-        result = runner(options, jobs[job], result)
+        result = runner(options, jobs[job], result, time_launcher)
 
         # Retry job if allowed
         if expected and not result and jobs[job]['retry'] > 0:
             while not result and attempt < jobs[job]['retry']:
                 attempt += 1
-                result = runner(options, jobs[job], expected)
+                result = runner(options, jobs[job], expected, time_launcher)
 
     # Result
     return True if result else False
 
 # Runner
-def runner(options, job_data, last_result):
+def runner(options, job_data, last_result, time_launcher):
 
     # Variables
     local_runner = False
@@ -396,7 +398,8 @@ def runner(options, job_data, last_result):
         job_details = ' (' + ', '.join(job_details_list) + ')'
 
     # Evalulate duration time
-    time_duration = time.time() - time_start
+    time_current = time.time()
+    time_duration = time_current - time_start
     time_seconds = '%.0f second%s' % (time_duration % 60,
                                       's' if time_duration % 60 > 1 else '')
     time_minutes = ''
@@ -405,13 +408,27 @@ def runner(options, job_data, last_result):
                                            's' if time_duration / 60 > 1 else '')
     time_string = time_minutes + time_seconds
 
+    # Evalulate duration total time
+    time_total_duration = time_current - time_launcher
+    time_total_seconds = '%.0f second%s' % (time_total_duration % 60,
+                                            's' if time_total_duration % 60 > 1 else '')
+    time_total_minutes = ''
+    if time_total_duration >= 60:
+        time_total_minutes = '%.0f minute%s ' % (time_total_duration / 60, 's'
+                                                 if time_total_duration / 60 > 1 else '')
+    if round(time_total_duration, 3) > round(time_duration, 3):
+        time_total_string = ' (total of ' + time_total_minutes + time_total_seconds + ')'
+    else:
+        time_total_string = ''
+
     # Footer
     print(' ', flush=True)
     if not options.quiet:
-        print(' %s> Result: %s in %s%s%s' %
+        print(' %s> Result: %s in %s%s%s%s%s' %
               (colored.fg('yellow') + colored.attr('bold'), colored.fg('green') +
                colored.attr('bold') + 'Success' if result else colored.fg('red') +
-               colored.attr('bold') + 'Failure', time_string, colored.fg('cyan') +
+               colored.attr('bold') + 'Failure', time_string, colored.attr('reset') +
+               colored.attr('bold'), time_total_string, colored.fg('cyan') +
                colored.attr('bold') + job_details, colored.attr('reset')))
         print(' ')
         print(' ', flush=True)
