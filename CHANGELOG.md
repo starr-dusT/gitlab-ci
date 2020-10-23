@@ -1,4 +1,17 @@
 
+<a name="1.3.1"></a>
+## [1.3.1](https://gitlab.com/AdrianDC/gitlabci-local/compare/1.3.0...1.3.1) (2020-10-23)
+
+### CHANGELOG
+
+* regenerate release tag changes history
+
+### Feat
+
+* resolve [#79](https://gitlab.com/AdrianDC/gitlabci-local/issues/79): add 'Bug Reports' and 'Source' links for PyPI
+* implement [#78](https://gitlab.com/AdrianDC/gitlabci-local/issues/78): add total pipeline time in results
+
+
 <a name="1.3.0"></a>
 ## [1.3.0](https://gitlab.com/AdrianDC/gitlabci-local/compare/1.2.1...1.3.0) (2020-10-21)
 
