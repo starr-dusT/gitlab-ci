@@ -26,7 +26,8 @@ setuptools.setup(
         'Bug Reports': 'https://gitlab.com/AdrianDC/gitlabci-local/-/issues',
         'Changelog': 'https://gitlab.com/AdrianDC/gitlabci-local/blob/master/CHANGELOG.md',
         'Documentation': 'https://gitlab.com/AdrianDC/gitlabci-local#gitlabci-local',
-        'Source': 'https://gitlab.com/AdrianDC/gitlabci-local'
+        'Source': 'https://gitlab.com/AdrianDC/gitlabci-local',
+        'Statistics': 'https://pypistats.org/packages/gitlabci-local'
     },
     packages=setuptools.find_packages(exclude=['tests']),
     setup_requires=['setuptools_scm'],
