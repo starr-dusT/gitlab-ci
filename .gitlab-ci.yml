@@ -53,10 +53,10 @@ stages:
 'Build':
   stage: build
   script:
-    - pip install -r requirements-dev.txt --upgrade
-    - pip install -r requirements.txt --upgrade
+    - pip3 install -r requirements-dev.txt --upgrade
+    - pip3 install -r requirements.txt --upgrade
     - rm -rf build dist *.egg-info .eggs
-    - python setup.py bdist_wheel
+    - python3 setup.py bdist_wheel
   artifacts:
     paths:
       - dist/
