@@ -67,6 +67,7 @@ def launcher(options, jobs):
 def runner(options, job_data, last_result, time_launcher):
 
     # Variables
+    client = None
     local_runner = False
     result = False
     time_start = time.time()
@@ -98,9 +99,6 @@ def runner(options, job_data, last_result, time_launcher):
                colored.fg('cyan') + colored.attr('bold'), image,
                colored.fg('green') + colored.attr('bold'), colored.attr('reset')))
         print(' ', flush=True)
-
-    # Create Docker client
-    client = docker.from_env()
 
     # Acquire project path
     pathProject = options.path
@@ -275,6 +273,10 @@ def runner(options, job_data, last_result, time_launcher):
 
     # Container execution
     if not local_runner:
+
+        # Create Docker client
+        if client is None:
+            client = docker.from_env()
 
         # Image validation
         if not image:
