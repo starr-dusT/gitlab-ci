@@ -3,7 +3,6 @@
 # Libraries
 import colored
 import datetime
-import docker
 import os
 from pathlib import Path
 import signal
@@ -13,8 +12,8 @@ import tempfile
 import time
 
 # Components
+from .engine import Engine
 from .main import NAME
-from .puller import pull
 from .utils import nameCheck
 
 # Constants
@@ -67,7 +66,7 @@ def launcher(options, jobs):
 def runner(options, job_data, last_result, time_launcher):
 
     # Variables
-    client = None
+    engine = None
     local_runner = False
     result = False
     time_start = time.time()
@@ -226,10 +225,6 @@ def runner(options, job_data, last_result, time_launcher):
         temp_dir: {
             'bind': temp_dir,
             'mode': 'rw'
-        },
-        '/var/run/docker.sock': {
-            'bind': '/var/run/docker.sock',
-            'mode': 'rw'
         }
     }
 
@@ -275,25 +270,20 @@ def runner(options, job_data, last_result, time_launcher):
     # Container execution
     if not local_runner:
 
-        # Create container client
-        if client is None:
-            client = docker.from_env()
+        # Create container engine
+        if engine is None:
+            engine = Engine()
+            engine.sockets(volumes)
 
         # Image validation
         if not image:
             raise ValueError(
                 'Missing image for "%s / %s"' % (job_data['stage'], job_data['name']))
-        try:
-            client.images.get(image)
-        except docker.errors.ImageNotFound:
-            pull(image)
+        engine.get(image)
 
         # Launch container
-        container = client.containers.run(
-            image, command=scriptFile.name, detach=True, entrypoint=entrypoint,
-            environment=variables, network_mode=network, privileged=True, remove=False,
-            stdout=True, stderr=True, stream=True, volumes=volumes,
-            working_dir=pathWorkDir)
+        container = engine.run(image, scriptFile.name, entrypoint, variables, network,
+                               volumes, pathWorkDir)
 
         # Create interruption handler
         def interruptHandler(signal, frame):
@@ -304,7 +294,7 @@ def runner(options, job_data, last_result, time_launcher):
                 % (colored.fg('yellow') + colored.attr('bold'),
                    colored.attr('reset') + colored.attr('bold'), colored.attr('reset')))
             print(' ', flush=True)
-            container.stop(timeout=0)
+            engine.stop(container, 0)
 
         # Register interruption handler
         originalINTHandler = signal.getsignal(signal.SIGINT)
@@ -317,7 +307,7 @@ def runner(options, job_data, last_result, time_launcher):
 
         # Show container logs
         try:
-            for line in container.logs(stream=True):
+            for line in engine.logs(container):
                 if marker_debug in line.decode():
                     break
                 sys.stdout.buffer.write(line)
@@ -328,27 +318,29 @@ def runner(options, job_data, last_result, time_launcher):
         # Runner bash or debug mode
         if options.bash or options.debug:
             print(' ')
-            exit_code, output = container.exec_run('which bash')
+            exit_code, output = engine.exec(container, 'which bash')
             shell = 'sh'
             if exit_code == 0:
                 shell = 'bash'
+            container_exec = engine.help('exec')
+            container_name = engine.name(container)
             print(
-                ' %s> INFORMATION: %sUse \'%sdocker exec -it %s %s%s\' commands for debugging. Interrupt with Ctrl+C...%s'
-                % (colored.fg('yellow') + colored.attr('bold'), colored.attr('reset') +
-                   colored.attr('bold'), colored.fg('cyan'), container.name, shell,
+                ' %s> INFORMATION: %sUse \'%s%s %s %s%s\' commands for debugging. Interrupt with Ctrl+C...%s'
+                % (colored.fg('yellow') + colored.attr('bold'),
+                   colored.attr('reset') + colored.attr('bold'),
+                   colored.fg('cyan'), container_exec, container_name, shell,
                    colored.attr('reset') + colored.attr('bold'), colored.attr('reset')))
             print(' ', flush=True)
 
         # Check container status
-        wait = container.wait()
-        success = (wait['StatusCode'] == 0)
+        success = engine.wait(container)
 
         # Stop container
-        container.stop(timeout=0)
+        engine.stop(container, 0)
         time.sleep(0.1)
 
         # Remove container
-        container.remove(force=True)
+        engine.remove(container)
 
         # Unregister interruption handler
         signal.signal(signal.SIGINT, originalINTHandler)
