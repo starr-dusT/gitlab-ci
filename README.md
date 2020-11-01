@@ -52,7 +52,7 @@ gitlabci-local: Launch .gitlab-ci.yml jobs locally (aliases: gcil)
 | -H, --host           | Run all jobs on the host rather than containers                                   |
 | -R, --no-regex       | Disable regex search of names                                                     |
 | -t TAGS              | Handle listed tags as manual jobs<br>Default list: ['deploy', 'local', 'publish'] |
-| -v VOLUME            | Mount VOLUME or HOST:TARGET in Docker containers                                  |
+| -v VOLUME            | Mount VOLUME or HOST:TARGET in containers                                         |
 | -w WORKDIR           | Override the container's working path                                             |
 | --all                | Enable all jobs by default in selections                                          |
 | --defaults           | Use default variables for .local:configurations                                   |
@@ -61,7 +61,7 @@ gitlabci-local: Launch .gitlab-ci.yml jobs locally (aliases: gcil)
 | -d, --dump           | Dump parsed .gitlab-ci.yml configuration                                          |
 | -s, --select         | Force jobs selection from enumerated names                                        |
 | -l, --list           | Select one job to run (implies --manual)                                          |
-| --pull               | Pull Docker images from all jobs                                                  |
+| --pull               | Pull container images from all jobs                                               |
 
 ---
 
@@ -90,7 +90,7 @@ Examples for each of these can be found in the `local` unit tests: [tests/local]
 
 ## Job execution in native context
 
-gitlabci-local runs every jobs in the specified Docker image.
+gitlabci-local runs every jobs in the specified container image.
 
 For specific local purposes where the native host context is wished,  
 where the host tools, folders or credentials are required,  
@@ -186,6 +186,7 @@ through the `winpty` wrapper, for example `winpty gitlabci-local`.
 
 - [.gitlab-ci.yml](https://docs.gitlab.com/ee/ci/yaml/): GitLab CI/CD Pipeline Configuration Reference
 - [git-chglog](https://github.com/git-chglog/git-chglog): CHANGELOG generator
+- [OCI](https://opencontainers.org): Open Container Initiative
 - [peek](https://github.com/phw/peek): Simple GIF screen recorder
 - [pexpect](https://pypi.org/project/pexpect/): Interactive console applications controller
 - [PyPI](https://pypi.org/): The Python Package Index

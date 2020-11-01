@@ -12,14 +12,14 @@ def puller(options, jobs):
     images = []
     result = False
 
-    # List Docker images
+    # List container images
     for job in jobs:
         image = jobs[job]['image']
         if image and image != 'local' and image not in images:
             images += [image]
             result = True
 
-    # Pull Docker images
+    # Pull container images
     if images:
         images.sort()
         for image in images:
@@ -31,7 +31,7 @@ def puller(options, jobs):
 # Pull
 def pull(image):
 
-    # Create Docker client
+    # Create container client
     client = docker.from_env()
 
     # Pull image with logs stream

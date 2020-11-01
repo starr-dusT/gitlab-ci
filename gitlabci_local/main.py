@@ -67,7 +67,7 @@ def main():
     parser.add_argument('--tags-default', dest='tags_default', action='store_true',
                         help=argparse.SUPPRESS)
     parser.add_argument('-v', dest='volume', action='append',
-                        help='Mount VOLUME or HOST:TARGET in Docker containers')
+                        help='Mount VOLUME or HOST:TARGET in containers')
     parser.add_argument('-w', dest='workdir',
                         help='Override the container\'s working path')
     parser.add_argument('--all', dest='all', action='store_true',
@@ -94,7 +94,7 @@ def main():
     group.add_argument('-l', '--list', dest='list', action='store_true',
                        help='Select one job to run (implies --manual)')
     group.add_argument('--pull', dest='pull', action='store_true',
-                       help='Pull Docker images from all jobs')
+                       help='Pull container images from all jobs')
 
     # Arguments positional definitions
     parser.add_argument(

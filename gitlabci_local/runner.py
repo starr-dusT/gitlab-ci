@@ -275,7 +275,7 @@ def runner(options, job_data, last_result, time_launcher):
     # Container execution
     if not local_runner:
 
-        # Create Docker client
+        # Create container client
         if client is None:
             client = docker.from_env()
 
