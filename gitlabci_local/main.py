@@ -56,6 +56,8 @@ def main():
                         help='Run complete stages rather than jobs')
     parser.add_argument('-e', dest='env', action='append',
                         help='Define VARIABLE=value, pass VARIABLE or ENV file')
+    parser.add_argument('-H', '--host', dest='host', action='store_true',
+                        help='Run all jobs on the host rather than containers')
     parser.add_argument('-R', '--no-regex', dest='no_regex', action='store_true',
                         help='Disable regex search of names')
     parser.add_argument(

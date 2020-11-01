@@ -82,7 +82,8 @@ def runner(options, job_data, last_result, time_launcher):
     image = job_data['image']
 
     # Prepare local runner
-    if image in ['local']:
+    if options.host or image in ['local']:
+        image = 'local'
         local_runner = True
 
     # Prepare network

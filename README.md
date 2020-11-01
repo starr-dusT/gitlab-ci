@@ -49,6 +49,7 @@ gitlabci-local: Launch .gitlab-ci.yml jobs locally (aliases: gcil)
 | -n NETWORK           | Configure the network mode used<br>Choices: bridge, host, none. Default: bridge   |
 | -p, --pipeline       | Run complete stages rather than jobs                                              |
 | -e ENV               | Define VARIABLE=value, pass VARIABLE or ENV file                                  |
+| -H, --host           | Run all jobs on the host rather than containers                                   |
 | -R, --no-regex       | Disable regex search of names                                                     |
 | -t TAGS              | Handle listed tags as manual jobs<br>Default list: ['deploy', 'local', 'publish'] |
 | -v VOLUME            | Mount VOLUME or HOST:TARGET in Docker containers                                  |
