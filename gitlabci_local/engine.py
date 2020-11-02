@@ -1,126 +1,83 @@
 #!/usr/bin/env python3
 
 # Libraries
-import docker
-import sys
+from enum import Enum
+
+# Components
+from .engines import docker
+
+# Backend enumeration
+class Backend(Enum):
+    DOCKER = 1
+    UNKNOWN = 2
 
 # Engine class
 class Engine:
 
     # Members
-    client = None
+    backend = Backend.UNKNOWN
+    engine = None
 
     # Constructor
     def __init__(self):
 
-        # Engine client
-        self.client = docker.from_env()
+        # Docker engine detection
+        if not self.engine:
+            try:
+                self.engine = docker.Docker()
+                self.backend = Backend.DOCKER
+            except:
+                self.engine = None
+
+        # Unknown engine fallback
+        if not self.engine:
+            raise NotImplementedError('Unknown or unsupported container engine...')
 
     # Exec
     def exec(self, container, command):
-
-        # Execute command in container
-        container.exec_run(command)
+        return self.engine.exec(container, command)
 
     # Help
-    def help(self, type):
-
-        # Exec help
-        if type is 'exec':
-            return 'docker exec -it'
-
-        # Default fallback
-        return ''
+    def help(self, command):
+        return self.engine.help(command)
 
     # Get
     def get(self, image):
-
-        # Validate image exists
-        try:
-            self.client.images.get(image)
-
-        # Pull missing image
-        except docker.errors.ImageNotFound:
-            pull(image)
+        self.engine.get(image)
 
     # Logs
     def logs(self, container):
-
-        # Return logs stream
-        return container.logs(stream=True)
+        return self.engine.logs(container)
 
     # Name
     def name(self, container):
-
-        # Result
-        return container.name
+        return self.engine.name(container)
 
     # Pull
     def pull(self, image):
-
-        # Pull image with logs stream
-        for data in self.client.api.pull(image, stream=True, decode=True):
-
-            # Layer progress logs
-            if 'progress' in data:
-                if sys.stdout.isatty():
-                    print(
-                        '\r\033[K%s: %s %s' %
-                        (data['id'], data['status'], data['progress']), end='',
-                        flush=True)
-
-            # Layer event logs
-            elif 'progressDetail' in data:
-                if sys.stdout.isatty():
-                    print('\r\033[K%s: %s' % (data['id'], data['status']), end='',
-                          flush=True)
-
-            # Layer completion logs
-            elif 'id' in data:
-                print('\r\033[K%s: %s' % (data['id'], data['status']), flush=True)
-
-            # Image logs
-            else:
-                print('\r\033[K%s' % (data['status']), flush=True)
-
-        # Footer
-        print(' ', flush=True)
+        self.engine.pull(image)
 
     # Remove
     def remove(self, container):
-
-        # Remove container
-        container.remove(force=True)
+        self.engine.remove(container)
 
     # Run
     def run(self, image, command, entrypoint, variables, network, volumes, directory):
-
-        # Run container image
-        return self.client.containers.run(
-            image, command=command, detach=True, entrypoint=entrypoint,
-            environment=variables, network_mode=network, privileged=True, remove=False,
-            stdout=True, stderr=True, stream=True, volumes=volumes, working_dir=directory)
+        return self.engine.run(image, command, entrypoint, variables, network, volumes,
+                               directory)
 
     # Sockets
     def sockets(self, volumes):
-
-        # Add socket volume
-        volumes['/var/run/docker.sock'] = { #
-            'bind': '/var/run/docker.sock',
-            'mode': 'rw'
-        }
+        self.engine.sockets(volumes)
 
     # Stop
     def stop(self, container, timeout):
+        self.engine.stop(container, timeout)
 
-        # Stop container
-        container.stop(timeout=timeout)
+    # Supports
+    def supports(self, image, container, binary):
+        return self.engine.supports(image, container, binary)
 
     # Wait
     def wait(self, container):
-
-        # Wait container
-        result = container.wait()
-
-        # Result
-        return result['StatusCode'] == 0
+        return self.engine.wait(container)

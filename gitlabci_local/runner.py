@@ -308,22 +308,33 @@ def runner(options, job_data, last_result, time_launcher):
         # Show container logs
         try:
             for line in engine.logs(container):
-                if marker_debug in line.decode():
-                    break
-                sys.stdout.buffer.write(line)
-                sys.stdout.buffer.flush()
+                if isinstance(line, bytes):
+                    if marker_debug in line.decode():
+                        break
+                    sys.stdout.buffer.write(line)
+                    sys.stdout.buffer.flush()
+                else:
+                    if marker_debug in line:
+                        break
+                    sys.stdout.write(line)
+                    sys.stdout.flush()
         except:
             pass
 
         # Runner bash or debug mode
         if options.bash or options.debug:
-            print(' ')
-            exit_code, output = engine.exec(container, 'which bash')
+
+            # Select shell
             shell = 'sh'
-            if exit_code == 0:
+            if engine.supports(image, container, 'bash'):
                 shell = 'bash'
+
+            # Acquire container informations
             container_exec = engine.help('exec')
             container_name = engine.name(container)
+
+            # Footer debugging informations
+            print(' ')
             print(
                 ' %s> INFORMATION: %sUse \'%s%s %s %s%s\' commands for debugging. Interrupt with Ctrl+C...%s'
                 % (colored.fg('yellow') + colored.attr('bold'),
