@@ -4,12 +4,13 @@
 from enum import Enum
 
 # Components
-from .engines import docker
+from .engines import docker, podman
 
 # Backend enumeration
 class Backend(Enum):
     DOCKER = 1
-    UNKNOWN = 2
+    PODMAN = 2
+    UNKNOWN = 3
 
 # Engine class
 class Engine:
@@ -20,6 +21,14 @@ class Engine:
 
     # Constructor
     def __init__(self):
+
+        # Podman engine detection
+        if not self.engine:
+            try:
+                self.engine = podman.Podman()
+                self.backend = Backend.PODMAN
+            except:
+                self.engine = None
 
         # Docker engine detection
         if not self.engine:
@@ -79,5 +88,5 @@ class Engine:
         return self.engine.supports(image, container, binary)
 
     # Wait
-    def wait(self, container):
-        return self.engine.wait(container)
+    def wait(self, container, result):
+        return self.engine.wait(container, result)

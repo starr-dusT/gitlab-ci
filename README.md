@@ -119,6 +119,15 @@ to allow specific conditions for local purposes in jobs' scripts.
 
 ---
 
+## Container engines
+
+gitlabci-local currently supports these container engines:
+
+- Docker: https://docs.docker.com/get-docker/ (daemon, as root)
+- Podman: https://podman.io/getting-started/ (as sudoer)
+
+---
+
 ## Windows compatibility
 
 In order to access the interactive terminal user interfaces,

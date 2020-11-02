@@ -18,6 +18,7 @@ from .utils import nameCheck
 
 # Constants
 marker_debug = '__GITLAB_CI_LOCAL_DEBUG__'
+marker_result = '__GITLAB_CI_LOCAL_RESULT__'
 
 # Launcher
 def launcher(options, jobs):
@@ -205,6 +206,11 @@ def runner(options, job_data, last_result, time_launcher):
             scriptStream.write(') 2>&1')
             scriptStream.flush()
 
+        # Prepare container result
+        if not local_runner:
+            scriptStream.write('\n')
+            scriptStream.write('echo "%s:${result}"' % (marker_result))
+
         # Prepare execution result
         scriptStream.write('\n')
         scriptStream.write('exit "${result}"')
@@ -303,18 +309,26 @@ def runner(options, job_data, last_result, time_launcher):
         signal.signal(signal.SIGTERM, interruptHandler)
 
         # Execution wrapper
+        scriptResult = 1
         success = False
 
         # Show container logs
         try:
             for line in engine.logs(container):
                 if isinstance(line, bytes):
-                    if marker_debug in line.decode():
+                    line_decoded = line.decode()
+                    if marker_debug in line_decoded:
+                        break
+                    elif marker_result in line_decoded:
+                        scriptResult = int(line_decoded.split(':')[-1])
                         break
                     sys.stdout.buffer.write(line)
                     sys.stdout.buffer.flush()
                 else:
                     if marker_debug in line:
+                        break
+                    elif marker_result in line:
+                        scriptResult = int(line.split(':')[-1])
                         break
                     sys.stdout.write(line)
                     sys.stdout.flush()
@@ -344,7 +358,7 @@ def runner(options, job_data, last_result, time_launcher):
             print(' ', flush=True)
 
         # Check container status
-        success = engine.wait(container)
+        success = engine.wait(container, scriptResult)
 
         # Stop container
         engine.stop(container, 0)

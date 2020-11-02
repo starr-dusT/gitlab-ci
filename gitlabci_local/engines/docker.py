@@ -127,7 +127,7 @@ class Docker:
         return exit_code == 0
 
     # Wait
-    def wait(self, container):
+    def wait(self, container, result):
 
         # Wait container
         result = container.wait()
