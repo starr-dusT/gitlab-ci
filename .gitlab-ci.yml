@@ -166,7 +166,7 @@ stages:
   services: []
   before_script:
     - mkdir -p ./.tmp/
-    - apk add gcc musl-dev py-pip python3 python3-dev
+    - apk add gcc linux-headers musl-dev py-pip python3 python3-dev
     - pip install dist/*.whl
     - pip install --no-deps --upgrade dist/*.whl
   variables:
