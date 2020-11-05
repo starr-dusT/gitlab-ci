@@ -67,7 +67,7 @@ stages:
   script:
     - sudo rm -rf build dist *.egg-info .eggs
     - python3 setup.py bdist_wheel
-    - pip3 install --upgrade --no-deps dist/*.whl
+    - sudo pip3 install --upgrade --no-deps dist/*.whl
   only:
     - local
 
