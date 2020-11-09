@@ -70,6 +70,22 @@ stages:
   only:
     - local
 
+'Test':
+  stage: test
+  image: local:silent
+  script:
+    - |
+      if [ -z "${SUITE}" ]; then
+        read -p " > Test suite : " -r SUITE
+        echo ''
+      fi
+      sed -n '/^.unit-tests-template/,/^$/{ /  script/,/^$/{ /script:/n; s/^ *- //g; p } }' ./.gitlab-ci.yml | grep "/tests/${SUITE:?}" |
+      while read -r line; do
+        bash -c "${line}"
+      done
+  only:
+    - local
+
 .unit-tests-template: &unit-tests-template
   stage: test
   timeout: 10m
