@@ -320,8 +320,13 @@ def parser(options, data, environment):
         if node == 'variables':
             for variable in data['variables']:
                 if variable not in global_values['variables']:
-                    global_values['variables'][variable] = data['variables'][variable]
+                    global_values['variables'][variable] = str(
+                        data['variables'][variable])
             continue
+
+    # Prepare environment
+    _environ = dict(os.environ) # or os.environ.copy()
+    os.environ.update(global_values['variables'])
 
     # Iterate through nodes
     for node in data:
@@ -355,6 +360,10 @@ def parser(options, data, environment):
     # Sort jobs based on stages
     jobs = collections.OrderedDict(
         sorted(jobs.items(), key=lambda x: stages[x[1]['stage']]))
+
+    # Restore environment
+    os.environ.clear()
+    os.environ.update(_environ)
 
     # Result
     return jobs

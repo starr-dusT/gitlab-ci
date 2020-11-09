@@ -1,7 +1,7 @@
 image: alpine:3
 
 stages:
-  - build
+  - configurations
 
 variables:
   CONSTANT_1: 'constant1'
@@ -65,7 +65,7 @@ variables:
       key: 'unknown.node'
 
 'Job':
-  stage: build
+  stage: configurations
   script:
     - echo 'Job'
     - echo "VARIABLE_1 = ${VARIABLE_1}"
