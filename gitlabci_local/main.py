@@ -3,6 +3,7 @@
 # Libraries
 import argparse
 import colored
+import importlib.metadata
 import os
 import sys
 
@@ -35,9 +36,13 @@ def main():
     # Arguments enumerations definitions
     networksEnum = ['bridge', 'host', 'none']
 
-    # Arguments optional definitions
+    # Arguments internal definitions
     parser.add_argument('-h', '--help', dest='help', action='store_true',
                         help='Show this help message')
+    parser.add_argument('--version', dest='version', action='store_true',
+                        help='Show the current version')
+
+    # Arguments optional definitions
     parser.add_argument('-q', '--quiet', dest='quiet', action='store_true',
                         help='Hide jobs execution context')
     parser.add_argument('-c', dest='configuration', default='.gitlab-ci.yml',
@@ -104,10 +109,26 @@ def main():
 
     # Arguments parser
     options = parser.parse_args()
+
+    # Help informations
     if options.help:
         print(' ')
         parser.print_help()
         print(' ', flush=True)
+        sys.exit(0)
+
+    # Version informations
+    if options.version:
+        name = __name__.split('.')[0]
+        version = '0.0.0'
+        try:
+            version = importlib.metadata.version(name)
+        except importlib.metadata.PackageNotFoundError:
+            pass
+        print(
+            '%s %s from %s (python %s.%s)' %
+            (name, version, __file__, sys.version_info.major, sys.version_info.minor),
+            flush=True)
         sys.exit(0)
 
     # Prepare configuration
