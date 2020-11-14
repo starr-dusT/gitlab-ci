@@ -1,8 +1,5 @@
 image: alpine:3
 
-services:
-  - docker:dind
-
 stages:
   - simple_stage
   - template_stage
