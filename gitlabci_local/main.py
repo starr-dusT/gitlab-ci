@@ -41,7 +41,7 @@ def main():
     parser.add_argument('-q', '--quiet', dest='quiet', action='store_true',
                         help='Hide jobs execution context')
     parser.add_argument('-c', dest='configuration', default='.gitlab-ci.yml',
-                        help='Path to the .gitlab-ci.yml configuration')
+                        help='Path to the .gitlab-ci.yml configuration file or folder')
     parser.add_argument('-B', '--no-before', dest='before', action='store_false',
                         help='Disable before_script executions')
     parser.add_argument('-A', '--no-after', dest='after', action='store_false',
@@ -109,6 +109,10 @@ def main():
         parser.print_help()
         print(' ', flush=True)
         sys.exit(0)
+
+    # Prepare configuration
+    if os.path.isdir(options.configuration):
+        options.configuration = os.path.join(options.configuration, '.gitlab-ci.yml')
 
     # Prepare paths
     options.path = os.path.dirname(os.path.abspath(options.configuration))
