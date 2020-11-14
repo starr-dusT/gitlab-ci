@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 # Libraries
+import copy
 import oyaml as yaml
 
 # Components
@@ -17,10 +18,13 @@ def dumper(options, jobs):
     if options.names:
         for job in options.names:
             if nameCheck(job, jobs, options.no_regex):
-                configuration[job] = jobs[job]
+                configuration[job] = copy.deepcopy(jobs[job])
+                del configuration[job]['options']
                 result = True
     else:
-        configuration = jobs
+        for job in jobs:
+            configuration[job] = copy.deepcopy(jobs[job])
+            del configuration[job]['options']
         result = True
 
     # Dump configuration results
