@@ -389,6 +389,9 @@ def stager(options, job_name, data, global_values):
     job['allow_failure'] = None
     job['tags'] = None
     job['parser_incomplete'] = None
+    job['options'] = dict()
+    job['options']['host'] = False
+    job['options']['quiet'] = False
 
     # Extract job extends
     if 'extends' in job_data and job_data['extends']:
@@ -546,6 +549,13 @@ def stager(options, job_name, data, global_values):
         # Configure job tags
         if job['tags'] and (set(job['tags']) & set(options.tags)):
             job['when'] = 'manual'
+
+    # Detect host jobs
+    if job['image']:
+        if job['image'] in ['local', 'local:quiet']:
+            job['options']['host'] = True
+        if job['image'] in ['local:quiet']:
+            job['options']['quiet'] = True
 
     # Result
     return job

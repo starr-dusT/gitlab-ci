@@ -96,6 +96,9 @@ For specific local purposes where the native host context is wished,
 where the host tools, folders or credentials are required,  
 `image: local` can be used to run the scripts natively.
 
+For specific purposes, the `image: local:quiet` variant  
+can be used to enable the `quiet` option for specific jobs.
+
 An example usage can be found in the local `Changelog` job: [.gitlab-ci.yml](https://gitlab.com/AdrianDC/gitlabci-local/blob/master/.gitlab-ci.yml)
 
 ---
@@ -130,8 +133,8 @@ gitlabci-local currently supports these container engines:
 
 ## Windows compatibility
 
-In order to access the interactive terminal user interfaces,
-Windows users may need to allocate an interactive PTY context
+In order to access the interactive terminal user interfaces,  
+Windows users may need to allocate an interactive PTY context  
 through the `winpty` wrapper, for example `winpty gitlabci-local`.
 
 ---

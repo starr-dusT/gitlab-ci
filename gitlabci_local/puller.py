@@ -17,7 +17,7 @@ def puller(options, jobs):
     # List container images
     for job in jobs:
         image = jobs[job]['image']
-        if image and image != 'local' and image not in images:
+        if image and not jobs[job]['host'] and image not in images:
             images += [image]
             result = True
 

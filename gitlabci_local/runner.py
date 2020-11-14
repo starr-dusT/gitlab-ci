@@ -68,7 +68,8 @@ def runner(options, job_data, last_result, time_launcher):
 
     # Variables
     engine = None
-    local_runner = False
+    host = False
+    quiet = options.quiet
     result = False
     time_start = time.time()
 
@@ -82,9 +83,13 @@ def runner(options, job_data, last_result, time_launcher):
     image = job_data['image']
 
     # Prepare local runner
-    if options.host or image in ['local']:
+    if options.host or job_data['options']['host']:
         image = 'local'
-        local_runner = True
+        host = True
+
+    # Prepare quiet runner
+    if job_data['options']['quiet']:
+        quiet = True
 
     # Prepare network
     network = 'bridge'
@@ -92,7 +97,7 @@ def runner(options, job_data, last_result, time_launcher):
         network = options.network
 
     # Header
-    if not options.quiet:
+    if not quiet:
         print(' %s===[ %s%s: %s%s %s(%s) %s]===%s' %
               (colored.fg('green') + colored.attr('bold'),
                colored.fg('yellow') + colored.attr('bold'), job_data['stage'],
@@ -124,7 +129,7 @@ def runner(options, job_data, last_result, time_launcher):
 
     # Prepare scripts
     scriptsCommands += job_data['script']
-    if not local_runner:
+    if not host:
         if options.bash:
             scriptsCommands = []
         if options.bash or options.debug:
@@ -207,7 +212,7 @@ def runner(options, job_data, last_result, time_launcher):
             scriptStream.flush()
 
         # Prepare container result
-        if not local_runner:
+        if not host:
             scriptStream.write('\n')
             scriptStream.write('echo "%s:${result}"' % (marker_result))
 
@@ -274,7 +279,7 @@ def runner(options, job_data, last_result, time_launcher):
     variables['CI_LOCAL'] = 'true'
 
     # Container execution
-    if not local_runner:
+    if not host:
 
         # Create container engine
         if engine is None:
@@ -443,7 +448,7 @@ def runner(options, job_data, last_result, time_launcher):
 
     # Footer
     print(' ', flush=True)
-    if not options.quiet:
+    if not quiet:
         print(' %s> Result: %s in %s%s%s%s%s' %
               (colored.fg('yellow') + colored.attr('bold'), colored.fg('green') +
                colored.attr('bold') + 'Success' if result else colored.fg('red') +
