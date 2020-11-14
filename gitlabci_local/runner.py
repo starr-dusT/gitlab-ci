@@ -324,7 +324,7 @@ def runner(options, job_data, last_result, jobs_status):
 
         # Create container engine
         if engine is None:
-            engine = Engine()
+            engine = Engine(options)
             engine.sockets(volumes)
 
         # Image validation

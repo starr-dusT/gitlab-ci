@@ -2,6 +2,7 @@
 
 # Libraries
 from enum import Enum
+import os
 
 # Components
 from .engines import docker, podman
@@ -12,6 +13,18 @@ class Backend(Enum):
     PODMAN = 2
     UNKNOWN = 3
 
+# Names enumeration
+class Names():
+    DOCKER = 'docker'
+    PODMAN = 'podman'
+
+# Supported engines
+def supported():
+    return [
+        Names.DOCKER,
+        Names.PODMAN,
+    ]
+
 # Engine class
 class Engine:
 
@@ -20,10 +33,18 @@ class Engine:
     engine = None
 
     # Constructor
-    def __init__(self):
+    def __init__(self, options):
+
+        # Variables
+        override = options.engine.lower() if options.engine else None
+
+        # Parse CI_LOCAL_ENGINE
+        if not override and 'CI_LOCAL_ENGINE' in os.environ:
+            override = os.environ['CI_LOCAL_ENGINE'].lower()
 
         # Podman engine detection
-        if not self.engine:
+        if (not self.engine and not override) or (override
+                                                  and Names.PODMAN.startswith(override)):
             try:
                 self.engine = podman.Podman()
                 self.backend = Backend.PODMAN
@@ -31,7 +52,8 @@ class Engine:
                 self.engine = None
 
         # Docker engine detection
-        if not self.engine:
+        if (not self.engine and not override) or (override
+                                                  and Names.DOCKER.startswith(override)):
             try:
                 self.engine = docker.Docker()
                 self.backend = Backend.DOCKER

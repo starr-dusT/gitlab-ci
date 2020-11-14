@@ -22,7 +22,7 @@ def puller(options, jobs):
             result = True
 
     # Create container engine
-    engine = Engine()
+    engine = Engine(options)
 
     # Pull container images
     if images:

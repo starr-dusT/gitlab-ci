@@ -14,6 +14,7 @@ NAME = 'gitlabci-local'
 # Components
 from .dumper import dumper
 from .menu import selector
+from .engine import supported as engine_supported
 from .parser import reader
 from .puller import puller
 from .runner import launcher
@@ -61,6 +62,10 @@ def main():
                         help='Run complete stages rather than jobs')
     parser.add_argument('-e', dest='env', action='append',
                         help='Define VARIABLE=value, pass VARIABLE or ENV file')
+    parser.add_argument(
+        '-E', dest='engine',
+        help='Force a specific engine (or define CI_LOCAL_ENGINE)\nAvailable engines: %s'
+        % (', '.join(engine_supported())))
     parser.add_argument('-H', '--host', dest='host', action='store_true',
                         help='Run all jobs on the host rather than containers')
     parser.add_argument('-R', '--no-regex', dest='no_regex', action='store_true',
