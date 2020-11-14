@@ -100,6 +100,9 @@ where the host tools, folders or credentials are required,
 For specific purposes, the `image: local:quiet` variant  
 can be used to enable the `quiet` option for specific jobs.
 
+The `image: local:silent` variant extends the `quiet` option
+by also disabling the verbose script `set -x` line entry.
+
 An example usage can be found in the local `Changelog` job: [.gitlab-ci.yml](https://gitlab.com/AdrianDC/gitlabci-local/blob/master/.gitlab-ci.yml)
 
 ---

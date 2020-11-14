@@ -152,7 +152,10 @@ def runner(options, job_data, last_result, time_launcher):
         # Prepare before_script/script context
         scriptStream.write('(')
         scriptStream.write('\n')
-        scriptStream.write('set -ex')
+        if job_data['options']['silent']:
+            scriptStream.write('set -e')
+        else:
+            scriptStream.write('set -ex')
         scriptStream.write('\n')
 
         # Prepare before_script commands
@@ -188,7 +191,8 @@ def runner(options, job_data, last_result, time_launcher):
             scriptStream.write('\n')
             scriptStream.write('(')
             scriptStream.write('\n')
-            scriptStream.write('set -x')
+            if not job_data['options']['silent']:
+                scriptStream.write('set -x')
             scriptStream.write('\n')
             scriptStream.write('\n'.join(scriptsDebug))
             scriptStream.write('\n')
@@ -200,7 +204,10 @@ def runner(options, job_data, last_result, time_launcher):
             scriptStream.write('\n')
             scriptStream.write('(')
             scriptStream.write('\n')
-            scriptStream.write('set -ex')
+            if job_data['options']['silent']:
+                scriptStream.write('set -e')
+            else:
+                scriptStream.write('set -ex')
             scriptStream.write('\n')
             scriptStream.write('{')
             scriptStream.write('\n')

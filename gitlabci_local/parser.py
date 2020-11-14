@@ -392,6 +392,7 @@ def stager(options, job_name, data, global_values):
     job['options']['host'] = False
     job['options']['incomplete'] = None
     job['options']['quiet'] = False
+    job['options']['silent'] = False
 
     # Extract job extends
     if 'extends' in job_data and job_data['extends']:
@@ -552,10 +553,12 @@ def stager(options, job_name, data, global_values):
 
     # Detect host jobs
     if job['image']:
-        if job['image'] in ['local', 'local:quiet']:
+        if job['image'] in ['local', 'local:quiet', 'local:silent']:
             job['options']['host'] = True
-        if job['image'] in ['local:quiet']:
+        if job['image'] in ['local:quiet', 'local:silent']:
             job['options']['quiet'] = True
+        if job['image'] in ['local:silent']:
+            job['options']['silent'] = True
 
     # Result
     return job
