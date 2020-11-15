@@ -31,7 +31,8 @@ class Podman:
             return subprocess.run([self.binary] + arguments, stdout=subprocess.DEVNULL,
                                   stderr=subprocess.DEVNULL)
         else:
-            return subprocess.run([self.binary] + arguments, capture_output=True)
+            return subprocess.run([self.binary] + arguments, stdout=subprocess.PIPE,
+                                  stderr=subprocess.PIPE)
 
     # Internal watcher
     def __watch(self, arguments):
