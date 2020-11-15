@@ -3,8 +3,8 @@
 # Libraries
 import argparse
 import colored
-import importlib.metadata
 import os
+import pkg_resources
 import sys
 
 # Constants
@@ -125,11 +125,7 @@ def main():
     # Version informations
     if options.version:
         name = __name__.split('.')[0]
-        version = '0.0.0'
-        try:
-            version = importlib.metadata.version(name)
-        except importlib.metadata.PackageNotFoundError:
-            pass
+        version = pkg_resources.require(name)[0].version
         print(
             '%s %s from %s (python %s.%s)' %
             (name, version, __file__, sys.version_info.major, sys.version_info.minor),
