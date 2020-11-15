@@ -45,8 +45,14 @@ stages:
   image: ${IMAGE_REFERENCE_4}
   variables:
     IMAGE_REFERENCE_4: alpine:unknown
+    VALUE_3:
+    VALUE_4: New value 4
   script:
     - echo 'Job 4'
+    - echo "VALUE_1 = ${VALUE_1}"
+    - echo "VALUE_2 = ${VALUE_2}"
+    - echo "VALUE_3 = ${VALUE_3}"
+    - echo "VALUE_4 = ${VALUE_4}"
 
 'Job 5':
   stage: variables

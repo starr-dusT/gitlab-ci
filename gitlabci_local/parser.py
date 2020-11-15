@@ -320,8 +320,11 @@ def parser(options, data, environment):
         if node == 'variables':
             for variable in data['variables']:
                 if variable not in global_values['variables']:
-                    global_values['variables'][variable] = str(
-                        data['variables'][variable])
+                    if data['variables'][variable] is None:
+                        global_values['variables'][variable] = ''
+                    else:
+                        global_values['variables'][variable] = str(
+                            data['variables'][variable])
             continue
 
     # Prepare environment
@@ -490,7 +493,11 @@ def stager(options, job_name, data, global_values):
 
     # Extract job variables
     if 'variables' in job_data and job_data['variables']:
-        job['variables'].update(job_data['variables'])
+        for variable in job_data['variables']:
+            if job_data['variables'][variable] is None:
+                job['variables'][variable] = ''
+            else:
+                job['variables'][variable] = str(job_data['variables'][variable])
 
     # Extract job before_script
     if 'before_script' in job_data:
