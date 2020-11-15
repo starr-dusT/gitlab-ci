@@ -16,8 +16,8 @@ def dumper(options, jobs):
 
     # Prepare configuration results
     if options.names:
-        for job in options.names:
-            if nameCheck(job, jobs, options.no_regex):
+        for job in jobs:
+            if nameCheck(job, options.names, options.no_regex):
                 configuration[job] = copy.deepcopy(jobs[job])
                 del configuration[job]['options']
                 result = True
