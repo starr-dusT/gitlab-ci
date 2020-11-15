@@ -131,8 +131,8 @@ to allow specific conditions for local purposes in jobs' scripts.
 
 gitlabci-local currently supports these container engines:
 
-- Docker: https://docs.docker.com/get-docker/ (daemon, as root)
-- Podman: https://podman.io/getting-started/ (as sudoer)
+- Docker: https://docs.docker.com/get-docker/ (root daemon, as user or sudoer)
+- Podman: https://podman.io/getting-started/ (rootless CLI or root CLI)
 
 ---
 

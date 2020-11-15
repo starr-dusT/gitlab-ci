@@ -2,8 +2,8 @@
 
 # Libraries
 import os
-import podman
 import stat
+import subprocess
 import tempfile
 import time
 
@@ -11,19 +11,43 @@ import time
 class Podman:
 
     # Members
-    client = None
+    binary = 'podman'
 
     # Constructor
     def __init__(self):
 
-        # Engine client
-        self.client = podman.Client()
+        # Configure binary
+        if 'PODMAN_BINARY_PATH' in os.environ:
+            self.binary = os.environ['PODMAN_BINARY_PATH']
+
+        # Check engine support
+        result = self.__exec(['system', 'info'], True)
+        if result.returncode != 0:
+            raise NotImplementedError('Unsupported Podman engine...')
+
+    # Internal execution
+    def __exec(self, arguments, quiet=False):
+        if quiet:
+            return subprocess.run([self.binary] + arguments, stdout=subprocess.DEVNULL,
+                                  stderr=subprocess.DEVNULL)
+        else:
+            return subprocess.run([self.binary] + arguments, capture_output=True)
+
+    # Internal watcher
+    def __watch(self, arguments):
+        return iter(
+            subprocess.Popen([self.binary] + arguments,
+                             stdout=subprocess.PIPE).stdout.readline, b'')
 
     # Exec
     def exec(self, container, command):
 
+        # Adapt command
+        if isinstance(command, str):
+            command = [command]
+
         # Execute command in container
-        raise NotImplementedError('Unsupported exec command in the Podman engine...')
+        return self.__exec(['exec', container] + command)
 
     # Help
     def help(self, command):
@@ -42,24 +66,26 @@ class Podman:
     def get(self, image):
 
         # Validate image exists
-        try:
-            self.client.images.get(image)
+        result = self.__exec(['inspect', '--type', 'image', '--format', 'exists', image],
+                             True)
 
         # Pull missing image
-        except:
+        if result.returncode != 0:
             self.pull(image)
 
     # Logs
     def logs(self, container):
 
         # Return logs stream
-        return container.logs()
+        return self.__watch(['logs', '--follow', container])
 
     # Name
     def name(self, container):
 
         # Result
-        return container.stats().name
+        result = self.__exec(
+            ['inspect', '--type', 'container', '--format', '{{.Name}}', container])
+        return result.stdout.strip().decode('utf-8') if result.returncode == 0 else ''
 
     # Pull
     def pull(self, image):
@@ -68,11 +94,17 @@ class Podman:
         print('Pulling from %s' % (image), flush=True)
 
         # Pull image with logs stream
-        id = self.client.images.pull(image)
+        result = self.__exec(['pull', image])
 
         # Layer completion logs
-        print('Digest: %s' % (id))
-        print('Status: Image is up to date for %s' % (image))
+        if result.returncode == 0:
+            result = self.__exec(
+                ['inspect', '--type', 'image', '--format', '{{.Id}}', image])
+            print('Digest: %s' % (result.stdout.strip().decode('utf-8')))
+            print('Status: Image is up to date for %s' % (image))
+        else:
+            print('Status: Image not found for %s' % (image), flush=True)
+            raise FileNotFoundError(result.stderr.decode('utf-8').replace('\\n', '\n'))
 
         # Footer
         print(' ', flush=True)
@@ -81,46 +113,65 @@ class Podman:
     def remove(self, container):
 
         # Remove container
-        container.remove(force=True)
+        self.__exec(['rm', '--force', container])
 
     # Run
     def run(self, image, command, entrypoint, variables, network, volumes, directory):
 
         # Variables
-        mount = []
+        args_command = []
+        args_entrypoint = []
+        args_env = []
+        args_volumes = []
 
-        # Acquire image
-        image = self.client.images.get(image)
+        # Adapt command
+        if isinstance(command, list):
+            args_command = command
+        elif isinstance(command, str):
+            args_command = [command]
 
         # Adapt entrypoint
         if isinstance(entrypoint, list):
             if len(entrypoint) > 1:
-                if isinstance(command, str):
-                    command = [command]
-                command = [' '.join(command)]
-                command[0:0] = entrypoint[1:]
+                args_command = [' '.join(args_command)]
+                args_command[0:0] = entrypoint[1:]
             entrypoint = entrypoint[0]
+        if isinstance(entrypoint, str):
+            args_entrypoint = ['--entrypoint', entrypoint]
 
         # Adapt mounts
         if isinstance(volumes, dict):
             for volume in volumes.items():
                 options = ''
                 if volume[1]['mode'] == 'ro':
-                    options += ',ro=true'
+                    options += ':ro'
                 elif volume[1]['mode'] == 'rw':
-                    options += ',rw=true'
-                mount += [
-                    'type=bind,src=%s,target=%s%s' %
-                    (volume[0], volume[1]['bind'], options)
+                    options += ':rw'
+                args_volumes += [
+                    '--volume',
+                    '%s:%s%s' % (volume[0], volume[1]['bind'], options)
                 ]
 
+        # Adapt variables
+        for variable in variables:
+            args_env.extend(['--env', '%s=%s' % (variable, variables[variable])])
+
         # Create container image
-        container = image.container(command=command, detach=True, entrypoint=entrypoint,
-                                    env=variables, rm=False, tty=True, mount=mount,
-                                    securityOpt=['label=disable'], workDir=directory)
+        result = self.__exec(['create'] + args_entrypoint + args_env + ['--tty'] +
+                             args_volumes + ['--security-opt', 'label=disable'] +
+                             ['--workdir', directory] + [image] + args_command)
+        if result.returncode == 0:
+            container = result.stdout.strip().decode('utf-8')
+
+        # Handle failures
+        else:
+            raise NotImplementedError(result.stderr.decode('utf-8').replace('\\n', '\n'))
 
         # Start container
-        return container.start()
+        self.__exec(['start', container])
+
+        # Result
+        return container
 
     # Sockets
     def sockets(self, volumes):
@@ -130,67 +181,22 @@ class Podman:
     def stop(self, container, timeout):
 
         # Stop container
-        try:
-            container.stop(timeout=timeout)
-        except podman.libs.errors.InvalidState:
-            pass
-        except:
-            pass
+        self.__exec(['stop', '--time', str(timeout), container])
 
     # Supports
     def supports(self, image, container, binary):
 
-        # Variables
-        exit_code = False
-        test = None
-
-        # Prepare commands
-        scriptFile = tempfile.NamedTemporaryFile(delete=True)
-        with open(scriptFile.name, mode='w') as scriptStream:
-
-            # Prepare execution context
-            scriptStream.write('#!/bin/sh')
-            scriptStream.write('\n')
-            scriptStream.write('whereis %s' % binary)
-            scriptStream.write('\n')
-            scriptStream.write('result=${?}')
-            scriptStream.write('\n')
-            scriptStream.write('sleep 1')
-            scriptStream.write('\n')
-            scriptStream.write('exit "${result}"')
-            scriptStream.write('\n')
-
-        # Prepare script execution
-        script_stat = os.stat(scriptStream.name)
-        os.chmod(scriptStream.name, script_stat.st_mode | stat.S_IEXEC)
-        scriptFile.file.close()
-
-        # Prepare mounts
-        temp_dir = tempfile.gettempdir()
-        volumes = {temp_dir: {'bind': temp_dir, 'mode': 'rw'}}
-
         # Validate binary support
-        try:
-            test = self.run(image, scriptFile.name, None, None, 'bridge', volumes, None)
-            exit_code = self.wait(test, 1)
-        except:
-            pass
-
-        # Cleanup test container
-        if test:
-            self.stop(test, 0)
-            time.sleep(0.1)
-            self.remove(test)
+        result = self.exec(container, ['whereis', binary])
 
         # Result
-        return exit_code
+        return result.returncode == 0
 
     # Wait
     def wait(self, container, result):
 
         # Wait container
-        if container.refresh().status != 'exited':
-            result = container.wait()
+        result = self.__exec(['wait', container])
 
         # Result
-        return result == 0
+        return int(result.stdout.strip()) == 0 if result.returncode == 0 else False
