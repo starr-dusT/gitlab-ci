@@ -136,6 +136,10 @@ def main():
     if os.path.isdir(options.configuration):
         options.configuration = os.path.join(options.configuration, '.gitlab-ci.yml')
 
+    # Prepare engine
+    if not options.engine and 'CI_LOCAL_ENGINE' in os.environ:
+        options.engine = os.environ['CI_LOCAL_ENGINE']
+
     # Prepare paths
     options.path = os.path.dirname(os.path.abspath(options.configuration))
 

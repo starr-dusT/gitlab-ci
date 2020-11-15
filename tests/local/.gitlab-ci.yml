@@ -32,6 +32,7 @@ stages:
         - 'value3'
   debug: false
   defaults: true
+  engine: auto
   env:
     - LOGNAME
     - VARIABLE_CI=SECOND_VALUE_EXPECTED

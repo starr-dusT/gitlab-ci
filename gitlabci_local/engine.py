@@ -15,12 +15,14 @@ class Backend(Enum):
 
 # Names enumeration
 class Names():
+    AUTO = 'auto'
     DOCKER = 'docker'
     PODMAN = 'podman'
 
 # Supported engines
 def supported():
     return [
+        Names.AUTO,
         Names.DOCKER,
         Names.PODMAN,
     ]
@@ -38,9 +40,9 @@ class Engine:
         # Variables
         override = options.engine.lower() if options.engine else None
 
-        # Parse CI_LOCAL_ENGINE
-        if not override and 'CI_LOCAL_ENGINE' in os.environ:
-            override = os.environ['CI_LOCAL_ENGINE'].lower()
+        # Handle engine automatically
+        if override == Names.AUTO:
+            override = None
 
         # Podman engine detection
         if (not self.engine and not override) or (override
