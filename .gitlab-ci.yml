@@ -185,6 +185,7 @@ stages:
   before_script:
     - mkdir -p ./.tmp/
     - apk add gcc linux-headers musl-dev py-pip python3 python3-dev
+    - rm /etc/alpine-release
     - pip install dist/*.whl
     - pip install --no-deps --upgrade dist/*.whl
   variables:

@@ -73,7 +73,9 @@ variables:
     - pwd
     - ls /etc/alpine-release && exit 1 || true
     - uname -a
+    - echo "CI_LOCAL=${CI_LOCAL}"
     - test -z "${CI_LOCAL}" && exit 1 || true
+    - echo "CI_LOCAL_ENGINE=${CI_LOCAL_ENGINE}"
   after_script:
     - echo '__AFTER__'
 
@@ -90,6 +92,10 @@ variables:
     - cat /etc/alpine-release
     - uname -a
     - ip a
+    - echo "CI_LOCAL=${CI_LOCAL}"
+    - test -z "${CI_LOCAL}" && exit 1 || true
+    - echo "CI_LOCAL_ENGINE=${CI_LOCAL_ENGINE}"
+    - test -z "${CI_LOCAL_ENGINE}" && exit 1 || true
   after_script:
     - echo '__AFTER__'
 

@@ -35,7 +35,7 @@ class Engine:
     engine = None
 
     # Constructor
-    def __init__(self, options):
+    def __init__(self, options, variables=None):
 
         # Variables
         override = options.engine.lower() if options.engine else None
@@ -50,6 +50,8 @@ class Engine:
             try:
                 self.engine = podman.Podman()
                 self.backend = Backend.PODMAN
+                if variables:
+                    variables['CI_LOCAL_ENGINE'] = Names.PODMAN
             except:
                 self.engine = None
 
@@ -59,6 +61,8 @@ class Engine:
             try:
                 self.engine = docker.Docker()
                 self.backend = Backend.DOCKER
+                if variables:
+                    variables['CI_LOCAL_ENGINE'] = Names.DOCKER
             except:
                 self.engine = None
 
