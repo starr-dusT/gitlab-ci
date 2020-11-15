@@ -35,8 +35,8 @@ stages:
   stage: prepare
   image: local
   script:
-    - yapf -i ./docs/*.py ./gitlabci_local/*.py ./setup.py
-    - unify -i --quote "'" ./docs/*.py ./gitlabci_local/*.py ./setup.py
+    - yapf -i ./docs/*.py ./gitlabci_local/*.py ./gitlabci_local/*/*.py ./setup.py
+    - unify -i --quote "'" ./docs/*.py ./gitlabci_local/*.py ./gitlabci_local/*/*.py ./setup.py
   only:
     - local
 

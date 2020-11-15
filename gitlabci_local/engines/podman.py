@@ -23,7 +23,7 @@ class Podman:
     def exec(self, container, command):
 
         # Execute command in container
-        raise NotImplementedError("Unsupported exec command in the Podman engine...")
+        raise NotImplementedError('Unsupported exec command in the Podman engine...')
 
     # Help
     def help(self, command):
