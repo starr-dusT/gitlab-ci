@@ -159,7 +159,8 @@ class Podman:
 
         # Create container image
         result = self.__exec(['create'] + args_entrypoint + args_env + ['--tty'] +
-                             args_volumes + ['--security-opt', 'label=disable'] +
+                             args_volumes + ['--privileged'] +
+                             ['--security-opt', 'label=disable'] +
                              ['--workdir', directory] + [image] + args_command)
         if result.returncode == 0:
             container = result.stdout.strip().decode('utf-8')
