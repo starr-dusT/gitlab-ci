@@ -76,6 +76,7 @@ variables:
     - echo "CI_LOCAL=${CI_LOCAL}"
     - test -z "${CI_LOCAL}" && exit 1 || true
     - echo "CI_LOCAL_ENGINE=${CI_LOCAL_ENGINE}"
+    - echo "CI_LOCAL_ENGINE_NAME=${CI_LOCAL_ENGINE_NAME}"
   after_script:
     - echo '__AFTER__'
 
@@ -95,7 +96,8 @@ variables:
     - echo "CI_LOCAL=${CI_LOCAL}"
     - test -z "${CI_LOCAL}" && exit 1 || true
     - echo "CI_LOCAL_ENGINE=${CI_LOCAL_ENGINE}"
-    - test -z "${CI_LOCAL_ENGINE}" && exit 1 || true
+    - echo "CI_LOCAL_ENGINE_NAME=${CI_LOCAL_ENGINE_NAME}"
+    - test -z "${CI_LOCAL_ENGINE_NAME}" && exit 1 || true
   after_script:
     - echo '__AFTER__'
 

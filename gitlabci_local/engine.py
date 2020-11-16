@@ -51,7 +51,7 @@ class Engine:
                 self.engine = podman.Podman()
                 self.backend = Backend.PODMAN
                 if variables:
-                    variables['CI_LOCAL_ENGINE'] = Names.PODMAN
+                    variables['CI_LOCAL_ENGINE_NAME'] = Names.PODMAN
             except:
                 self.engine = None
 
@@ -62,7 +62,7 @@ class Engine:
                 self.engine = docker.Docker()
                 self.backend = Backend.DOCKER
                 if variables:
-                    variables['CI_LOCAL_ENGINE'] = Names.DOCKER
+                    variables['CI_LOCAL_ENGINE_NAME'] = Names.DOCKER
             except:
                 self.engine = None
 
