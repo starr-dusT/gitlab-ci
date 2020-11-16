@@ -264,7 +264,9 @@ def runner(options, job_data, last_result, jobs_status):
 
     # Prepare script execution
     script_stat = os.stat(scriptStream.name)
-    os.chmod(scriptStream.name, script_stat.st_mode | stat.S_IEXEC)
+    os.chmod(
+        scriptStream.name, script_stat.st_mode | stat.S_IXUSR | stat.S_IXGRP
+        | stat.S_IRGRP | stat.S_IROTH | stat.S_IXOTH)
     scriptFile.file.close()
 
     # Prepare mounts
