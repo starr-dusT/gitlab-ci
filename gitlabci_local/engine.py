@@ -14,10 +14,46 @@ class Backend(Enum):
     UNKNOWN = 3
 
 # Names enumeration
-class Names():
+class Names:
+
+    # Constants
     AUTO = 'auto'
     DOCKER = 'docker'
     PODMAN = 'podman'
+
+    # Getter
+    def get(override):
+
+        # Default prioritized names
+        defaults = [
+            Names.PODMAN,
+            Names.DOCKER,
+        ]
+
+        # Adapt override
+        override = override.lower() if override else None
+
+        # Handle engine overrides
+        if override:
+            auto = False
+            names = []
+            overrides = override.split(',')
+            for item in overrides:
+                if item:
+                    if Names.AUTO.startswith(item):
+                        auto = True
+                    else:
+                        names += [name for name in defaults if name.startswith(item)]
+            if auto or override[-1] == ',':
+                names = names + defaults
+            names = list(dict.fromkeys(names))
+
+        # Use engine defaults
+        else:
+            names = defaults
+
+        # Result
+        return names
 
 # Supported engines
 def supported():
@@ -37,34 +73,33 @@ class Engine:
     # Constructor
     def __init__(self, options, variables=None):
 
-        # Variables
-        override = options.engine.lower() if options.engine else None
+        # Acquire engine names
+        names = Names.get(options.engine)
 
-        # Handle engine automatically
-        if override == Names.AUTO:
-            override = None
+        # Iterate through names
+        for name in names:
 
-        # Podman engine detection
-        if (not self.engine and not override) or (override
-                                                  and Names.PODMAN.startswith(override)):
-            try:
-                self.engine = podman.Podman()
-                self.backend = Backend.PODMAN
-                if variables:
-                    variables['CI_LOCAL_ENGINE_NAME'] = Names.PODMAN
-            except:
-                self.engine = None
+            # Podman engine detection
+            if name == Names.PODMAN:
+                try:
+                    self.engine = podman.Podman()
+                    self.backend = Backend.PODMAN
+                    if variables:
+                        variables['CI_LOCAL_ENGINE_NAME'] = Names.PODMAN
+                    break
+                except:
+                    self.engine = None
 
-        # Docker engine detection
-        if (not self.engine and not override) or (override
-                                                  and Names.DOCKER.startswith(override)):
-            try:
-                self.engine = docker.Docker()
-                self.backend = Backend.DOCKER
-                if variables:
-                    variables['CI_LOCAL_ENGINE_NAME'] = Names.DOCKER
-            except:
-                self.engine = None
+            # Docker engine detection
+            elif name == Names.DOCKER:
+                try:
+                    self.engine = docker.Docker()
+                    self.backend = Backend.DOCKER
+                    if variables:
+                        variables['CI_LOCAL_ENGINE_NAME'] = Names.DOCKER
+                    break
+                except:
+                    self.engine = None
 
         # Unknown engine fallback
         if not self.engine:
