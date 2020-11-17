@@ -92,21 +92,36 @@ stages:
   only:
     - local
 
-.unit-tests-template: &unit-tests-template
-  stage: test
-  timeout: 10m
+.unit-tests-docker:
   services:
     - docker:19.03.13-dind
   variables:
     DOCKER_DRIVER: overlay2
-    # DOCKER_HOST: tcp://docker:2375
-    FORCE_STYLING: 'true'
-    TEMP: .tmp
-    TERM: ansi
   before_script:
     - mkdir -p ./.tmp/
     - pip install dist/*.whl
     - pip install --no-deps --upgrade dist/*.whl
+
+.unit-tests-podman:
+  before_script:
+    - echo 'deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/Debian_10/ /' >/etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list
+    - curl -L https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/Debian_10/Release.key | apt-key add -
+    - apt update
+    - apt -y install podman
+    - sed -i 's#.*cgroup_manager = ".*"#cgroup_manager = "cgroupfs"#g' /etc/containers/containers.conf
+    - sed -i 's#.*events_logger = ".*"#events_logger = "file"#g' /etc/containers/containers.conf
+    - sed -i 's#driver = ""#driver = "vfs"#g' /etc/containers/storage.conf
+    - mkdir -p ./.tmp/
+    - pip install dist/*.whl
+    - pip install --no-deps --upgrade dist/*.whl
+
+.unit-tests-template:
+  stage: test
+  timeout: 10m
+  variables:
+    FORCE_STYLING: 'true'
+    TEMP: .tmp
+    TERM: ansi
   script:
     - pip show gitlabci-local
     - gitlabci-local -h
@@ -179,48 +194,57 @@ stages:
     - gcil -c ./tests/simple/.gitlab-ci.yml 4 && exit 1 || true
 
 'Py3.6 Docker':
-  extends: .unit-tests-template
+  extends:
+    - .unit-tests-template
+    - .unit-tests-docker
   image: python:3.6
 
 'Py3.7 Docker':
-  extends: .unit-tests-template
+  extends:
+    - .unit-tests-template
+    - .unit-tests-docker
   image: python:3.7
 
 'Py3.8 Docker':
-  extends: .unit-tests-template
+  extends:
+    - .unit-tests-template
+    - .unit-tests-docker
   image: python:3.8
 
 'Py3.9 Docker':
-  extends: .unit-tests-template
+  extends:
+    - .unit-tests-template
+    - .unit-tests-docker
   image: python:3.9
 
-'Py3.8 PodMan':
-  extends: .unit-tests-template
-  image:
-    entrypoint: ['']
-    name: mgoltzsche/podman:latest
-  services: []
-  before_script:
-    - mkdir -p ./.tmp/
-    - apk add gcc linux-headers musl-dev py-pip python3 python3-dev
-    - rm /etc/alpine-release
-    - pip install dist/*.whl
-    - pip install --no-deps --upgrade dist/*.whl
-  variables:
-    DOCKER_HOST: tcp://localhost:9999
+'Py3.6 Podman':
+  extends:
+    - .unit-tests-template
+    - .unit-tests-podman
+  image: python:3.6
 
-'PyPI Docker':
-  extends: .unit-tests-template
+'Py3.7 Podman':
+  extends:
+    - .unit-tests-template
+    - .unit-tests-podman
+  image: python:3.7
+
+'Py3.8 Podman':
+  extends:
+    - .unit-tests-template
+    - .unit-tests-podman
   image: python:3.8
-  before_script:
-    - echo "VERSION=${VERSION:-latest}"
-    - pip install "gitlabci-local${VERSION:+==}${VERSION}"
-  when: manual
+
+'Py3.9 Podman':
+  extends:
+    - .unit-tests-template
+    - .unit-tests-podman
+  image: python:3.9
 
 'Python Local':
-  extends: .unit-tests-template
+  extends:
+    - .unit-tests-template
   image: local:quiet
-  before_script: []
   only:
     - local
 
