@@ -159,6 +159,7 @@ stages:
     - gitlabci-local -c ./tests/extends/.gitlab-ci.yml -p
     - gitlabci-local -c ./tests/multilines/.gitlab-ci.yml -p
     - gitlabci-local -c ./tests/disabled/.gitlab-ci.yml -p
+    - gitlabci-local -c ./tests/triggers/.gitlab-ci.yml -p
     - timeout 5 gitlabci-local -c ./tests/simple/.gitlab-ci.yml 'Job 1' --bash && exit 1 || true
     - timeout 5 gitlabci-local -c ./tests/simple/.gitlab-ci.yml 'Job 1' --debug && exit 1 || true
     - gcil -c ./tests/simple/.gitlab-ci.yml Job

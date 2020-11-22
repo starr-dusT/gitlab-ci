@@ -1,0 +1,20 @@
+image: alpine:3
+
+stages:
+  - build
+  - trigger
+
+'Job 1':
+  stage: build
+  script:
+    - echo 'Job 1'
+
+'Job Trigger 1':
+  stage: trigger
+  trigger: username/project
+
+'Job Trigger 2':
+  stage: trigger
+  trigger:
+    project: username/project
+    branch: stable

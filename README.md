@@ -184,6 +184,9 @@ through the `winpty` wrapper, for example `winpty gitlabci-local`.
     + **max:** RETRY_COUNT
   * **tags:**
     + MANUAL_TAGS
+  * **trigger:** SIMPLE_TRIGGER (ignored)
+  * **trigger:**
+    + COMPLEX_TRIGGER (ignored)
   * **when:** on\_success/manual/on\_failure/always
   * **allow_failure:** true/false
 

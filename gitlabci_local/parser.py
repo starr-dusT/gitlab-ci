@@ -397,6 +397,7 @@ def stager(options, job_name, data, global_values):
     job['when'] = None
     job['allow_failure'] = None
     job['tags'] = None
+    job['trigger'] = None
     job['options'] = dict()
     job['options']['disabled'] = None
     job['options']['host'] = False
@@ -448,6 +449,8 @@ def stager(options, job_name, data, global_values):
                 job['allow_failure'] = job_extended['allow_failure']
             if job['tags'] is None:
                 job['tags'] = job_extended['tags']
+            if job['trigger'] is None:
+                job['trigger'] = job_extended['trigger']
 
     # Apply global values
     if global_values:
@@ -556,6 +559,14 @@ def stager(options, job_name, data, global_values):
     # Extract job tags
     if 'tags' in job_data and job_data['tags']:
         job['tags'] = job_data['tags'][:]
+
+    # Extract job trigger
+    if 'trigger' in job_data and job_data['trigger']:
+        job['options']['disabled'] = 'trigger only'
+        if isinstance(job_data['trigger'], dict):
+            job['trigger'] = job_data['trigger']
+        elif isinstance(job_data['trigger'], str):
+            job['trigger'] = job_data['trigger']
 
     # Finalize global values
     if global_values:
