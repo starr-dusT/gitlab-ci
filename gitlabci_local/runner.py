@@ -177,99 +177,98 @@ def runner(options, job_data, last_result, jobs_status):
     if options.after:
         scriptsAfter += job_data['after_script']
 
-    # Prepare commands
-    scriptFile = tempfile.NamedTemporaryFile(delete=True)
-    with open(scriptFile.name, mode='w') as scriptStream:
+    # Prepare temporary script
+    scriptFile = tempfile.NamedTemporaryFile(delete=True, mode='w')
 
-        # Prepare execution context
-        scriptStream.write('#!/bin/sh')
-        scriptStream.write('\n')
-        scriptStream.write('result=1')
-        scriptStream.write('\n')
+    # Prepare execution context
+    scriptFile.write('#!/bin/sh')
+    scriptFile.write('\n')
+    scriptFile.write('result=1')
+    scriptFile.write('\n')
 
-        # Prepare before_script/script context
-        scriptStream.write('(')
-        scriptStream.write('\n')
+    # Prepare before_script/script context
+    scriptFile.write('(')
+    scriptFile.write('\n')
+    if job_data['options']['silent']:
+        scriptFile.write('set -e')
+    else:
+        scriptFile.write('set -ex')
+    scriptFile.write('\n')
+
+    # Prepare before_script commands
+    if len(scriptsBefore) > 0:
+        scriptFile.write('{')
+        scriptFile.write('\n')
+        scriptFile.write('\n'.join(scriptsBefore))
+        scriptFile.write('\n')
+        scriptFile.write('} && ')
+        scriptFile.flush()
+
+    # Prepare script commands
+    if len(scriptsCommands) > 0:
+        scriptFile.write('{')
+        scriptFile.write('\n')
+        scriptFile.write('\n'.join(scriptsCommands))
+        scriptFile.write('\n')
+        scriptFile.write('}')
+        scriptFile.flush()
+    else:
+        scriptFile.write('false')
+        scriptFile.flush()
+
+    # Finish before_script/script context
+    scriptFile.write('\n')
+    scriptFile.write(') 2>&1')
+    scriptFile.write('\n')
+    scriptFile.write('result=${?}')
+    scriptFile.flush()
+
+    # Prepare debug script commands
+    if len(scriptsDebug) > 0:
+        scriptFile.write('\n')
+        scriptFile.write('(')
+        scriptFile.write('\n')
+        if not job_data['options']['silent']:
+            scriptFile.write('set -x')
+        scriptFile.write('\n')
+        scriptFile.write('\n'.join(scriptsDebug))
+        scriptFile.write('\n')
+        scriptFile.write(') 2>&1')
+        scriptFile.flush()
+
+    # Prepare after_script commands
+    if len(scriptsAfter) > 0:
+        scriptFile.write('\n')
+        scriptFile.write('(')
+        scriptFile.write('\n')
         if job_data['options']['silent']:
-            scriptStream.write('set -e')
+            scriptFile.write('set -e')
         else:
-            scriptStream.write('set -ex')
-        scriptStream.write('\n')
+            scriptFile.write('set -ex')
+        scriptFile.write('\n')
+        scriptFile.write('{')
+        scriptFile.write('\n')
+        scriptFile.write('\n'.join(scriptsAfter))
+        scriptFile.write('\n')
+        scriptFile.write('}')
+        scriptFile.write('\n')
+        scriptFile.write(') 2>&1')
+        scriptFile.flush()
 
-        # Prepare before_script commands
-        if len(scriptsBefore) > 0:
-            scriptStream.write('{')
-            scriptStream.write('\n')
-            scriptStream.write('\n'.join(scriptsBefore))
-            scriptStream.write('\n')
-            scriptStream.write('} && ')
-            scriptStream.flush()
+    # Prepare container result
+    if not host:
+        scriptFile.write('\n')
+        scriptFile.write('echo "%s:${result}"' % (marker_result))
 
-        # Prepare script commands
-        if len(scriptsCommands) > 0:
-            scriptStream.write('{')
-            scriptStream.write('\n')
-            scriptStream.write('\n'.join(scriptsCommands))
-            scriptStream.write('\n')
-            scriptStream.write('}')
-            scriptStream.flush()
-        else:
-            scriptStream.write('false')
-            scriptStream.flush()
-
-        # Finish before_script/script context
-        scriptStream.write('\n')
-        scriptStream.write(') 2>&1')
-        scriptStream.write('\n')
-        scriptStream.write('result=${?}')
-        scriptStream.flush()
-
-        # Prepare debug script commands
-        if len(scriptsDebug) > 0:
-            scriptStream.write('\n')
-            scriptStream.write('(')
-            scriptStream.write('\n')
-            if not job_data['options']['silent']:
-                scriptStream.write('set -x')
-            scriptStream.write('\n')
-            scriptStream.write('\n'.join(scriptsDebug))
-            scriptStream.write('\n')
-            scriptStream.write(') 2>&1')
-            scriptStream.flush()
-
-        # Prepare after_script commands
-        if len(scriptsAfter) > 0:
-            scriptStream.write('\n')
-            scriptStream.write('(')
-            scriptStream.write('\n')
-            if job_data['options']['silent']:
-                scriptStream.write('set -e')
-            else:
-                scriptStream.write('set -ex')
-            scriptStream.write('\n')
-            scriptStream.write('{')
-            scriptStream.write('\n')
-            scriptStream.write('\n'.join(scriptsAfter))
-            scriptStream.write('\n')
-            scriptStream.write('}')
-            scriptStream.write('\n')
-            scriptStream.write(') 2>&1')
-            scriptStream.flush()
-
-        # Prepare container result
-        if not host:
-            scriptStream.write('\n')
-            scriptStream.write('echo "%s:${result}"' % (marker_result))
-
-        # Prepare execution result
-        scriptStream.write('\n')
-        scriptStream.write('exit "${result}"')
-        scriptStream.write('\n')
+    # Prepare execution result
+    scriptFile.write('\n')
+    scriptFile.write('exit "${result}"')
+    scriptFile.write('\n')
 
     # Prepare script execution
-    script_stat = os.stat(scriptStream.name)
+    script_stat = os.stat(scriptFile.name)
     os.chmod(
-        scriptStream.name, script_stat.st_mode | stat.S_IXUSR | stat.S_IXGRP
+        scriptFile.name, script_stat.st_mode | stat.S_IXUSR | stat.S_IXGRP
         | stat.S_IRGRP | stat.S_IROTH | stat.S_IXOTH)
     scriptFile.file.close()
 
