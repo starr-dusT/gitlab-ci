@@ -45,6 +45,10 @@ def launcher(options, jobs):
                                                                options.no_regex):
             continue
 
+        # Filter disabled jobs
+        if jobs[job]['options']['disabled']:
+            continue
+
         # Raise initial result
         if result == None:
             result = True

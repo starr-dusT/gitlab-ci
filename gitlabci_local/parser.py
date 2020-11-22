@@ -357,12 +357,13 @@ def parser(options, data, environment):
         jobs[node] = stager(options, node, data, global_values)
 
         # Validate job script
-        if not jobs[node]['options']['incomplete'] and not jobs[node]['script']:
+        if not jobs[node]['options']['disabled'] and not jobs[node]['script']:
             raise ValueError('Missing "script" key for "%s / %s"' %
                              (jobs[node]['stage'], jobs[node]['name']))
 
         # Append unknown stage if required
-        if jobs[node]['options']['incomplete'] and 'unknown' not in stages:
+        if jobs[node]['options']['disabled'] and jobs[node][
+                'stage'] == 'unknown' and 'unknown' not in stages:
             stages['unknown'] = list(stages.values())[-1] + 1
 
     # Sort jobs based on stages
@@ -397,8 +398,8 @@ def stager(options, job_name, data, global_values):
     job['allow_failure'] = None
     job['tags'] = None
     job['options'] = dict()
+    job['options']['disabled'] = None
     job['options']['host'] = False
-    job['options']['incomplete'] = None
     job['options']['quiet'] = False
     job['options']['silent'] = False
 
@@ -414,7 +415,7 @@ def stager(options, job_name, data, global_values):
 
             # Parse extended job
             if job_extend not in data:
-                job['options']['incomplete'] = '%s unknown' % (job_extend)
+                job['options']['disabled'] = '%s unknown' % (job_extend)
                 if job['stage'] is None:
                     job['stage'] = 'unknown'
                 break
