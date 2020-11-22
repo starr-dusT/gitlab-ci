@@ -82,8 +82,10 @@ stages:
       fi
       sed -n '/^.unit-tests-template/,/^$/{ /  script/,/^$/{ /script:/n; s/^ *- //g; p } }' ./.gitlab-ci.yml | grep "/tests/${SUITE:?}" |
       while read -r line; do
+        echo " \033[1;35mTest: \033[0;35m${line}\033[0m"
         bash -c "${line}"
       done
+      echo " \033[1;35mTests: \033[0;35mPassed successfully\033[0m"
   only:
     - local
 
