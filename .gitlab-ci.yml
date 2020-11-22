@@ -187,6 +187,10 @@ stages:
   extends: .unit-tests-template
   image: python:3.8
 
+'Py3.9 Docker':
+  extends: .unit-tests-template
+  image: python:3.9
+
 'Py3.8 PodMan':
   extends: .unit-tests-template
   image:
