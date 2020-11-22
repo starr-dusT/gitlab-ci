@@ -45,16 +45,16 @@ stages:
   stage: prepare
   image: local:quiet
   script:
-    - sudo pip3 install -r requirements-dev.txt --upgrade
     - sudo pip3 install -r requirements.txt --upgrade
+    - sudo pip3 install -r requirements-dev.txt --upgrade
   only:
     - local
 
 'Build':
   stage: build
   script:
-    - pip3 install -r requirements-dev.txt --upgrade
     - pip3 install -r requirements.txt --upgrade
+    - pip3 install -r requirements-dev.txt --upgrade
     - rm -rf build dist *.egg-info .eggs
     - python3 setup.py bdist_wheel
   artifacts:
