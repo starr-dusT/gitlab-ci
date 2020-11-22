@@ -55,9 +55,19 @@ def nameCheck(name, items, no_regex):
         return True
 
     # Search with regex
-    for item in items:
-        if not no_regex and re.search(item, name):
-            return True
+    if not no_regex:
+        for item in items:
+
+            # Search with string inclusion
+            if item in name:
+                return True
+
+            # Search with real regex
+            try:
+                if re.search(item, re.escape(name)):
+                    return True
+            except:
+                pass
 
     # Result
     return False

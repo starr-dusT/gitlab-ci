@@ -162,6 +162,13 @@ stages:
     - gitlabci-local -c ./tests/multilines/.gitlab-ci.yml -p
     - gitlabci-local -c ./tests/disabled/.gitlab-ci.yml -p
     - gitlabci-local -c ./tests/triggers/.gitlab-ci.yml -p
+    - gitlabci-local -c ./tests/regex/.gitlab-ci.yml -p
+    - gitlabci-local -c ./tests/regex/.gitlab-ci.yml 'C'
+    - gitlabci-local -c ./tests/regex/.gitlab-ci.yml 'C++'
+    - gitlabci-local -c ./tests/regex/.gitlab-ci.yml 'Test'
+    - gitlabci-local -c ./tests/regex/.gitlab-ci.yml 'C*'
+    - gitlabci-local -c ./tests/regex/.gitlab-ci.yml 'C.*'
+    - gitlabci-local -c ./tests/regex/.gitlab-ci.yml 'est .*'
     - timeout 5 gitlabci-local -c ./tests/simple/.gitlab-ci.yml 'Job 1' --bash && exit 1 || true
     - timeout 5 gitlabci-local -c ./tests/simple/.gitlab-ci.yml 'Job 1' --debug && exit 1 || true
     - gcil -c ./tests/simple/.gitlab-ci.yml Job

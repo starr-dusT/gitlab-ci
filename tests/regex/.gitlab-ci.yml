@@ -1,0 +1,19 @@
+image: alpine:3
+
+stages:
+  - test
+
+'Test C++':
+  stage: test
+  script:
+    - echo 'Test C++'
+
+'Test Python':
+  stage: test
+  script:
+    - echo 'Test Python'
+
+'Test .*':
+  stage: test
+  script:
+    - echo 'Test .*'
