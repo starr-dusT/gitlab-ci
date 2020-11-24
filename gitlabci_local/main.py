@@ -76,6 +76,8 @@ def main():
         ('\', \''.join(tagsDefault)))
     parser.add_argument('--tags-default', dest='tags_default', action='store_true',
                         help=argparse.SUPPRESS)
+    parser.add_argument('-r', '--real-paths', dest='real_paths', action='store_true',
+                        help='Mount real folder paths in the container')
     parser.add_argument('-v', dest='volume', action='append',
                         help='Mount VOLUME or HOST:TARGET in containers')
     parser.add_argument('-w', dest='workdir',

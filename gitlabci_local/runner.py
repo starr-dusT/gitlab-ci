@@ -151,8 +151,10 @@ def runner(options, job_data, last_result, jobs_status):
     # Prepare working directory
     if options.workdir:
         pathWorkDir = os.path.abspath(options.workdir)
-    else:
+    elif options.real_paths:
         pathWorkDir = pathProject
+    else:
+        pathWorkDir = str(Path('/builds') / Path(pathProject).name)
 
     # Prepare entrypoint and scripts
     entrypoint = job_data['entrypoint']
@@ -276,7 +278,7 @@ def runner(options, job_data, last_result, jobs_status):
     temp_dir = tempfile.gettempdir()
     volumes = {
         pathParent: {
-            'bind': pathParent,
+            'bind': pathParent if options.real_paths else '/builds',
             'mode': 'rw'
         },
         temp_dir: {
