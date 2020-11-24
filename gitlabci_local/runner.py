@@ -181,6 +181,8 @@ def runner(options, job_data, last_result, jobs_status):
 
     # Prepare temporary script
     scriptFile = tempfile.NamedTemporaryFile(delete=True, mode='w')
+    scriptPath = str(scriptFile.name)
+    scriptTarget = str(Path('/tmp') / Path(scriptFile.name).name)
 
     # Prepare execution context
     scriptFile.write('#!/bin/sh')
@@ -275,15 +277,14 @@ def runner(options, job_data, last_result, jobs_status):
     scriptFile.file.close()
 
     # Prepare mounts
-    temp_dir = tempfile.gettempdir()
     volumes = {
         pathParent: {
             'bind': pathParent if options.real_paths else '/builds',
             'mode': 'rw'
         },
-        temp_dir: {
-            'bind': temp_dir,
-            'mode': 'rw'
+        scriptPath: {
+            'bind': scriptTarget,
+            'mode': 'ro'
         }
     }
 
@@ -341,7 +342,7 @@ def runner(options, job_data, last_result, jobs_status):
         engine.get(image)
 
         # Launch container
-        container = engine.run(image, scriptFile.name, entrypoint, variables, network,
+        container = engine.run(image, scriptTarget, entrypoint, variables, network,
                                volumes, pathWorkDir)
 
         # Create interruption handler
