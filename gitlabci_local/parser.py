@@ -231,6 +231,11 @@ def parser(options, data, environment):
             if not options.quiet:
                 options.quiet = local['quiet']
 
+        # Parse local real_paths
+        if 'real_paths' in local:
+            if not options.real_paths:
+                options.real_paths = local['real_paths']
+
         # Parse local tags
         if 'tags' in local:
             if options.tags_default:

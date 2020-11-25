@@ -53,6 +53,7 @@ stages:
   network: host
   pipeline: true
   quiet: true
+  real_paths: true
   tags:
     - deploy
   volumes:

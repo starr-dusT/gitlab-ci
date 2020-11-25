@@ -84,8 +84,8 @@ Examples for each of these can be found in the `configurations` unit tests: [tes
 gitlabci-local implements further support of most parameters  
 inside the `.local` to ease default parameters definitions.
 
-Supported local values include `after`, `all`, `bash`, `before`, `configurations`, `debug`, `defaults`,  
-`engine`, `env`, `image`, `manual`, `names`, `network`, `pipeline`, `quiet`, `tags`, `volumes`, `workdir`.
+Supported local values include `after`, `all`, `bash`, `before`, `configurations`, `debug`, `defaults`, `engine`,  
+`env`, `image`, `manual`, `names`, `network`, `pipeline`, `quiet`, `real_paths`, `tags`, `volumes`, `workdir`.
 
 Examples for each of these can be found in the `local` unit tests: [tests/local](https://gitlab.com/AdrianDC/gitlabci-local/blob/master/tests/local/.gitlab-ci.yml)
 
