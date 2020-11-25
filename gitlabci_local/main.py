@@ -9,6 +9,7 @@ import sys
 
 # Constants
 ALIAS = 'gcil'
+CONFIGURATION = '.gitlab-ci.yml'
 NAME = 'gitlabci-local'
 
 # Components
@@ -28,8 +29,9 @@ def main():
 
     # Arguments creation
     parser = argparse.ArgumentParser(
-        prog=NAME, description='%s: Launch .gitlab-ci.yml jobs locally (aliases: %s)' %
-        (NAME, ALIAS), add_help=False, formatter_class=argparse.RawTextHelpFormatter)
+        prog=NAME, description='%s: Launch %s jobs locally (aliases: %s)' %
+        (NAME, CONFIGURATION, ALIAS), add_help=False,
+        formatter_class=argparse.RawTextHelpFormatter)
 
     # Arguments default definitions
     tagsDefault = ['deploy', 'local', 'publish']
@@ -46,8 +48,9 @@ def main():
     # Arguments optional definitions
     parser.add_argument('-q', '--quiet', dest='quiet', action='store_true',
                         help='Hide jobs execution context')
-    parser.add_argument('-c', dest='configuration', default='.gitlab-ci.yml',
-                        help='Path to the .gitlab-ci.yml configuration file or folder')
+    parser.add_argument(
+        '-c', dest='configuration', default=CONFIGURATION,
+        help='Path to the %s configuration file or folder' % CONFIGURATION)
     parser.add_argument('-B', '--no-before', dest='before', action='store_false',
                         help='Disable before_script executions')
     parser.add_argument('-A', '--no-after', dest='after', action='store_false',
@@ -100,7 +103,7 @@ def main():
     # Arguments exclusive definitions
     group = parser.add_mutually_exclusive_group()
     group.add_argument('-d', '--dump', dest='dump', action='store_true',
-                       help='Dump parsed .gitlab-ci.yml configuration')
+                       help='Dump parsed %s configuration' % CONFIGURATION)
     group.add_argument('-s', '--select', dest='select', action='store_true',
                        help='Force jobs selection from enumerated names')
     group.add_argument('-l', '--list', dest='list', action='store_true',
@@ -136,7 +139,7 @@ def main():
 
     # Prepare configuration
     if os.path.isdir(options.configuration):
-        options.configuration = os.path.join(options.configuration, '.gitlab-ci.yml')
+        options.configuration = os.path.join(options.configuration, CONFIGURATION)
 
     # Prepare engine
     if not options.engine and 'CI_LOCAL_ENGINE' in os.environ:
