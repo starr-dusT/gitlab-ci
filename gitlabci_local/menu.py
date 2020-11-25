@@ -238,7 +238,7 @@ def configurator(options, configurations):
         # Parse configuration types: json
         elif variable_type == 'json':
             if not variable_set:
-                configuration_path = str(Path(options.path) / variable_node['path'])
+                configuration_path = Path(options.path) / variable_node['path']
                 configuration_key = variable_node['key']
                 with open(configuration_path, 'r') as configuration_data:
                     variable_values = dictGet(json.load(configuration_data),
@@ -260,7 +260,7 @@ def configurator(options, configurations):
         # Parse configuration types: yaml
         elif variable_type == 'yaml':
             if not variable_set:
-                configuration_path = str(Path(options.path) / variable_node['path'])
+                configuration_path = Path(options.path) / variable_node['path']
                 configuration_key = variable_node['key']
                 with open(configuration_path, 'r') as configuration_data:
                     variable_values = dictGet(yaml.safe_load(configuration_data),

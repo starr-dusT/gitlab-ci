@@ -36,7 +36,7 @@ def reader(options):
                 environment['parameters'][variable] = value
 
             # Parse ENVIRONMENT_FILE
-            elif os.path.isfile(Path(options.path) / env):
+            elif (Path(options.path) / env).is_file():
                 environment['files'] += [Path(options.path) / env]
 
             # Parse VARIABLE
@@ -110,7 +110,7 @@ def parser(options, data, environment):
             # Parse local nodes
             if 'local' in include_node:
                 file_path = include_node['local'].lstrip('/')
-                if os.path.isfile(Path(options.path) / file_path):
+                if (Path(options.path) / file_path).is_file():
                     with open(Path(options.path) / file_path, 'r') as include_data:
                         include_additions = yaml.safe_load(include_data)
                         data_new.update(include_additions)
@@ -177,7 +177,7 @@ def parser(options, data, environment):
                         global_values['variables'][variable] = value
 
                 # Parse ENVIRONMENT_FILE
-                elif os.path.isfile(Path(options.path) / env):
+                elif (Path(options.path) / env).is_file():
                     environment_file = Path(options.path) / env
                     if not environment_file.is_file():
                         continue

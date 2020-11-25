@@ -14,7 +14,7 @@ import time
 # Components
 from .engine import Engine
 from .main import NAME
-from .utils import nameCheck
+from .utils import getPath, nameCheck, resolvePath
 
 # Constants
 marker_debug = '__GITLAB_CI_LOCAL_DEBUG__'
@@ -145,16 +145,16 @@ def runner(options, job_data, last_result, jobs_status):
         print(' ', flush=True)
 
     # Acquire project path
-    pathProject = options.path
-    pathParent = str(Path(pathProject).parent)
+    pathProject = resolvePath(options.path)
+    pathParent = resolvePath(Path(options.path).parent)
 
     # Prepare working directory
     if options.workdir:
-        pathWorkDir = os.path.abspath(options.workdir)
+        pathWorkDir = getPath(options.workdir)
     elif options.real_paths:
-        pathWorkDir = pathProject
+        pathWorkDir = getPath(options.path)
     else:
-        pathWorkDir = str(Path('/builds') / Path(pathProject).name)
+        pathWorkDir = getPath(Path('/builds') / Path(pathProject).name)
 
     # Prepare entrypoint and scripts
     entrypoint = job_data['entrypoint']
@@ -181,8 +181,8 @@ def runner(options, job_data, last_result, jobs_status):
 
     # Prepare temporary script
     scriptFile = tempfile.NamedTemporaryFile(delete=True, mode='w')
-    scriptPath = str(scriptFile.name)
-    scriptTarget = str(Path('/tmp') / Path(scriptFile.name).name)
+    scriptPath = resolvePath(scriptFile.name)
+    scriptTarget = resolvePath(Path('/tmp') / Path(scriptFile.name).name)
 
     # Prepare execution context
     scriptFile.write('#!/bin/sh')
@@ -295,20 +295,20 @@ def runner(options, job_data, last_result, jobs_status):
 
             # Parse HOST:TARGET:MODE
             if len(volume_nodes) == 3:
-                volume_host = os.path.abspath(os.path.expandvars(volume_nodes[0]))
+                volume_host = resolvePath(os.path.expandvars(volume_nodes[0]))
                 volume_target = os.path.expandvars(volume_nodes[1])
                 volume_mode = volume_nodes[2]
 
             # Parse HOST:TARGET
             elif len(volume_nodes) == 2:
-                volume_host = os.path.abspath(os.path.expandvars(volume_nodes[0]))
+                volume_host = resolvePath(os.path.expandvars(volume_nodes[0]))
                 volume_target = os.path.expandvars(volume_nodes[1])
                 volume_mode = 'rw'
 
             # Parse VOLUME
             else:
-                volume_host = os.path.abspath(os.path.expandvars(volume))
-                volume_target = os.path.abspath(os.path.expandvars(volume))
+                volume_host = resolvePath(os.path.expandvars(volume))
+                volume_target = resolvePath(os.path.expandvars(volume))
                 volume_mode = 'rw'
 
             # Clear volume overrides

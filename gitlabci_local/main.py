@@ -4,6 +4,7 @@
 import argparse
 import colored
 import os
+from pathlib import Path
 import pkg_resources
 import sys
 
@@ -138,15 +139,16 @@ def main():
         sys.exit(0)
 
     # Prepare configuration
-    if os.path.isdir(options.configuration):
-        options.configuration = os.path.join(options.configuration, CONFIGURATION)
+    if Path(options.configuration).is_dir():
+        options.configuration = Path(options.configuration) / CONFIGURATION
 
     # Prepare engine
     if not options.engine and 'CI_LOCAL_ENGINE' in os.environ:
         options.engine = os.environ['CI_LOCAL_ENGINE']
 
     # Prepare paths
-    options.path = os.path.dirname(os.path.abspath(options.configuration))
+    options.configuration = Path(options.configuration).resolve()
+    options.path = options.configuration.parent
 
     # Prepare tags
     if not options.tags:

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 # Libraries
+from pathlib import Path
 import re
 import regex
 
@@ -71,3 +72,24 @@ def nameCheck(name, items, no_regex):
 
     # Result
     return False
+
+# Path getter
+def getPath(path):
+
+    # Resolve path
+    path = Path(path).resolve()
+
+    # Result
+    return str(path)
+
+# Path resolver
+def resolvePath(path):
+
+    # Resolve path
+    path = Path(path).resolve()
+
+    # Linux path
+    path = str(path)
+
+    # Result
+    return path
