@@ -12,6 +12,7 @@ import tempfile
 import time
 
 # Components
+from .const import Platform
 from .engine import Engine
 from .main import NAME
 from .utils import getPath, nameCheck, resolvePath
@@ -154,7 +155,7 @@ def runner(options, job_data, last_result, jobs_status):
     elif options.real_paths:
         pathWorkDir = getPath(options.path)
     else:
-        pathWorkDir = getPath(Path('/builds') / Path(pathProject).name)
+        pathWorkDir = getPath(Path(Platform.BUILDS_DIR) / Path(pathProject).name)
 
     # Prepare entrypoint and scripts
     entrypoint = job_data['entrypoint']
@@ -182,7 +183,7 @@ def runner(options, job_data, last_result, jobs_status):
     # Prepare temporary script
     scriptFile = tempfile.NamedTemporaryFile(delete=True, mode='w')
     scriptPath = resolvePath(scriptFile.name)
-    scriptTarget = resolvePath(Path('/tmp') / Path(scriptFile.name).name)
+    scriptTarget = resolvePath(Path(Platform.TEMP_DIR) / Path(scriptFile.name).name)
 
     # Prepare execution context
     scriptFile.write('#!/bin/sh')
@@ -279,7 +280,7 @@ def runner(options, job_data, last_result, jobs_status):
     # Prepare mounts
     volumes = {
         pathParent: {
-            'bind': pathParent if options.real_paths else '/builds',
+            'bind': pathParent if options.real_paths else Platform.BUILDS_DIR,
             'mode': 'rw'
         },
         scriptPath: {
