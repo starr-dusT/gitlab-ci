@@ -181,7 +181,7 @@ def runner(options, job_data, last_result, jobs_status):
         scriptsAfter += job_data['after_script']
 
     # Prepare temporary script
-    scriptFile = tempfile.NamedTemporaryFile(delete=True, mode='w')
+    scriptFile = tempfile.NamedTemporaryFile(delete=True, mode='wt', newline='\n')
     scriptPath = resolvePath(scriptFile.name)
     scriptTarget = resolvePath(Path(Platform.TEMP_DIR) / Path(scriptFile.name).name)
 
