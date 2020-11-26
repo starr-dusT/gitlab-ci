@@ -181,7 +181,7 @@ def runner(options, job_data, last_result, jobs_status):
         scriptsAfter += job_data['after_script']
 
     # Prepare temporary script
-    scriptFile = tempfile.NamedTemporaryFile(delete=True, mode='wt', newline='\n')
+    scriptFile = tempfile.NamedTemporaryFile(delete=False, mode='wt', newline='\n')
     scriptPath = resolvePath(scriptFile.name)
     scriptTarget = getPath(PurePosixPath(Platform.TEMP_DIR) / Path(scriptFile.name).name)
 
@@ -455,6 +455,9 @@ def runner(options, job_data, last_result, jobs_status):
         # Restore environment
         os.environ.clear()
         os.environ.update(_environ)
+
+    # Close temporary script
+    Path(scriptFile.name).unlink()
 
     # Initial job details
     job_details = ''
