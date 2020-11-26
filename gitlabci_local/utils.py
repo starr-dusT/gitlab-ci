@@ -5,6 +5,9 @@ from pathlib import Path, PurePosixPath
 import re
 import regex
 
+# Components
+from .const import Platform
+
 # Dictionnaries getter
 def dictGet(data, path):
 
@@ -89,7 +92,12 @@ def resolvePath(path):
     path = Path(path).resolve()
 
     # Linux path
-    path = str(path)
+    if Platform.IS_LINUX:
+        path = str(path)
+
+    # Windows path
+    elif Platform.IS_WINDOWS:
+        path = str(path)
 
     # Result
     return path
