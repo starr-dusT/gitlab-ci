@@ -72,7 +72,7 @@ def launcher(options, jobs):
         # Pipeline jobs footer
         if jobs_status['jobs_count'] > 1:
 
-            # Evalulate duration total time
+            # Evaluate duration total time
             time_total_duration = time.time() - jobs_status['time_launcher']
             time_total_seconds = '%.0f second%s' % (time_total_duration % 60, 's' if
                                                     time_total_duration % 60 > 1 else '')
@@ -472,7 +472,7 @@ def runner(options, job_data, last_result, jobs_status):
     if job_details_list:
         job_details = ' (' + ', '.join(job_details_list) + ')'
 
-    # Evalulate duration time
+    # Evaluate duration time
     time_duration = time.time() - time_start
     time_seconds = '%.0f second%s' % (time_duration % 60,
                                       's' if time_duration % 60 > 1 else '')
