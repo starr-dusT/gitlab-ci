@@ -4,6 +4,9 @@
 import docker
 import sys
 
+# Components
+from ..const import Platform
+
 # Docker class
 class Docker:
 
@@ -106,10 +109,11 @@ class Docker:
     def sockets(self, volumes):
 
         # Add socket volume
-        volumes['/var/run/docker.sock'] = { #
-            'bind': '/var/run/docker.sock',
-            'mode': 'rw'
-        }
+        if not Platform.IS_WINDOWS:
+            volumes['/var/run/docker.sock'] = { #
+                'bind': '/var/run/docker.sock',
+                'mode': 'rw'
+            }
 
     # Stop
     def stop(self, container, timeout):
