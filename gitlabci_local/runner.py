@@ -4,7 +4,7 @@
 import colored
 import datetime
 import os
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 import signal
 import stat
 import sys
@@ -155,7 +155,7 @@ def runner(options, job_data, last_result, jobs_status):
     elif options.real_paths:
         pathWorkDir = getPath(options.path)
     else:
-        pathWorkDir = getPath(Path(Platform.BUILDS_DIR) / Path(pathProject).name)
+        pathWorkDir = getPath(PurePosixPath(Platform.BUILDS_DIR) / Path(pathProject).name)
 
     # Prepare entrypoint and scripts
     entrypoint = job_data['entrypoint']
@@ -183,7 +183,7 @@ def runner(options, job_data, last_result, jobs_status):
     # Prepare temporary script
     scriptFile = tempfile.NamedTemporaryFile(delete=True, mode='wt', newline='\n')
     scriptPath = resolvePath(scriptFile.name)
-    scriptTarget = resolvePath(Path(Platform.TEMP_DIR) / Path(scriptFile.name).name)
+    scriptTarget = getPath(PurePosixPath(Platform.TEMP_DIR) / Path(scriptFile.name).name)
 
     # Prepare execution context
     scriptFile.write('#!/bin/sh')

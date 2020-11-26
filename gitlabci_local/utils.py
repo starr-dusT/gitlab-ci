@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 # Libraries
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 import re
 import regex
 
@@ -76,8 +76,8 @@ def nameCheck(name, items, no_regex):
 # Path getter
 def getPath(path):
 
-    # Resolve path
-    path = Path(path).resolve()
+    # POSIX path
+    path = PurePosixPath(path)
 
     # Result
     return str(path)
