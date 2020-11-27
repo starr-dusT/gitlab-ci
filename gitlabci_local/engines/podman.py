@@ -11,14 +11,14 @@ import time
 class Podman:
 
     # Members
-    binary = 'podman'
+    _binary = 'podman'
 
     # Constructor
     def __init__(self):
 
         # Configure binary
         if 'PODMAN_BINARY_PATH' in os.environ:
-            self.binary = os.environ['PODMAN_BINARY_PATH']
+            self._binary = os.environ['PODMAN_BINARY_PATH']
 
         # Check engine support
         result = self.__exec(['system', 'info'], True)
@@ -28,16 +28,16 @@ class Podman:
     # Internal execution
     def __exec(self, arguments, quiet=False):
         if quiet:
-            return subprocess.run([self.binary] + arguments, stdout=subprocess.DEVNULL,
+            return subprocess.run([self._binary] + arguments, stdout=subprocess.DEVNULL,
                                   stderr=subprocess.DEVNULL)
         else:
-            return subprocess.run([self.binary] + arguments, stdout=subprocess.PIPE,
+            return subprocess.run([self._binary] + arguments, stdout=subprocess.PIPE,
                                   stderr=subprocess.PIPE)
 
     # Internal watcher
     def __watch(self, arguments):
         return iter(
-            subprocess.Popen([self.binary] + arguments,
+            subprocess.Popen([self._binary] + arguments,
                              stdout=subprocess.PIPE).stdout.readline, b'')
 
     # Exec

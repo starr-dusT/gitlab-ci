@@ -67,8 +67,8 @@ def supported():
 class Engine:
 
     # Members
-    backend = Backend.UNKNOWN
-    engine = None
+    _backend = Backend.UNKNOWN
+    _engine = None
 
     # Constructor
     def __init__(self, options, variables=None):
@@ -82,74 +82,74 @@ class Engine:
             # Podman engine detection
             if name == Names.PODMAN:
                 try:
-                    self.engine = podman.Podman()
-                    self.backend = Backend.PODMAN
+                    self._engine = podman.Podman()
+                    self._backend = Backend.PODMAN
                     if variables:
                         variables['CI_LOCAL_ENGINE_NAME'] = Names.PODMAN
                     break
                 except:
-                    self.engine = None
+                    self._engine = None
 
             # Docker engine detection
             elif name == Names.DOCKER:
                 try:
-                    self.engine = docker.Docker()
-                    self.backend = Backend.DOCKER
+                    self._engine = docker.Docker()
+                    self._backend = Backend.DOCKER
                     if variables:
                         variables['CI_LOCAL_ENGINE_NAME'] = Names.DOCKER
                     break
                 except:
-                    self.engine = None
+                    self._engine = None
 
         # Unknown engine fallback
-        if not self.engine:
+        if not self._engine:
             raise NotImplementedError('Unknown or unsupported container engine...')
 
     # Exec
     def exec(self, container, command):
-        return self.engine.exec(container, command)
+        return self._engine.exec(container, command)
 
     # Help
     def help(self, command):
-        return self.engine.help(command)
+        return self._engine.help(command)
 
     # Get
     def get(self, image):
-        self.engine.get(image)
+        self._engine.get(image)
 
     # Logs
     def logs(self, container):
-        return self.engine.logs(container)
+        return self._engine.logs(container)
 
     # Name
     def name(self, container):
-        return self.engine.name(container)
+        return self._engine.name(container)
 
     # Pull
     def pull(self, image):
-        self.engine.pull(image)
+        self._engine.pull(image)
 
     # Remove
     def remove(self, container):
-        self.engine.remove(container)
+        self._engine.remove(container)
 
     # Run
     def run(self, image, command, entrypoint, variables, network, volumes, directory):
-        return self.engine.run(image, command, entrypoint, variables, network, volumes,
-                               directory)
+        return self._engine.run(image, command, entrypoint, variables, network, volumes,
+                                directory)
 
     # Sockets
     def sockets(self, volumes):
-        self.engine.sockets(volumes)
+        self._engine.sockets(volumes)
 
     # Stop
     def stop(self, container, timeout):
-        self.engine.stop(container, timeout)
+        self._engine.stop(container, timeout)
 
     # Supports
     def supports(self, image, container, binary):
-        return self.engine.supports(image, container, binary)
+        return self._engine.supports(image, container, binary)
 
     # Wait
     def wait(self, container, result):
-        return self.engine.wait(container, result)
+        return self._engine.wait(container, result)

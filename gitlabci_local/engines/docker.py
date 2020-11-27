@@ -11,14 +11,14 @@ from ..const import Platform
 class Docker:
 
     # Members
-    client = None
+    _client = None
 
     # Constructor
     def __init__(self):
 
         # Engine client
-        self.client = docker.from_env()
-        self.client.ping()
+        self._client = docker.from_env()
+        self._client.ping()
 
     # Exec
     def exec(self, container, command):
@@ -41,7 +41,7 @@ class Docker:
 
         # Validate image exists
         try:
-            self.client.images.get(image)
+            self._client.images.get(image)
 
         # Pull missing image
         except docker.errors.ImageNotFound:
@@ -63,7 +63,7 @@ class Docker:
     def pull(self, image):
 
         # Pull image with logs stream
-        for data in self.client.api.pull(image, stream=True, decode=True):
+        for data in self._client.api.pull(image, stream=True, decode=True):
 
             # Layer progress logs
             if 'progress' in data:
@@ -100,7 +100,7 @@ class Docker:
     def run(self, image, command, entrypoint, variables, network, volumes, directory):
 
         # Run container image
-        return self.client.containers.run(
+        return self._client.containers.run(
             image, command=command, detach=True, entrypoint=entrypoint,
             environment=variables, network_mode=network, privileged=True, remove=False,
             stdout=True, stderr=True, stream=True, volumes=volumes, working_dir=directory)
