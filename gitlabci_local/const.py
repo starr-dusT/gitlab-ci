@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 # Libraries
+from pathlib import PurePosixPath
 from sys import platform
 
 # Platform
@@ -11,5 +12,5 @@ class Platform:
     IS_WINDOWS = (platform == 'win32')
 
     # Paths
-    BUILDS_DIR = '/builds'
-    TEMP_DIR = '/tmp'
+    BUILDS_DIR = PurePosixPath('/builds')
+    TEMP_DIR = PurePosixPath('/tmp')

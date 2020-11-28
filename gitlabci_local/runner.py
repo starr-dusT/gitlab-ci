@@ -4,7 +4,7 @@
 import colored
 import datetime
 import os
-from pathlib import Path, PurePosixPath
+from pathlib import Path
 import signal
 import stat
 import sys
@@ -170,7 +170,7 @@ def runner(options, job_data, last_result, jobs_status):
     elif options.real_paths:
         pathWorkDir = getPath(options.path)
     else:
-        pathWorkDir = getPath(PurePosixPath(Platform.BUILDS_DIR) / Path(pathProject).name)
+        pathWorkDir = getPath(Platform.BUILDS_DIR / Path(pathProject).name)
 
     # Prepare entrypoint and scripts
     entrypoint = job_data['entrypoint']
@@ -197,8 +197,9 @@ def runner(options, job_data, last_result, jobs_status):
 
     # Prepare temporary script
     scriptFile = tempfile.NamedTemporaryFile(delete=False, mode='wt', newline='\n')
-    scriptPath = resolvePath(scriptFile.name)
-    scriptTarget = getPath(PurePosixPath(Platform.TEMP_DIR) / Path(scriptFile.name).name)
+    scriptFolder = resolvePath(Path(scriptFile.name).parent)
+    scriptTargetFolder = getPath(Platform.TEMP_DIR)
+    scriptTargetPath = getPath(Platform.TEMP_DIR / Path(scriptFile.name).name)
 
     # Prepare execution context
     scriptFile.write('#!/bin/sh')
@@ -295,11 +296,11 @@ def runner(options, job_data, last_result, jobs_status):
     # Prepare mounts
     volumes = {
         pathParent: {
-            'bind': pathParent if options.real_paths else Platform.BUILDS_DIR,
+            'bind': pathParent if options.real_paths else getPath(Platform.BUILDS_DIR),
             'mode': 'rw'
         },
-        scriptPath: {
-            'bind': scriptTarget,
+        scriptFolder: {
+            'bind': scriptTargetFolder,
             'mode': 'ro'
         }
     }
@@ -360,7 +361,7 @@ def runner(options, job_data, last_result, jobs_status):
         engine.get(image)
 
         # Launch container
-        container = engine.run(image, scriptTarget, entrypoint, variables, network,
+        container = engine.run(image, scriptTargetPath, entrypoint, variables, network,
                                volumes, pathWorkDir)
 
         # Create interruption handler
