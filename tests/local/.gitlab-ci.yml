@@ -56,6 +56,7 @@ stages:
   pipeline: true
   quiet: true
   real_paths: true
+  sockets: true
   tags:
     - deploy
   volumes:

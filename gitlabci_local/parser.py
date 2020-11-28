@@ -236,6 +236,11 @@ def parser(options, data, environment):
             if not options.real_paths:
                 options.real_paths = local['real_paths']
 
+        # Parse local sockets
+        if 'sockets' in local:
+            if not options.sockets:
+                options.sockets = local['sockets']
+
         # Parse local tags
         if 'tags' in local:
             if options.tags_default:

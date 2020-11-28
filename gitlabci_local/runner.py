@@ -350,7 +350,8 @@ def runner(options, job_data, last_result, jobs_status):
         variables['CI_LOCAL_ENGINE_NAME'] = engine.name()
 
         # Append sockets mounts
-        engine.sockets(volumes)
+        if options.sockets:
+            engine.sockets(volumes)
 
         # Image validation
         if not image:

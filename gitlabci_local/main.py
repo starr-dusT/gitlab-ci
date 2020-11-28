@@ -82,6 +82,8 @@ def main():
                         help=argparse.SUPPRESS)
     parser.add_argument('-r', '--real-paths', dest='real_paths', action='store_true',
                         help='Mount real folder paths in the container')
+    parser.add_argument('-S', '--sockets', dest='sockets', action='store_true',
+                        help='Mount engine sockets for nested containers')
     parser.add_argument('-v', dest='volume', action='append',
                         help='Mount VOLUME or HOST:TARGET in containers')
     parser.add_argument('-w', dest='workdir',
