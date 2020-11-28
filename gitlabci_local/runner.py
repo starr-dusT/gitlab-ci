@@ -21,6 +21,9 @@ from .utils import getPath, nameCheck, resolvePath
 marker_debug = '__GITLAB_CI_LOCAL_DEBUG__'
 marker_result = '__GITLAB_CI_LOCAL_RESULT__'
 
+# Variables
+engine = None
+
 # Launcher
 def launcher(options, jobs):
 
@@ -101,8 +104,10 @@ def launcher(options, jobs):
 # Runner
 def runner(options, job_data, last_result, jobs_status):
 
+    # Globals
+    global engine
+
     # Variables
-    engine = None
     host = False
     quiet = options.quiet
     result = False
