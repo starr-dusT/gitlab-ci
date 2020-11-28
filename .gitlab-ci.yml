@@ -6,6 +6,9 @@ stages:
   - test
   - deploy
 
+.local:
+  engine: docker,auto
+
 'Changelog':
   stage: prepare
   image: local:silent
