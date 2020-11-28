@@ -1,0 +1,27 @@
+stages:
+  - native
+  - containers
+
+'Job 1':
+  stage: native
+  image: local
+  script:
+    - echo 'Job 1'
+
+'Job 2':
+  stage: native
+  image: local:quiet
+  script:
+    - echo 'Job 2'
+
+'Job 3':
+  stage: native
+  image: local:silent
+  script:
+    - echo 'Job 3'
+
+'Job 4':
+  stage: containers
+  image: alpine:3
+  script:
+    - echo 'Job 4'
