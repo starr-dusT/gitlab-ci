@@ -138,14 +138,6 @@ gitlabci-local currently supports these container engines:
 
 ---
 
-## Windows compatibility
-
-In order to access the interactive terminal user interfaces,  
-Windows users may need to allocate an interactive PTY context  
-through the `winpty` wrapper, for example `winpty gitlabci-local`.
-
----
-
 ## Supported .gitlab-ci.yml features
 
 - **image:** IMAGE_NAME

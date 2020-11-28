@@ -6,6 +6,7 @@ import colored
 import os
 from pathlib import Path
 import pkg_resources
+import subprocess
 import sys
 
 # Constants
@@ -14,6 +15,7 @@ CONFIGURATION = '.gitlab-ci.yml'
 NAME = 'gitlabci-local'
 
 # Components
+from .const import Platform
 from .dumper import dumper
 from .menu import selector
 from .engine import supported as engine_supported
@@ -25,6 +27,7 @@ from .runner import launcher
 def main():
 
     # Variables
+    hint = ''
     interactive = (sys.stdin.isatty() and sys.stdout.isatty())
     result = False
 
@@ -205,10 +208,27 @@ def main():
 
     # Unsupported case
     else:
-        print(' %s%s: %sERROR: %sUnsupported non-interactive context...%s' %
+
+        # Windows WinPTY compatibility
+        if Platform.IS_WINDOWS and not 'CI_LOCAL_WINPTY' in os.environ:
+            hint = ' (on Windows, winpty is required)'
+            try:
+                winpty = subprocess.check_output(['where', 'winpty.exe'],
+                                                 stderr=subprocess.DEVNULL).strip()
+            except:
+                pass
+            else:
+                _environ = dict(os.environ)
+                _environ['CI_LOCAL_WINPTY'] = 'true'
+                process = subprocess.Popen([winpty] + sys.argv, env=_environ)
+                process.wait()
+                sys.exit(process.returncode)
+
+        # Unsupported interactive terminal
+        print(' %s%s: %sERROR: %sUnsupported non-interactive context%s...%s' %
               (colored.fg('green') + colored.attr('bold'), NAME,
                colored.fg('red') + colored.attr('bold'),
-               colored.attr('reset') + colored.attr('bold'), colored.attr('reset')))
+               colored.attr('reset') + colored.attr('bold'), hint, colored.attr('reset')))
         print(' ', flush=True)
 
     # Result
