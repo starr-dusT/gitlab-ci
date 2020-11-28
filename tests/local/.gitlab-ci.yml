@@ -8,6 +8,7 @@ stages:
   - local_fifth
   - local_sixth
   - local_seventh
+  - local_eighth
 
 .local:
   after: true
@@ -50,6 +51,7 @@ stages:
     - local_forth
     - local_fifth
     - local_sixth
+    - local_eighth
   network: host
   pipeline: true
   quiet: true
@@ -152,3 +154,17 @@ variables:
   image: alpine:3
   script:
     - echo "__NOT_EXPECTED__"
+
+'Job 8':
+  stage: local_eighth
+  image: alpine:3
+  before_script:
+    - echo '__BEFORE__'
+  script:
+    - echo "CI_LOCAL=${CI_LOCAL}"
+    - test -z "${CI_LOCAL}" && exit 1 || true
+    - echo "CI_LOCAL_ENGINE=${CI_LOCAL_ENGINE}"
+    - echo "CI_LOCAL_ENGINE_NAME=${CI_LOCAL_ENGINE_NAME}"
+    - test -z "${CI_LOCAL_ENGINE_NAME}" && exit 1 || true
+  after_script:
+    - echo '__AFTER__'
