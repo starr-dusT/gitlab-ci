@@ -196,10 +196,13 @@ def runner(options, job_data, last_result, jobs_status):
         scriptsAfter += job_data['after_script']
 
     # Prepare temporary script
-    scriptFile = tempfile.NamedTemporaryFile(delete=False, mode='wt', newline='\n')
+    Path(Platform.TEMP_ENTRYPOINTS_DIR).mkdir(exist_ok=True)
+    scriptFile = tempfile.NamedTemporaryFile(
+        delete=False, dir=resolvePath(Platform.TEMP_ENTRYPOINTS_DIR), mode='wt',
+        newline='\n')
     scriptFolder = resolvePath(Path(scriptFile.name).parent)
-    scriptTargetFolder = getPath(Platform.OPT_TMP_DIR)
-    scriptTargetPath = getPath(Platform.OPT_TMP_DIR / Path(scriptFile.name).name)
+    scriptTargetFolder = getPath(Platform.TEMP_ENTRYPOINTS_DIR)
+    scriptTargetPath = getPath(Platform.TEMP_ENTRYPOINTS_DIR / Path(scriptFile.name).name)
 
     # Prepare execution context
     scriptFile.write('#!/bin/sh')
@@ -301,7 +304,7 @@ def runner(options, job_data, last_result, jobs_status):
         },
         scriptFolder: {
             'bind': scriptTargetFolder,
-            'mode': 'ro'
+            'mode': 'rw'
         }
     }
 
