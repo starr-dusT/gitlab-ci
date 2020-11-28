@@ -150,6 +150,10 @@ def main():
     options.configuration = Path(options.configuration).resolve()
     options.path = options.configuration.parent
 
+    # Prepare working dir
+    if options.workdir:
+        options.workdir = Path(options.workdir).resolve()
+
     # Prepare tags
     if not options.tags:
         options.tags = tagsDefault
