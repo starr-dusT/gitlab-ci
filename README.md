@@ -26,10 +26,11 @@ is the common and unique interface between GitLab CI and gitlabci-local.
 ## Usage
 
 ```shell
-usage: gitlabci-local [-h] [-q] [-c CONFIGURATION] [-B] [-A] [-m] [-n NETWORK]
-                      [-p] [-e ENV] [-R] [-t TAGS] [-v VOLUME] [-w WORKDIR]
-                      [--all] [--defaults] [--bash | --debug]
-                      [-d | -s | -l | --pull] [names [names ...]]
+usage: gitlabci-local [-h] [--version] [-q] [-c CONFIGURATION] [-B] [-A] [-m] [-n NETWORK]
+                      [-p] [-e ENV] [-E ENGINE] [-H] [-R] [-t TAGS] [-r] [-S] [-v VOLUME]
+                      [-w WORKDIR] [--all] [--defaults] [--bash | --debug]
+                      [-d | -s | -l | --pull]
+                      [names [names ...]]
 
 gitlabci-local: Launch .gitlab-ci.yml jobs locally (aliases: gcil)
 ```
@@ -38,33 +39,34 @@ gitlabci-local: Launch .gitlab-ci.yml jobs locally (aliases: gcil)
 | -------------------- | -------------------------------------------------------------------------------------------------------- |
 | names                | Names of specific jobs (or stages with --pipeline)<br>Regex names is supported unless --no-regex is used |
 
-| optional arguments   |                                                                                          |
-| -------------------- | ---------------------------------------------------------------------------------------- |
-| -h, --help           | Show this help message                                                                   |
-| --version            | Show the current version                                                                 |
-| -q, --quiet          | Hide jobs execution context                                                              |
-| -c CONFIGURATION     | Path to the .gitlab-ci.yml configuration file or folder                                  |
-| -B, --no-before      | Disable before_script executions                                                         |
-| -A, --no-after       | Disable after_script executions                                                          |
-| -m, --manual         | Allow manual jobs to be used                                                             |
-| -n NETWORK           | Configure the network mode used<br>Choices: bridge, host, none. Default: bridge          |
-| -p, --pipeline       | Run complete stages rather than jobs                                                     |
-| -e ENV               | Define VARIABLE=value, pass VARIABLE or ENV file                                         |
-| -E ENGINE            | Force a specific engine (or define CI_LOCAL_ENGINE)<br>Available engines: docker, podman |
-| -H, --host           | Run all jobs on the host rather than containers                                          |
-| -R, --no-regex       | Disable regex search of names                                                            |
-| -t TAGS              | Handle listed tags as manual jobs<br>Default list: ['deploy', 'local', 'publish']        |
-| -r, --real-paths     | Mount real folder paths in the container                                                 |
-| -v VOLUME            | Mount VOLUME or HOST:TARGET in containers                                                |
-| -w WORKDIR           | Override the container's working path                                                    |
-| --all                | Enable all jobs by default in selections                                                 |
-| --defaults           | Use default variables for .local:configurations                                          |
-| --bash               | Prepare runners for manual bash purposes                                                 |
-| --debug              | Keep runners active for debugging purposes                                               |
-| -d, --dump           | Dump parsed .gitlab-ci.yml configuration                                                 |
-| -s, --select         | Force jobs selection from enumerated names                                               |
-| -l, --list           | Select one job to run (implies --manual)                                                 |
-| --pull               | Pull container images from all jobs                                                      |
+| optional arguments   |                                                                                                |
+| -------------------- | ---------------------------------------------------------------------------------------------- |
+| -h, --help           | Show this help message                                                                         |
+| --version            | Show the current version                                                                       |
+| -q, --quiet          | Hide jobs execution context                                                                    |
+| -c CONFIGURATION     | Path to the .gitlab-ci.yml configuration file or folder                                        |
+| -B, --no-before      | Disable before_script executions                                                               |
+| -A, --no-after       | Disable after_script executions                                                                |
+| -m, --manual         | Allow manual jobs to be used                                                                   |
+| -n NETWORK           | Configure the network mode used<br>Choices: bridge, host, none. Default: bridge                |
+| -p, --pipeline       | Run complete stages rather than jobs                                                           |
+| -e ENV               | Define VARIABLE=value, pass VARIABLE or ENV file                                               |
+| -E ENGINE            | Force a specific engine (or define CI_LOCAL_ENGINE)<br>Available engines: auto, docker, podman |
+| -H, --host           | Run all jobs on the host rather than containers                                                |
+| -R, --no-regex       | Disable regex search of names                                                                  |
+| -t TAGS              | Handle listed tags as manual jobs<br>Default list: ['deploy', 'local', 'publish']              |
+| -r, --real-paths     | Mount real folder paths in the container                                                       |
+| -S, --sockets        | Mount engine sockets for nested containers                                                     |
+| -v VOLUME            | Mount VOLUME or HOST:TARGET in containers                                                      |
+| -w WORKDIR           | Override the container's working path                                                          |
+| --all                | Enable all jobs by default in selections                                                       |
+| --defaults           | Use default variables for .local:configurations                                                |
+| --bash               | Prepare runners for manual bash purposes                                                       |
+| --debug              | Keep runners active for debugging purposes                                                     |
+| -d, --dump           | Dump parsed .gitlab-ci.yml configuration                                                       |
+| -s, --select         | Force jobs selection from enumerated names                                                     |
+| -l, --list           | Select one job to run (implies --manual)                                                       |
+| --pull               | Pull container images from all jobs                                                            |
 
 ---
 
