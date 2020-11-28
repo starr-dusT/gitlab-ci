@@ -198,8 +198,8 @@ def runner(options, job_data, last_result, jobs_status):
     # Prepare temporary script
     scriptFile = tempfile.NamedTemporaryFile(delete=False, mode='wt', newline='\n')
     scriptFolder = resolvePath(Path(scriptFile.name).parent)
-    scriptTargetFolder = getPath(Platform.TEMP_DIR)
-    scriptTargetPath = getPath(Platform.TEMP_DIR / Path(scriptFile.name).name)
+    scriptTargetFolder = getPath(Platform.OPT_TMP_DIR)
+    scriptTargetPath = getPath(Platform.OPT_TMP_DIR / Path(scriptFile.name).name)
 
     # Prepare execution context
     scriptFile.write('#!/bin/sh')
