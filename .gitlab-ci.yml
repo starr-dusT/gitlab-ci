@@ -217,6 +217,7 @@ stages:
 'Python Local':
   extends: .unit-tests-template
   image: local:quiet
+  before_script: []
   only:
     - local
 
