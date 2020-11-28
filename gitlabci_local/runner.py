@@ -133,6 +133,11 @@ def runner(options, job_data, last_result, jobs_status):
     if options.network:
         network = options.network
 
+    # Prepare engine execution
+    if not host:
+        if engine is None:
+            engine = Engine(options)
+
     # Header
     if not quiet:
         if jobs_status['jobs_count'] > 1:
@@ -331,10 +336,11 @@ def runner(options, job_data, last_result, jobs_status):
     # Container execution
     if not host:
 
-        # Create container engine
-        if engine is None:
-            engine = Engine(options, variables)
-            engine.sockets(volumes)
+        # Configure engine variables
+        variables['CI_LOCAL_ENGINE_NAME'] = engine.name()
+
+        # Append sockets mounts
+        engine.sockets(volumes)
 
         # Image validation
         if not image:

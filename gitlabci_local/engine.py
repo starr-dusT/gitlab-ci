@@ -69,9 +69,10 @@ class Engine:
     # Members
     _backend = Backend.UNKNOWN
     _engine = None
+    _name = None
 
     # Constructor
-    def __init__(self, options, variables=None):
+    def __init__(self, options):
 
         # Acquire engine names
         names = Names.get(options.engine)
@@ -84,8 +85,7 @@ class Engine:
                 try:
                     self._engine = podman.Podman()
                     self._backend = Backend.PODMAN
-                    if variables:
-                        variables['CI_LOCAL_ENGINE_NAME'] = Names.PODMAN
+                    self._name = Names.PODMAN
                     break
                 except:
                     self._engine = None
@@ -95,8 +95,7 @@ class Engine:
                 try:
                     self._engine = docker.Docker()
                     self._backend = Backend.DOCKER
-                    if variables:
-                        variables['CI_LOCAL_ENGINE_NAME'] = Names.DOCKER
+                    self._name = Names.DOCKER
                     break
                 except:
                     self._engine = None
@@ -122,8 +121,11 @@ class Engine:
         return self._engine.logs(container)
 
     # Name
-    def name(self, container):
-        return self._engine.name(container)
+    def name(self, container=None):
+        if container:
+            return self._engine.name(container)
+        else:
+            return self._name
 
     # Pull
     def pull(self, image):
