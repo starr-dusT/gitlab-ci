@@ -137,16 +137,21 @@ def runner(options, job_data, last_result, jobs_status):
     if not host:
         if engine is None:
             engine = Engine(options)
+        engine_type = engine.name()
+
+    # Prepare native execution
+    else:
+        engine_type = 'native'
 
     # Header
     if not quiet:
         if jobs_status['jobs_count'] > 1:
             print(' ')
-        print(' %s===[ %s%s: %s%s %s(%s) %s]===%s' %
+        print(' %s===[ %s%s: %s%s %s(%s, %s) %s]===%s' %
               (colored.fg('green') + colored.attr('bold'),
                colored.fg('yellow') + colored.attr('bold'), job_data['stage'],
                colored.fg('yellow') + colored.attr('bold'), job_data['name'],
-               colored.fg('cyan') + colored.attr('bold'), image,
+               colored.fg('cyan') + colored.attr('bold'), image, engine_type,
                colored.fg('green') + colored.attr('bold'), colored.attr('reset')))
         print(' ', flush=True)
 
