@@ -353,7 +353,7 @@ def runner(options, job_data, last_result, jobs_status):
                 volume_mode = 'rw'
 
             # Append volume mounts
-            volumes.add(volume_host, volume_target, volume_mode, volume_local)
+            volumes.add(volume_host, volume_target, volume_mode, not volume_local)
 
     # Prepare variables
     variables = dict()

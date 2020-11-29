@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 # Libraries
+from os import sep
 from pathlib import PurePosixPath
 from sys import platform
 
@@ -13,3 +14,6 @@ class Platform:
 
     # Paths
     BUILDS_DIR = PurePosixPath('/builds')
+
+    # Separators
+    PATH_SEPARATOR = sep
