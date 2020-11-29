@@ -78,11 +78,6 @@ for i in range(1, 30):
 # Delay
 time.sleep(3)
 
-# Help
-Executor('gitlabci-local -h').\
-    read().\
-    finish()
-
 # Jobs selector
 Executor('gitlabci-local', './examples/').\
     read().\
