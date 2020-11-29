@@ -71,8 +71,11 @@ class Executor:
         time.sleep(1)
         return self
 
+# Engine
+os.environ['CI_LOCAL_ENGINE'] = 'docker,auto'
+
 # Header
-for i in range(1, 30):
+for i in range(1, 100):
     print(' ', flush=True)
 
 # Delay
@@ -120,7 +123,7 @@ Executor('gitlabci-local -l').\
     finish()
 
 # Job runner
-Executor('gitlabci-local "Job 1 - 3"').\
+Executor('gitlabci-local \'Job 1 - 3\'').\
     finish()
 
 # Pipeline runner
@@ -132,7 +135,7 @@ Executor('gitlabci-local -p one two', '../stages/').\
     finish()
 
 # Configurations runner
-Executor('gitlabci-local -e VARIABLE_8="value8" -e VARIABLE_11=value11 -p', '../configurations/').\
+Executor('gitlabci-local -e VARIABLE_8=\'value8\' -e VARIABLE_11=value11 -p', '../configurations/').\
     read().\
     wait(1).\
     interact(Executor.KEY_ENTER).\
