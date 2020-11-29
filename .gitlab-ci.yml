@@ -175,10 +175,15 @@ stages:
     - gitlabci-local -c ./tests/local/.gitlab-ci.yml -p
     - gitlabci-local -c ./tests/local/.gitlab-ci.yml 'Job 1'
     - gitlabci-local -c ./tests/local/.gitlab-ci.yml -p local_first
-    - gitlabci-local -c ./tests/local/.gitlab-ci.yml -v ./tests/configurations:/opt/src/tests:ro -p
     - gitlabci-local -c ./tests/local/.gitlab-ci.yml -n bridge 'Job 2'
     - gitlabci-local -c ./tests/local/.gitlab-ci.yml -n host 'Job 2'
     - gitlabci-local -c ./tests/local/.gitlab-ci.yml -n none 'Job 2'
+    - gitlabci-local -c ./tests/volumes/.gitlab-ci.yml -p
+    - gitlabci-local -c ./tests/volumes/.gitlab-ci.yml -v ./tests/volumes:/opt/src:ro -p
+    - gitlabci-local -c ./tests/volumes/.gitlab-ci.yml -v ./tests/volumes:/opt/src:ro -v ./tests/volumes:/opt/src:ro -p
+    - gitlabci-local -c ./tests/volumes/.gitlab-ci.yml -v ./tests/local:/opt/src:ro -p
+    - gitlabci-local -c ./tests/volumes/.gitlab-ci.yml -v ./tests/volumes:/opt/src3:ro -p
+    - gitlabci-local -c ./tests/volumes/.gitlab-ci.yml -v ./tests/local:/opt/src:ro -v ./tests/volumes:/opt/src:ro -p && exit 1 || true
     - gitlabci-local -c ./tests/includes/.gitlab-ci.yml -p
     - gitlabci-local -c ./tests/extends/.gitlab-ci.yml -p
     - gitlabci-local -c ./tests/multilines/.gitlab-ci.yml -p

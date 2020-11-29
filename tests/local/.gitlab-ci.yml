@@ -61,8 +61,6 @@ stages:
     - deploy
   volumes:
     - .:/opt/src
-    - .:/opt/src2
-    - ./tests:/opt/src/tests
     - ../:/opt/parent:ro
   workdir: .
 
@@ -92,9 +90,6 @@ variables:
     - echo '__BEFORE__'
   script:
     - ls -la /opt/src/
-    - ls -la /opt/src/tests/
-    - ls -la /opt/src2/
-    - ls -la /opt/src2/tests/
     - ls -la /opt/parent/
     - touch /opt/parent/test && exit 1 || true
     - cat /etc/alpine-release
