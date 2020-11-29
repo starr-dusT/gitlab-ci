@@ -4,7 +4,7 @@
 import colored
 import datetime
 import os
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 import signal
 import stat
 import sys
@@ -182,12 +182,12 @@ def runner(options, job_data, last_result, jobs_status):
             if real_paths:
                 pathWorkDir = getPath((options.path / workdir).resolve())
             else:
-                pathWorkDir = getPath(Path(pathTargetProject) / workdir)
+                pathWorkDir = getPath(PurePosixPath(pathTargetProject) / workdir)
         else:
             if real_paths:
                 pathWorkDir = getPath((Path('.') / options.workdir).resolve())
             else:
-                pathWorkDir = getPath(Path(pathTargetProject) / options.workdir)
+                pathWorkDir = getPath(PurePosixPath(pathTargetProject) / options.workdir)
     elif real_paths:
         pathWorkDir = getPath(options.path)
     else:
