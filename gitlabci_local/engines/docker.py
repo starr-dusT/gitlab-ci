@@ -103,17 +103,15 @@ class Docker:
         return self._client.containers.run(
             image, command=command, detach=True, entrypoint=entrypoint,
             environment=variables, network_mode=network, privileged=True, remove=False,
-            stdout=True, stderr=True, stream=True, volumes=volumes, working_dir=directory)
+            stdout=True, stderr=True, stream=True, volumes=volumes.get(),
+            working_dir=directory)
 
     # Sockets
     def sockets(self, volumes):
 
         # Add socket volume
         if not Platform.IS_WINDOWS:
-            volumes['/var/run/docker.sock'] = { #
-                'bind': '/var/run/docker.sock',
-                'mode': 'rw'
-            }
+            volumes.add('/var/run/docker.sock', '/var/run/docker.sock', 'rw')
 
     # Stop
     def stop(self, container, timeout):

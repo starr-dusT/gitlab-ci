@@ -15,6 +15,7 @@ import time
 from .const import Platform
 from .engine import Engine
 from .main import NAME
+from .types import Volumes
 from .utils import getPath, nameCheck, resolvePath
 
 # Constants
@@ -112,6 +113,7 @@ def runner(options, job_data, last_result, jobs_status):
     quiet = options.quiet
     result = False
     time_start = time.time()
+    volumes = Volumes()
 
     # Filter when
     if last_result and job_data['when'] not in ['on_success', 'manual', 'always']:
@@ -296,12 +298,7 @@ def runner(options, job_data, last_result, jobs_status):
     scriptFile.file.close()
 
     # Mount repository folder
-    volumes = { #
-        pathParent: {
-            'bind': pathTargetParent,
-            'mode': 'rw'
-        }
-    }
+    volumes.add(pathParent, pathTargetParent, 'rw')
 
     # Extend mounts
     if options.volume:
@@ -326,13 +323,8 @@ def runner(options, job_data, last_result, jobs_status):
                 volume_target = resolvePath(os.path.expandvars(volume))
                 volume_mode = 'rw'
 
-            # Clear volume overrides
-            for volume in list(volumes.keys()):
-                if volume_target == volumes[volume]['bind']:
-                    volumes.pop(volume)
-
             # Append volume mounts
-            volumes[volume_host] = {'bind': volume_target, 'mode': volume_mode}
+            volumes.add(volume_host, volume_target, volume_mode)
 
     # Prepare variables
     variables = dict()

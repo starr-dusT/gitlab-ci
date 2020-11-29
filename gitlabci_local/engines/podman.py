@@ -141,8 +141,8 @@ class Podman:
             args_entrypoint = ['--entrypoint', entrypoint]
 
         # Adapt mounts
-        if isinstance(volumes, dict):
-            for volume in volumes.items():
+        if volumes and isinstance(volumes.get(), dict):
+            for volume in volumes.get().items():
                 options = ''
                 if volume[1]['mode'] == 'ro':
                     options += ':ro'
