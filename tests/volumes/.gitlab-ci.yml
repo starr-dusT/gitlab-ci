@@ -20,6 +20,7 @@ variables:
   before_script:
     - echo '__BEFORE__'
   script:
+    - pwd
     - ls -la /opt/src/
     - ls -la /opt/src/folder/
     - ls -la /opt/src2/

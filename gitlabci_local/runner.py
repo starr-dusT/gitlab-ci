@@ -303,24 +303,32 @@ def runner(options, job_data, last_result, jobs_status):
     # Extend mounts
     if options.volume:
         for volume in options.volume:
+            cwd = Path('.')
+            volume_local = False
             volume_nodes = volume.split(':')
+
+            # Handle .local volumes
+            if volume_nodes[0] == '.local':
+                cwd = options.path
+                volume_local = True
+                volume_nodes.pop(0)
 
             # Parse HOST:TARGET:MODE
             if len(volume_nodes) == 3:
-                volume_host = resolvePath(os.path.expandvars(volume_nodes[0]))
+                volume_host = resolvePath(cwd / os.path.expandvars(volume_nodes[0]))
                 volume_target = os.path.expandvars(volume_nodes[1])
                 volume_mode = volume_nodes[2]
 
             # Parse HOST:TARGET
             elif len(volume_nodes) == 2:
-                volume_host = resolvePath(os.path.expandvars(volume_nodes[0]))
+                volume_host = resolvePath(cwd / os.path.expandvars(volume_nodes[0]))
                 volume_target = os.path.expandvars(volume_nodes[1])
                 volume_mode = 'rw'
 
             # Parse VOLUME
             else:
-                volume_host = resolvePath(os.path.expandvars(volume))
-                volume_target = resolvePath(os.path.expandvars(volume))
+                volume_host = resolvePath(cwd / os.path.expandvars(volume))
+                volume_target = resolvePath(cwd / os.path.expandvars(volume))
                 volume_mode = 'rw'
 
             # Append volume mounts

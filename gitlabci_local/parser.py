@@ -251,12 +251,13 @@ def parser(options, data, environment):
         if 'volumes' in local:
             if not options.volume:
                 options.volume = []
-            options.volume = local['volumes'] + options.volume
+            for volume in local['volumes']:
+                options.volume += ['.local:' + volume]
 
         # Parse local workdir
         if 'workdir' in local:
             if not options.workdir:
-                options.workdir = Path(local['workdir']).resolve()
+                options.workdir = Path(options.path / local['workdir']).resolve()
 
         # Parse local configurations
         if 'configurations' in local:
