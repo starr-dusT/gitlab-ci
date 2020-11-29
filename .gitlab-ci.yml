@@ -125,6 +125,8 @@ stages:
     TEMP: .tmp
     TERM: ansi
   script:
+    - pwd
+    - mount
     - pip show gitlabci-local
     - gitlabci-local -h
     - gitlabci-local -c unknown/.gitlab-ci.yml && exit 1 || true
