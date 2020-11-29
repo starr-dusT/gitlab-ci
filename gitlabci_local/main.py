@@ -84,7 +84,7 @@ def main():
     parser.add_argument('--tags-default', dest='tags_default', action='store_true',
                         help=argparse.SUPPRESS)
     parser.add_argument('-r', '--real-paths', dest='real_paths', action='store_true',
-                        help='Mount real folder paths in the container')
+                        help='Mount real folder paths in the container (Linux only)')
     parser.add_argument('-S', '--sockets', dest='sockets', action='store_true',
                         help='Mount engine sockets for nested containers')
     parser.add_argument('-v', dest='volume', action='append',

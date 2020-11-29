@@ -55,7 +55,7 @@ gitlabci-local: Launch .gitlab-ci.yml jobs locally (aliases: gcil)
 | -H, --host           | Run all jobs on the host rather than containers                                                |
 | -R, --no-regex       | Disable regex search of names                                                                  |
 | -t TAGS              | Handle listed tags as manual jobs<br>Default list: ['deploy', 'local', 'publish']              |
-| -r, --real-paths     | Mount real folder paths in the container                                                       |
+| -r, --real-paths     | Mount real folder paths in the container (Linux only)                                          |
 | -S, --sockets        | Mount engine sockets for nested containers                                                     |
 | -v VOLUME            | Mount VOLUME or HOST:TARGET in containers                                                      |
 | -w WORKDIR           | Override the container's working path                                                          |
