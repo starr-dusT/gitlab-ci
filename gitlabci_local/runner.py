@@ -453,7 +453,7 @@ def runner(options, job_data, last_result, jobs_status):
             scripts += entrypoint
         if not scripts:
             scripts = ['sh']
-        scripts += [scriptFile.name]
+        scripts += ['"%s"' % scriptFile.name]
         success = (os.system(' '.join(scripts)) == 0)
 
         # Result evaluation
