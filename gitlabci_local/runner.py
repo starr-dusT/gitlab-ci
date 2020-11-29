@@ -160,9 +160,12 @@ def runner(options, job_data, last_result, jobs_status):
                colored.fg('green') + colored.attr('bold'), colored.attr('reset')))
         print(' ', flush=True)
 
-    # Acquire project path
+    # Acquire project paths
     pathProject = resolvePath(options.path)
     pathParent = resolvePath(Path(options.path).parent)
+
+    # Acquire project targets
+    pathTargetParent = pathParent if options.real_paths else getPath(Platform.BUILDS_DIR)
 
     # Prepare working directory
     if options.workdir:
@@ -196,13 +199,9 @@ def runner(options, job_data, last_result, jobs_status):
         scriptsAfter += job_data['after_script']
 
     # Prepare temporary script
-    Path(Platform.TEMP_ENTRYPOINTS_DIR).mkdir(exist_ok=True)
-    scriptFile = tempfile.NamedTemporaryFile(
-        delete=False, dir=resolvePath(Platform.TEMP_ENTRYPOINTS_DIR), mode='wt',
-        newline='\n')
-    scriptFolder = resolvePath(Path(scriptFile.name).parent)
-    scriptTargetFolder = getPath(Platform.TEMP_ENTRYPOINTS_DIR)
-    scriptTargetPath = getPath(Platform.TEMP_ENTRYPOINTS_DIR / Path(scriptFile.name).name)
+    scriptFile = tempfile.NamedTemporaryFile(delete=False, dir=pathParent, mode='wt',
+                                             newline='\n', prefix='.tmp.entrypoint.')
+    scriptTargetPath = getPath(Path(pathTargetParent) / Path(scriptFile.name).name)
 
     # Prepare execution context
     scriptFile.write('#!/bin/sh')
@@ -296,14 +295,10 @@ def runner(options, job_data, last_result, jobs_status):
         | stat.S_IRGRP | stat.S_IROTH | stat.S_IXOTH)
     scriptFile.file.close()
 
-    # Prepare mounts
-    volumes = {
+    # Mount repository folder
+    volumes = { #
         pathParent: {
-            'bind': pathParent if options.real_paths else getPath(Platform.BUILDS_DIR),
-            'mode': 'rw'
-        },
-        scriptFolder: {
-            'bind': scriptTargetFolder,
+            'bind': pathTargetParent,
             'mode': 'rw'
         }
     }

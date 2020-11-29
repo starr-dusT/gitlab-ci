@@ -13,5 +13,3 @@ class Platform:
 
     # Paths
     BUILDS_DIR = PurePosixPath('/builds')
-    TEMP_DIR = PurePosixPath('/tmp')
-    TEMP_ENTRYPOINTS_DIR = PurePosixPath('/tmp/gitlabci-local')
