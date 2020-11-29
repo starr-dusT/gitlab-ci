@@ -298,7 +298,7 @@ def runner(options, job_data, last_result, jobs_status):
     scriptFile.file.close()
 
     # Mount repository folder
-    volumes.add(pathParent, pathTargetParent, 'rw')
+    volumes.add(pathParent, pathTargetParent, 'rw', True)
 
     # Extend mounts
     if options.volume:
@@ -332,7 +332,7 @@ def runner(options, job_data, last_result, jobs_status):
                 volume_mode = 'rw'
 
             # Append volume mounts
-            volumes.add(volume_host, volume_target, volume_mode)
+            volumes.add(volume_host, volume_target, volume_mode, volume_local)
 
     # Prepare variables
     variables = dict()

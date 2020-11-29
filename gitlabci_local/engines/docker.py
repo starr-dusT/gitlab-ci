@@ -111,7 +111,7 @@ class Docker:
 
         # Add socket volume
         if not Platform.IS_WINDOWS:
-            volumes.add('/var/run/docker.sock', '/var/run/docker.sock', 'rw')
+            volumes.add('/var/run/docker.sock', '/var/run/docker.sock', 'rw', True)
 
     # Stop
     def stop(self, container, timeout):
