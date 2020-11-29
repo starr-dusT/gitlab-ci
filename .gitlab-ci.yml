@@ -27,7 +27,7 @@ stages:
     - ./.tmp/git-chglog -o ./CHANGELOG.md
     - sed -i "s#raw/[^/]*/docs#raw/${tag}/docs#g" ./README.md
     - git add -v ./CHANGELOG.md ./README.md
-    - 'git commit -m "CHANGELOG: regenerate release tag changes history"'
+    - 'git commit -m "docs: changelog: regenerate release tag changes history"'
     - git tag -f -m '' "${tag}"
     - ./.tmp/git-chglog -o ./CHANGELOG.md
     - git add -v ./CHANGELOG.md
