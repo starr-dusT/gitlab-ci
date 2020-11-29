@@ -131,20 +131,20 @@ to allow specific conditions for local purposes in jobs' scripts.
 
 ---
 
-## Container engines
+## Supported container engines
 
 gitlabci-local currently supports these container engines:
 
-- Docker: https://docs.docker.com/get-docker/ (root daemon, as user or sudoer)
-- Podman: https://podman.io/getting-started/ (rootless CLI or root CLI)
+- **Docker :** https://docs.docker.com/get-docker/ (root daemon, as user or sudoer)
+- **Podman :** https://podman.io/getting-started/ (rootless or root CLI)
 
 ---
 
-## Supported systems and engines
+## Supported operating systems
 
 - **Linux systems :**
 
-|                  | Linux Mint / Ubuntu | CentOS | Others |
+|                  | Linux Mint,  Ubuntu | CentOS | Others |
 |:-----------------|:-------------------:|:------:|:------:|
 | Docker (as user) | **✓**               | **✓**  | **?**  |
 | Docker (as root) | **✓**               | **✓**  | **?**  |
