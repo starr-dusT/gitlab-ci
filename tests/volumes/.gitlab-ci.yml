@@ -31,3 +31,15 @@ variables:
     - touch /opt/parent/test && exit 1 || true
   after_script:
     - echo '__AFTER__'
+
+'Job 2':
+  stage: volumes
+  image: local
+  before_script:
+    - echo '__BEFORE__'
+  script:
+    - pwd
+    - ls -la ./
+  after_script:
+    - echo '__AFTER__'
+  when: manual

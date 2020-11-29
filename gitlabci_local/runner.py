@@ -179,12 +179,12 @@ def runner(options, job_data, last_result, jobs_status):
     if options.workdir:
         if options.workdir.startswith('.local:'):
             workdir = options.workdir[len('.local:'):]
-            if real_paths:
+            if host or real_paths:
                 pathWorkDir = getPath((options.path / workdir).resolve())
             else:
                 pathWorkDir = getPath(PurePosixPath(pathTargetProject) / workdir)
         else:
-            if real_paths:
+            if host or real_paths:
                 pathWorkDir = getPath((Path('.') / options.workdir).resolve())
             else:
                 pathWorkDir = getPath(PurePosixPath(pathTargetProject) / options.workdir)
@@ -226,6 +226,11 @@ def runner(options, job_data, last_result, jobs_status):
     scriptFile.write('\n')
     scriptFile.write('result=1')
     scriptFile.write('\n')
+
+    # Prepare host working directory
+    if host:
+        scriptFile.write('cd "%s"' % pathWorkDir)
+        scriptFile.write('\n')
 
     # Prepare before_script/script context
     scriptFile.write('(')

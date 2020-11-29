@@ -189,6 +189,10 @@ stages:
     - gitlabci-local -c ./tests/volumes/.gitlab-ci.yml -w ./tests/volumes/ -p
     - gitlabci-local -c ./tests/volumes/.gitlab-ci.yml -w /opt/src -p
     - gitlabci-local -c ./tests/volumes/.gitlab-ci.yml -w /opt/unknown -p
+    - gitlabci-local -c ./tests/volumes/.gitlab-ci.yml 'Job 2'
+    - gitlabci-local -c ./tests/volumes/.gitlab-ci.yml -w . 'Job 2'
+    - gitlabci-local -c ./tests/volumes/.gitlab-ci.yml -r 'Job 2'
+    - gitlabci-local -c ./tests/volumes/.gitlab-ci.yml -r -w . 'Job 2'
     - gitlabci-local -c ./tests/includes/.gitlab-ci.yml -p
     - gitlabci-local -c ./tests/extends/.gitlab-ci.yml -p
     - gitlabci-local -c ./tests/multilines/.gitlab-ci.yml -p
