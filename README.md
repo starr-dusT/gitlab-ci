@@ -144,8 +144,8 @@ gitlabci-local currently supports these container engines:
 
 - **Linux systems :**
 
-|                  | Linux Mint,  Ubuntu | CentOS | Others |
-|:-----------------|:-------------------:|:------:|:------:|
+| Engines          | Linux Mint,  Ubuntu | CentOS | Others |
+|:----------------:|:-------------------:|:------:|:------:|
 | Docker (as user) | **✓**               | **✓**  | **?**  |
 | Docker (as root) | **✓**               | **✓**  | **?**  |
 | Podman (as user) | **~**               | **~**  | **?**  |
@@ -153,8 +153,8 @@ gitlabci-local currently supports these container engines:
 
 - **Windows systems :**
 
-|                  | Windows 10 (2004, 20H2) | Others |
-|:-----------------|:-----------------------:|:------:|
+| Engines          | Windows 10 (2004, 20H2) | Others |
+|:----------------:|:-----------------------:|:------:|
 | Docker (Hyper-V) | **✓**                   | **?**  |
 | Docker (WSL 2)   | **✓**                   | **?**  |
 
