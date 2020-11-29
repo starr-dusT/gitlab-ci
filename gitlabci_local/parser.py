@@ -257,7 +257,7 @@ def parser(options, data, environment):
         # Parse local workdir
         if 'workdir' in local:
             if not options.workdir:
-                options.workdir = Path(options.path / local['workdir']).resolve()
+                options.workdir = '.local:' + local['workdir']
 
         # Parse local configurations
         if 'configurations' in local:

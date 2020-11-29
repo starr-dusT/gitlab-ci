@@ -111,6 +111,7 @@ def runner(options, job_data, last_result, jobs_status):
     # Variables
     host = False
     quiet = options.quiet
+    real_paths = options.real_paths
     result = False
     time_start = time.time()
     volumes = Volumes()
@@ -167,15 +168,30 @@ def runner(options, job_data, last_result, jobs_status):
     pathParent = resolvePath(Path(options.path).parent)
 
     # Acquire project targets
-    pathTargetParent = pathParent if options.real_paths else getPath(Platform.BUILDS_DIR)
+    if real_paths:
+        pathTargetProject = pathProject
+        pathTargetParent = pathParent
+    else:
+        pathTargetProject = getPath(Platform.BUILDS_DIR / Path(pathProject).name)
+        pathTargetParent = getPath(Platform.BUILDS_DIR)
 
     # Prepare working directory
     if options.workdir:
-        pathWorkDir = getPath(options.workdir)
-    elif options.real_paths:
+        if options.workdir.startswith('.local:'):
+            workdir = options.workdir[len('.local:'):]
+            if real_paths:
+                pathWorkDir = getPath((options.path / workdir).resolve())
+            else:
+                pathWorkDir = getPath(Path(pathTargetProject) / workdir)
+        else:
+            if real_paths:
+                pathWorkDir = getPath((Path('.') / options.workdir).resolve())
+            else:
+                pathWorkDir = getPath(Path(pathTargetProject) / options.workdir)
+    elif real_paths:
         pathWorkDir = getPath(options.path)
     else:
-        pathWorkDir = getPath(Platform.BUILDS_DIR / Path(pathProject).name)
+        pathWorkDir = pathTargetProject
 
     # Prepare entrypoint and scripts
     entrypoint = job_data['entrypoint']
