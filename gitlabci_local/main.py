@@ -150,6 +150,8 @@ def main():
     # Prepare engine
     if not options.engine and 'CI_LOCAL_ENGINE' in os.environ:
         options.engine = os.environ['CI_LOCAL_ENGINE']
+    elif options.engine:
+        os.environ['CI_LOCAL_ENGINE'] = options.engine
 
     # Prepare paths
     options.configuration = Path(options.configuration).resolve()
