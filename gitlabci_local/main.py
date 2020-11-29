@@ -28,7 +28,7 @@ def main():
 
     # Variables
     hint = ''
-    interactive = (sys.stdin.isatty() and sys.stdout.isatty())
+    interactive = Platform.IS_TTY_STDIN and Platform.IS_TTY_STDOUT
     result = False
 
     # Arguments creation

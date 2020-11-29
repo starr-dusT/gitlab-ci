@@ -7,9 +7,9 @@ import os
 import oyaml as yaml
 from pathlib import Path
 import PyInquirer
-import sys
 
 # Components
+from .const import Platform
 from .main import NAME
 from .patcher import InquirerControl
 from .runner import launcher
@@ -294,7 +294,7 @@ def configurator(options, configurations):
             variable_set = True
 
         # Request configuration selection
-        if not sys.stdin.isatty() or variable_set or options.defaults:
+        if not Platform.IS_TTY_STDIN or variable_set or options.defaults:
             result[variable] = str(variable_default)
             print(' %s%s  %s%s%s' %
                   (colored.fg('yellow') + colored.attr('bold'),

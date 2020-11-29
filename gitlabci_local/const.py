@@ -3,7 +3,7 @@
 # Libraries
 from os import sep
 from pathlib import PurePosixPath
-from sys import platform
+from sys import platform, stdin, stdout
 
 # Platform
 class Platform:
@@ -17,3 +17,7 @@ class Platform:
 
     # Separators
     PATH_SEPARATOR = sep
+
+    # TTYs
+    IS_TTY_STDIN = stdin.isatty() and stdin.encoding != 'cp1252'
+    IS_TTY_STDOUT = stdout.isatty()

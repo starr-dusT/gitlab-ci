@@ -2,7 +2,6 @@
 
 # Libraries
 import docker
-import sys
 
 # Components
 from ..const import Platform
@@ -67,7 +66,7 @@ class Docker:
 
             # Layer progress logs
             if 'progress' in data:
-                if sys.stdout.isatty():
+                if Platform.IS_TTY_STDOUT:
                     print(
                         '\r\033[K%s: %s %s' %
                         (data['id'], data['status'], data['progress']), end='',
@@ -75,7 +74,7 @@ class Docker:
 
             # Layer event logs
             elif 'progressDetail' in data:
-                if sys.stdout.isatty():
+                if Platform.IS_TTY_STDOUT:
                     print('\r\033[K%s: %s' % (data['id'], data['status']), end='',
                           flush=True)
 
