@@ -160,7 +160,7 @@ stages:
     - gitlabci-local -c ./tests/configurations/.gitlab-ci.yml -e VARIABLE_8=value8 -e VARIABLE_11=value11 --defaults -p
     - gitlabci-local -c ./tests/environment/.gitlab-ci.yml -p
     - gitlabci-local -c ./tests/environment/.gitlab-ci.yml -e USER -e VALUE_1=set1 -e VALUE_2=set2 -e VALUE_3=set3 -p
-    - gitlabci-local -c ./tests/environment/.gitlab-ci.yml -e FOLDER=$(readlink -f "${PWD}") -v ./ 'Job 2'
+    - gitlabci-local -c ./tests/environment/.gitlab-ci.yml -e FOLDER="$(readlink -f "${PWD}")" -v ./ 'Job 2'
     - gitlabci-local -c ./tests/environment/.gitlab-ci.yml -v ./:/opt 'Job 2'
     - gitlabci-local -c ./tests/environment/.gitlab-ci.yml -v ./:/opt -w /opt/ 'Job 2'
     - gitlabci-local -c ./tests/entrypoints/.gitlab-ci.yml --pull
