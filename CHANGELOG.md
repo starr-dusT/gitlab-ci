@@ -1,14 +1,6 @@
 
 <a name="2.0.0"></a>
-## [2.0.0](https://gitlab.com/AdrianDC/gitlabci-local/compare/2.0.0rc2...2.0.0) (2020-11-30)
-
-### Docs
-
-* changelog: regenerate release tag changes history
-
-
-<a name="2.0.0rc2"></a>
-## [2.0.0rc2](https://gitlab.com/AdrianDC/gitlabci-local/compare/1.3.1...2.0.0rc2) (2020-11-30)
+## [2.0.0](https://gitlab.com/AdrianDC/gitlabci-local/compare/1.3.1...2.0.0) (2020-11-30)
 
 ### Chore
 
@@ -38,6 +30,7 @@
 
 ### Docs
 
+* changelog: regenerate release tag changes history
 * changelog: regenerate release tag changes history
 * readme: center operating systems and engines names tables
 * gitlab-ci: use 'docs: changelog:' for changelog commits
