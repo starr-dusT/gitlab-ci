@@ -21,14 +21,14 @@ class Names:
     DOCKER = 'docker'
     PODMAN = 'podman'
 
+    # Defaults
+    DEFAULTS = [
+        PODMAN,
+        DOCKER,
+    ]
+
     # Getter
     def get(override):
-
-        # Default prioritized names
-        defaults = [
-            Names.PODMAN,
-            Names.DOCKER,
-        ]
 
         # Adapt override
         override = override.lower() if override else None
@@ -43,25 +43,23 @@ class Names:
                     if Names.AUTO.startswith(item):
                         auto = True
                     else:
-                        names += [name for name in defaults if name.startswith(item)]
+                        names += [
+                            name for name in Names.DEFAULTS if name.startswith(item)
+                        ]
             if auto or override[-1] == ',':
-                names = names + defaults
+                names = names + Names.DEFAULTS
             names = list(dict.fromkeys(names))
 
         # Use engine defaults
         else:
-            names = defaults
+            names = Names.DEFAULTS
 
         # Result
         return names
 
 # Supported engines
 def supported():
-    return [
-        Names.AUTO,
-        Names.DOCKER,
-        Names.PODMAN,
-    ]
+    return [Names.AUTO] + Names.DEFAULTS
 
 # Engine class
 class Engine:

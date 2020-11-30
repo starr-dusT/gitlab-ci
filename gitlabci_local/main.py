@@ -71,8 +71,8 @@ def main():
                         help='Define VARIABLE=value, pass VARIABLE or ENV file')
     parser.add_argument(
         '-E', dest='engine',
-        help='Force a specific engine (or define CI_LOCAL_ENGINE)\nAvailable engines: %s'
-        % (', '.join(engine_supported())))
+        help='Force a specific engine (or define CI_LOCAL_ENGINE)\nDefault list: %s' %
+        (','.join(engine_supported())))
     parser.add_argument('-H', '--host', dest='host', action='store_true',
                         help='Run all jobs on the host rather than containers')
     parser.add_argument('-R', '--no-regex', dest='no_regex', action='store_true',
