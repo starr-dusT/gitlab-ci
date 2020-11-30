@@ -290,7 +290,7 @@ stages:
   only:
     - tags
 
-'Deploy Test':
+'Deploy Trial':
   stage: deploy
   variables:
     TWINE_PASSWORD_TEST: ${TWINE_PASSWORD_TEST}
@@ -299,5 +299,7 @@ stages:
     - python3 setup.py bdist_wheel
     - twine upload -u '__token__' -p "${TWINE_PASSWORD_TEST}" --repository testpypi dist/*
   only:
+    - local
+  tags:
     - local
   when: manual
