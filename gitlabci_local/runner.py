@@ -114,7 +114,6 @@ def runner(options, job_data, last_result, jobs_status):
     real_paths = options.real_paths and Platform.IS_LINUX
     result = False
     time_start = time.time()
-    volumes = Volumes()
 
     # Filter when
     if last_result and job_data['when'] not in ['on_success', 'manual', 'always']:
@@ -318,43 +317,6 @@ def runner(options, job_data, last_result, jobs_status):
         | stat.S_IRGRP | stat.S_IROTH | stat.S_IXOTH)
     scriptFile.file.close()
 
-    # Mount repository folder
-    volumes.add(pathParent, pathTargetParent, 'rw', True)
-
-    # Extend mounts
-    if options.volume:
-        for volume in options.volume:
-            cwd = Path('.')
-            volume_local = False
-            volume_nodes = volume.split(':')
-
-            # Handle .local volumes
-            if volume_nodes[0] == '.local':
-                cwd = options.path
-                volume_local = True
-                volume_nodes.pop(0)
-
-            # Parse HOST:TARGET:MODE
-            if len(volume_nodes) == 3:
-                volume_host = resolvePath(cwd / os.path.expandvars(volume_nodes[0]))
-                volume_target = os.path.expandvars(volume_nodes[1])
-                volume_mode = volume_nodes[2]
-
-            # Parse HOST:TARGET
-            elif len(volume_nodes) == 2:
-                volume_host = resolvePath(cwd / os.path.expandvars(volume_nodes[0]))
-                volume_target = os.path.expandvars(volume_nodes[1])
-                volume_mode = 'rw'
-
-            # Parse VOLUME
-            else:
-                volume_host = resolvePath(cwd / os.path.expandvars(volume))
-                volume_target = resolvePath(cwd / os.path.expandvars(volume))
-                volume_mode = 'rw'
-
-            # Append volume mounts
-            volumes.add(volume_host, volume_target, volume_mode, not volume_local)
-
     # Prepare variables
     variables = dict()
     for variable in job_data['variables']:
@@ -368,6 +330,46 @@ def runner(options, job_data, last_result, jobs_status):
 
         # Configure engine variables
         variables['CI_LOCAL_ENGINE_NAME'] = engine.name()
+
+        # Prepare volumes mounts
+        volumes = Volumes()
+
+        # Mount repository folder
+        volumes.add(pathParent, pathTargetParent, 'rw', True)
+
+        # Extend mounts
+        if options.volume:
+            for volume in options.volume:
+                cwd = Path('.')
+                volume_local = False
+                volume_nodes = volume.split(':')
+
+                # Handle .local volumes
+                if volume_nodes[0] == '.local':
+                    cwd = options.path
+                    volume_local = True
+                    volume_nodes.pop(0)
+
+                # Parse HOST:TARGET:MODE
+                if len(volume_nodes) == 3:
+                    volume_host = resolvePath(cwd / os.path.expandvars(volume_nodes[0]))
+                    volume_target = os.path.expandvars(volume_nodes[1])
+                    volume_mode = volume_nodes[2]
+
+                # Parse HOST:TARGET
+                elif len(volume_nodes) == 2:
+                    volume_host = resolvePath(cwd / os.path.expandvars(volume_nodes[0]))
+                    volume_target = os.path.expandvars(volume_nodes[1])
+                    volume_mode = 'rw'
+
+                # Parse VOLUME
+                else:
+                    volume_host = resolvePath(cwd / os.path.expandvars(volume))
+                    volume_target = resolvePath(cwd / os.path.expandvars(volume))
+                    volume_mode = 'rw'
+
+                # Append volume mounts
+                volumes.add(volume_host, volume_target, volume_mode, not volume_local)
 
         # Append sockets mounts
         if options.sockets:
