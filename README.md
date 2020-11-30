@@ -23,6 +23,20 @@ is the common and unique interface between GitLab CI and gitlabci-local.
 
 ---
 
+## Examples
+
+| Commands                       | Purpose                                            |
+|:-------------------------------|:---------------------------------------------------|
+| gitlabci-local                 | Launch the jobs choices interactive menu           |
+| gitlabci-local -p              | Launch the jobs pipeline automatically             |
+| gitlabci-local -l              | Launch the job selection interactive menu          |
+| gitlabci-local 'Dev'           | Launch jobs where the name contains a given string |
+| gitlabci-local 'Job 1' --debug | Hold a finishing specific job for debugging        |
+| gitlabci-local 'Job 1' --bash  | Prepare a bash environment for a specific job      |
+| gcil                           | Shortcut alias to gitlabci-local                   |
+
+---
+
 ## Usage
 
 ```shell
