@@ -278,3 +278,15 @@ stages:
     - twine upload -u '__token__' -p "${TWINE_PASSWORD}" dist/*
   only:
     - tags
+
+'Deploy Test':
+  stage: deploy
+  variables:
+    TWINE_PASSWORD_TEST: ${TWINE_PASSWORD_TEST}
+  script:
+    - pip3 install -r requirements-dev.txt --upgrade
+    - python3 setup.py bdist_wheel
+    - twine upload -u '__token__' -p "${TWINE_PASSWORD_TEST}" --repository testpypi dist/*
+  only:
+    - local
+  when: manual
