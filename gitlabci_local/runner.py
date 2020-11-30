@@ -187,7 +187,7 @@ def runner(options, job_data, last_result, jobs_status):
                 pathWorkDir = getPath((Path('.') / options.workdir).resolve())
             else:
                 pathWorkDir = getPath(PurePosixPath(pathTargetProject) / options.workdir)
-    elif real_paths:
+    elif host or real_paths:
         pathWorkDir = getPath(options.path)
     else:
         pathWorkDir = pathTargetProject
