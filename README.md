@@ -35,9 +35,9 @@ usage: gitlabci-local [-h] [--version] [-q] [-c CONFIGURATION] [-B] [-A] [-m] [-
 gitlabci-local: Launch .gitlab-ci.yml jobs locally (aliases: gcil)
 ```
 
-| positional arguments |                                                                                                          |
-| -------------------- | -------------------------------------------------------------------------------------------------------- |
-| names                | Names of specific jobs (or stages with --pipeline)<br>Regex names is supported unless --no-regex is used |
+| positional arguments |                                                                                                           |
+| -------------------- | --------------------------------------------------------------------------------------------------------- |
+| names                | Names of specific jobs (or stages with --pipeline)<br>Regex names are supported unless --no-regex is used |
 
 | optional arguments   |                                                                                         |
 | -------------------- | --------------------------------------------------------------------------------------- |
