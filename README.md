@@ -153,10 +153,10 @@ gitlabci-local currently supports these container engines:
 
 - **Windows systems :**
 
-| Engines             | Windows 10 (2004, 20H2) | Others |
-|:-------------------:|:-----------------------:|:------:|
-| Docker (Hyper-V)    | **✓**                   | **?**  |
-| Docker (WSL&nbsp;2) | **✓**                   | **?**  |
+| Engines             | Windows 10 (1909, 2004, 20H2) | Others |
+|:-------------------:|:-----------------------------:|:------:|
+| Docker (Hyper-V)    | **✓**                         | **?**  |
+| Docker (WSL&nbsp;2) | **✓**                         | **?**  |
 
 ---
 

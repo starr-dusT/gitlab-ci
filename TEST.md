@@ -15,7 +15,7 @@ The following engines are available :
 
 ## Test on Windows
 
-The following tools are required for Windows 10 hosts tests (example: 1903, 1909, 2004, 20H2, ...) :
+The following tools are required for Windows 10 hosts tests (example: 1909, 2004, 20H2, ...) :
 
 - **Git for Windows :** https://gitforwindows.org (Git, 64-bit.exe)
 - **Python :** https://www.python.org/downloads/windows/ (Python 3, x86-64 executable, all users, add to PATH, path length limit disabled)
