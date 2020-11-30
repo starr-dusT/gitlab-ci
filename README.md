@@ -162,49 +162,87 @@ gitlabci-local currently supports these container engines:
 
 ## Supported .gitlab-ci.yml features
 
-- **image:** IMAGE_NAME
-- **image:**
-  * **name:** IMAGE_NAME
-  * **entrypoint:** ['COMMANDS']
-- **include:**
-  * **local:** FILE_PATHS
-- **variables:**
-  * VARIABLES: VALUES
-- .TEMPLATES: &TEMPLATES
-- **stages:**
-  * STAGE_NAMES
-- **before_script:**
-  * COMMANDS
-- **after_script:**
-  * COMMANDS
-- JOB_NAME:
-  * **stage:** STAGE_NAME
-  * **image:** IMAGE_NAME
-  * **image:**
-    + **name:** IMAGE_NAME
-    + **entrypoint:** ['COMMANDS']
-  * **<<:** *TEMPLATES
-  * **extends:** TEMPLATE
-  * **extends:**
-    + TEMPLATES
-  * **variables:**
-    + **VARIABLES:** VALUES
-  * **before_script:**
-    + COMMANDS
-  * **script:**
-    + COMMANDS
-  * **after_script:**
-    + COMMANDS
-  * **retry:** RETRY_COUNT
-  * **retry:**
-    + **max:** RETRY_COUNT
-  * **tags:**
-    + MANUAL_TAGS
-  * **trigger:** SIMPLE_TRIGGER (ignored)
-  * **trigger:**
-    + COMPLEX_TRIGGER (ignored)
-  * **when:** on\_success/manual/on\_failure/always
-  * **allow_failure:** true/false
+```yml
+# Global configurations
+
+include:
+  local: FILE_PATHS
+
+image: IMAGE_NAME
+image:
+  name: IMAGE_NAME
+  entrypoint: ['COMMANDS']
+
+variables:
+  - VARIABLES: VALUES
+
+stages:
+  - STAGE_NAMES
+
+# Global scripts
+
+before_script:
+  - COMMANDS
+
+after_script:
+  - COMMANDS
+
+# Templates nodes
+
+.TEMPLATES: &TEMPLATES
+  KEYS: VALUES
+
+# Job nodes
+
+JOB_NAME:
+
+  # Job configurations
+
+  stage: STAGE_NAME
+
+  image: IMAGE_NAME
+  image:
+    name: IMAGE_NAME
+    entrypoint: ['COMMANDS']
+
+  variables:
+    VARIABLES: VALUES
+
+  # Job templates
+
+  <<: *TEMPLATES
+  extends: TEMPLATE
+  extends:
+    - TEMPLATES
+
+  # Job scripts
+
+  before_script:
+    - COMMANDS
+
+  script:
+    - COMMANDS
+
+  after_script:
+    - COMMANDS
+
+  # Job executions
+
+  retry: RETRY_COUNT
+  retry:
+    max: RETRY_COUNT
+
+  tags:
+    - MANUAL_TAGS
+
+  trigger: SIMPLE_TRIGGER (ignored)
+  trigger:
+    COMPLEX_TRIGGER (ignored)
+
+  when: on_success / manual / on_failure / always
+
+  allow_failure: true / false
+```
 
 ---
 
