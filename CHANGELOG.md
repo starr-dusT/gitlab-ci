@@ -1,4 +1,144 @@
 
+<a name="2.0.0"></a>
+## [2.0.0](https://gitlab.com/AdrianDC/gitlabci-local/compare/2.0.0rc2...2.0.0) (2020-11-30)
+
+### Docs
+
+* changelog: regenerate release tag changes history
+
+
+<a name="2.0.0rc2"></a>
+## [2.0.0rc2](https://gitlab.com/AdrianDC/gitlabci-local/compare/1.3.1...2.0.0rc2) (2020-11-30)
+
+### Chore
+
+* gitlab-ci: add Test PyPI uploader local manual job
+* docs: refresh the preview GIF for the latest 2.0.0 release
+* docs: use Docker engine by default and minor cleanups
+* docs: drop 'gitlabci-local --help' command in the preview
+* gitignore: exclude all .tmp.* entrypoint intermediate files
+* gitlab-ci: add 'pwd' and 'mount' to all tests jobs
+* gitlab-ci: use the Docker engine by default for development
+* run: add 'run.sh' script for local development purposes
+* gitlab-ci: avoid reinstalling upon local native tests
+* gitlab-ci: resolve colored terminal outputs in 'Test'
+* prepare [#34](https://gitlab.com/AdrianDC/gitlabci-local/issues/34): isolate /builds and /tmp paths in const class
+* main: use a global variable for '.gitlab-ci.yml' file name
+* gitlab-ci: install production requirements then development
+* gitlab-ci: add command headers for the 'Test' local job
+* gitlab-ci: add 'git --name-status' after 'Codestyle' fixes
+* gitlab-ci: add 'Test' local job to run unit tests suites
+* resolve [#86](https://gitlab.com/AdrianDC/gitlabci-local/issues/86): hide irrelevant internal values from --dump
+* development: install as 'sudoer' when using 'Development'
+* gitlab-ci: ensure /usr/local/path is in PATH for all tests
+* prepare [#82](https://gitlab.com/AdrianDC/gitlabci-local/issues/82): ensure Python 3 is explicitly used in 'Deploy'
+* dev: add missing setuptools-scm development requirement
+* prepare [#80](https://gitlab.com/AdrianDC/gitlabci-local/issues/80): reduce Docker specific references and add OCI
+* prepare [#82](https://gitlab.com/AdrianDC/gitlabci-local/issues/82): ensure Python 3 is explicitly used in 'Build'
+
+### Docs
+
+* changelog: regenerate release tag changes history
+* readme: center operating systems and engines names tables
+* gitlab-ci: use 'docs: changelog:' for changelog commits
+* readme: improve readability of supported engines and systems
+* readme: refresh 'gitlabci-local' usage and parameters lists
+* document [#34](https://gitlab.com/AdrianDC/gitlabci-local/issues/34): add supported systems and engines in README
+
+### Feat
+
+* resolve [#108](https://gitlab.com/AdrianDC/gitlabci-local/issues/108): define CI_LOCAL_ENGINE if engine option is set
+* resolve [#34](https://gitlab.com/AdrianDC/gitlabci-local/issues/34): automate interactive winpty calls on Windows
+* implement [#101](https://gitlab.com/AdrianDC/gitlabci-local/issues/101): add '-S' to manually mount engine sockets
+* implement [#103](https://gitlab.com/AdrianDC/gitlabci-local/issues/103): see the used engine in the job header
+* resolve [#100](https://gitlab.com/AdrianDC/gitlabci-local/issues/100): add '.local: real_paths:' configuration
+* resolve [#100](https://gitlab.com/AdrianDC/gitlabci-local/issues/100): use /builds paths for the temporary script
+* resolve [#100](https://gitlab.com/AdrianDC/gitlabci-local/issues/100): use /builds paths and add '-r' for real mounts
+* resolve [#99](https://gitlab.com/AdrianDC/gitlabci-local/issues/99): add support and tests for Python 3.9.0
+* resolve [#93](https://gitlab.com/AdrianDC/gitlabci-local/issues/93): add 'docker,' / 'podman,' for engines priority
+* implement [#92](https://gitlab.com/AdrianDC/gitlabci-local/issues/92): add '.local:engine' default configurations
+* finish [#80](https://gitlab.com/AdrianDC/gitlabci-local/issues/80): refactor with Podman subprocess CLI calls
+* fix [#85](https://gitlab.com/AdrianDC/gitlabci-local/issues/85): resolve puller access to job options 'host'
+* fix [#87](https://gitlab.com/AdrianDC/gitlabci-local/issues/87): use setuptools API for the --version informations
+* extend [#80](https://gitlab.com/AdrianDC/gitlabci-local/issues/80): add -E engine selection and add CI_LOCAL_ENGINE
+* implement [#89](https://gitlab.com/AdrianDC/gitlabci-local/issues/89): improve pipeline total duration outputs
+* implement [#88](https://gitlab.com/AdrianDC/gitlabci-local/issues/88): add 'image: local:silent' as host silent jobs
+* implement [#87](https://gitlab.com/AdrianDC/gitlabci-local/issues/87): add support for --version informations
+* implement [#85](https://gitlab.com/AdrianDC/gitlabci-local/issues/85): add 'image: local:quiet' for host quiet jobs
+* implement [#84](https://gitlab.com/AdrianDC/gitlabci-local/issues/84): accept -c with folder path to .gitlab-ci.yml
+* implement [#80](https://gitlab.com/AdrianDC/gitlabci-local/issues/80): add Podman root / sudoers engine support
+* finish [#79](https://gitlab.com/AdrianDC/gitlabci-local/issues/79): add 'Statistics' links for PyPI
+* implement [#82](https://gitlab.com/AdrianDC/gitlabci-local/issues/82): add -H or --host to force host local usage
+
+### Fix
+
+* gitlab-ci: resolve "${PWD}" path usage with spaces in tests
+* resolve [#110](https://gitlab.com/AdrianDC/gitlabci-local/issues/110): fix non-interactive menus and engine on Windows
+* resolve [#105](https://gitlab.com/AdrianDC/gitlabci-local/issues/105): handle duplicated source paths on Windows too
+* resolve [#107](https://gitlab.com/AdrianDC/gitlabci-local/issues/107): support working directory in local native jobs
+* resolve [#106](https://gitlab.com/AdrianDC/gitlabci-local/issues/106): use required pure POSIX paths for workdir paths
+* resolve [#109](https://gitlab.com/AdrianDC/gitlabci-local/issues/109): disallow real paths usage on Windows
+* resolve [#106](https://gitlab.com/AdrianDC/gitlabci-local/issues/106): resolve relative workdir paths against options
+* resolve [#105](https://gitlab.com/AdrianDC/gitlabci-local/issues/105): handle volumes duplicates and local overrides
+* resolve [#106](https://gitlab.com/AdrianDC/gitlabci-local/issues/106): resolve relative paths against configuration
+* resolve [#34](https://gitlab.com/AdrianDC/gitlabci-local/issues/34): support local script paths with spaces
+* resolve [#105](https://gitlab.com/AdrianDC/gitlabci-local/issues/105): support mounting a path twice without overlaps
+* resolve [#34](https://gitlab.com/AdrianDC/gitlabci-local/issues/34): use only /builds folder for entrypoint scripts
+* resolve [#34](https://gitlab.com/AdrianDC/gitlabci-local/issues/34): use isolated temporary directory to avoid issues
+* gitlab-ci: use real paths and bind sockets for development
+* gitlab-ci: refactor, nested containers and Podman 3.6 to 3.9
+* gitlab-ci: resolve "${PWD}" real path upon environment tests
+* resolve [#34](https://gitlab.com/AdrianDC/gitlabci-local/issues/34): avoid using host '/tmp' with container processes
+* resolve [#34](https://gitlab.com/AdrianDC/gitlabci-local/issues/34): bind temp directory to avoid Hyper-V share spams
+* resolve [#34](https://gitlab.com/AdrianDC/gitlabci-local/issues/34): use 'sh' explicitly for local native scripts
+* test [#102](https://gitlab.com/AdrianDC/gitlabci-local/issues/102): test if CI_LOCAL_ENGINE_NAME is defined twice
+* resolve [#104](https://gitlab.com/AdrianDC/gitlabci-local/issues/104): configure and instantiate the engine only once
+* prepare [#34](https://gitlab.com/AdrianDC/gitlabci-local/issues/34): resolve 'local: workdir' absolute path in parser
+* resolve [#102](https://gitlab.com/AdrianDC/gitlabci-local/issues/102): ensure CI_LOCAL_ENGINE_NAME is set for all jobs
+* prepare [#103](https://gitlab.com/AdrianDC/gitlabci-local/issues/103): use hidden internal members in Engine classes
+* prepare [#34](https://gitlab.com/AdrianDC/gitlabci-local/issues/34): resolve workdir absolute path before using it
+* prepare [#34](https://gitlab.com/AdrianDC/gitlabci-local/issues/34): prepare Windows specific changes in resolvePath
+* prepare [#34](https://gitlab.com/AdrianDC/gitlabci-local/issues/34): exclude /var/run/docker.sock from Windows mounts
+* prepare [#34](https://gitlab.com/AdrianDC/gitlabci-local/issues/34): add IS_LINUX and IS_WINDOWS constants
+* prepare [#34](https://gitlab.com/AdrianDC/gitlabci-local/issues/34): remove the temporary script only after execution
+* finish [#89](https://gitlab.com/AdrianDC/gitlabci-local/issues/89): minor comments typo fixes upon time evaluations
+* prepare [#34](https://gitlab.com/AdrianDC/gitlabci-local/issues/34): use PurePosixPath for internal container paths
+* prepare [#34](https://gitlab.com/AdrianDC/gitlabci-local/issues/34): use Linux newline endings in entrypoint scripts
+* prepare [#34](https://gitlab.com/AdrianDC/gitlabci-local/issues/34): migrate from os.path to pathlib Path items
+* resolve [#95](https://gitlab.com/AdrianDC/gitlabci-local/issues/95): avoid opening the NamedTemporaryFile file twice
+* resolve [#96](https://gitlab.com/AdrianDC/gitlabci-local/issues/96): support non-regex names like "C++" in inputs
+* resolve [#98](https://gitlab.com/AdrianDC/gitlabci-local/issues/98): avoid running incomplete jobs in pipelines
+* finish [#80](https://gitlab.com/AdrianDC/gitlabci-local/issues/80): ensure the entrypoint script is user accessible
+* finish [#80](https://gitlab.com/AdrianDC/gitlabci-local/issues/80): add '--privileged' flag for Podman containers
+* finish [#80](https://gitlab.com/AdrianDC/gitlabci-local/issues/80): avoid CI_LOCAL_ENGINE / CI_LOCAL_ENGINE_NAME loop
+* resolve [#80](https://gitlab.com/AdrianDC/gitlabci-local/issues/80): avoid Python 3.7+ specific 'capture_output'
+* finish [#80](https://gitlab.com/AdrianDC/gitlabci-local/issues/80): define CI_LOCAL_ENGINE and resolve Podman tests
+* test [#80](https://gitlab.com/AdrianDC/gitlabci-local/issues/80): use extends rather than anchos to keeps variables
+* resolve [#91](https://gitlab.com/AdrianDC/gitlabci-local/issues/91): fix parser support for empty variables
+* resolve [#90](https://gitlab.com/AdrianDC/gitlabci-local/issues/90): fix regex searches of names upon --dump
+* gitlab-ci: remove PATH to avoid issues with Docker-in-Docker
+* gitlab-ci: add engines sources to the codestyle input files
+* gitlab-ci: migrate to Docker-in-Docker (dind) 19.03.13
+* implement [#83](https://gitlab.com/AdrianDC/gitlabci-local/issues/83): add support for 'variables:' usage in 'image:'
+* prepare [#80](https://gitlab.com/AdrianDC/gitlabci-local/issues/80): add missing 'linux-headers' for the Podman test
+* tests: resolve entrypoint i686 / x86_64 unreliable results
+* resolve [#81](https://gitlab.com/AdrianDC/gitlabci-local/issues/81): avoid invoking Docker APIs if running local jobs
+
+### Parser
+
+* resolve [#94](https://gitlab.com/AdrianDC/gitlabci-local/issues/94): ignore and consider trigger jobs as disabled
+
+### Refactor
+
+* prepare [#80](https://gitlab.com/AdrianDC/gitlabci-local/issues/80): isolate the Docker engine as an abstract
+* prepare [#80](https://gitlab.com/AdrianDC/gitlabci-local/issues/80): isolate Docker engine specific APIs
+
+### Test
+
+* prepare [#105](https://gitlab.com/AdrianDC/gitlabci-local/issues/105): specific tests for local and CLI volumes
+* prepare [#80](https://gitlab.com/AdrianDC/gitlabci-local/issues/80): add Podman specific test job for reference
+
+
 <a name="1.3.1"></a>
 ## [1.3.1](https://gitlab.com/AdrianDC/gitlabci-local/compare/1.3.0...1.3.1) (2020-10-23)
 
