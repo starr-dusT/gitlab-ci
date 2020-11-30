@@ -63,7 +63,7 @@ gitlabci-local: Launch .gitlab-ci.yml jobs locally (aliases: gcil)
 | -A, --no-after       | Disable after_script executions                                                         |
 | -m, --manual         | Allow manual jobs to be used                                                            |
 | -n NETWORK           | Configure the network mode used<br>Choices: bridge, host, none. Default: bridge         |
-| -p, --pipeline       | Run complete stages rather than jobs                                                    |
+| -p, --pipeline       | Automatically run pipeline stages rather than jobs                                      |
 | -e ENV               | Define VARIABLE=value, pass VARIABLE or ENV file                                        |
 | -E ENGINE            | Force a specific engine (or define CI_LOCAL_ENGINE)<br>Default list: auto,podman,docker |
 | -H, --host           | Run all jobs on the host rather than containers                                         |

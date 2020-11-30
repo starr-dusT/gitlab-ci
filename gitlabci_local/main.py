@@ -66,7 +66,7 @@ def main():
         help='Configure the network mode used\nChoices: %s. Default: %s' %
         (', '.join(networksEnum), networksEnum[0]))
     parser.add_argument('-p', '--pipeline', dest='pipeline', action='store_true',
-                        help='Run complete stages rather than jobs')
+                        help='Automatically run pipeline stages rather than jobs')
     parser.add_argument('-e', dest='env', action='append',
                         help='Define VARIABLE=value, pass VARIABLE or ENV file')
     parser.add_argument(
