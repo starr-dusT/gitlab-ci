@@ -55,6 +55,14 @@ stages:
   only:
     - local
 
+'Preview':
+  stage: prepare
+  image: local:silent
+  script:
+    - python3 ./docs/preview.py
+  only:
+    - local
+
 'Build':
   stage: build
   script:
