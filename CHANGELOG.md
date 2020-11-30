@@ -1,4 +1,38 @@
 
+<a name="2.0.1"></a>
+## [2.0.1](https://gitlab.com/AdrianDC/gitlabci-local/compare/2.0.0...2.0.1) (2020-12-01)
+
+### Chore
+
+* readme: isolate Linux and Windows tables in chapters
+* readme: minor missing line break in native context jobs
+* gitlab-ci: use 'Deploy Trial' name to avoid 'Test' issues
+* gitlab-ci: add 'Preview' wrapper job for 'docs/preview.py'
+* resolve [#111](https://gitlab.com/AdrianDC/gitlabci-local/issues/111): improve '-p' pipeline documentation details
+* resolve [#112](https://gitlab.com/AdrianDC/gitlabci-local/issues/112): prevent line break of 'Hyper-V' in engines
+* resolve [#119](https://gitlab.com/AdrianDC/gitlabci-local/issues/119): avoid preparing volumes on native jobs
+* resolve [#112](https://gitlab.com/AdrianDC/gitlabci-local/issues/112): prevent line breaks in the tables
+* resolve [#111](https://gitlab.com/AdrianDC/gitlabci-local/issues/111): cleanup typos and improve --help details
+
+### Docs
+
+* changelog: regenerate release tag changes history
+* resolve [#117](https://gitlab.com/AdrianDC/gitlabci-local/issues/117): add usual examples of parameters
+* resolve [#120](https://gitlab.com/AdrianDC/gitlabci-local/issues/120): refactor the supported .gitlab-ci.yml nodes
+* readme: add Windows 10 1909 as being a supported system
+* test: add tools and engines references for Linux and Windows
+* changelog: regenerate release tag changes history
+
+### Feat
+
+* resolve [#113](https://gitlab.com/AdrianDC/gitlabci-local/issues/113): standardize --tags values as "list,of,values"
+
+### Fix
+
+* resolve [#116](https://gitlab.com/AdrianDC/gitlabci-local/issues/116): fix native scripts working directory access
+* resolve [#114](https://gitlab.com/AdrianDC/gitlabci-local/issues/114): show default prioritized engines list in --help
+
+
 <a name="2.0.0"></a>
 ## [2.0.0](https://gitlab.com/AdrianDC/gitlabci-local/compare/1.3.1...2.0.0) (2020-11-30)
 
@@ -30,7 +64,6 @@
 
 ### Docs
 
-* changelog: regenerate release tag changes history
 * changelog: regenerate release tag changes history
 * readme: center operating systems and engines names tables
 * gitlab-ci: use 'docs: changelog:' for changelog commits
