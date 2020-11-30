@@ -4,6 +4,7 @@ stages:
   - one
   - two
   - three
+  - four
 
 'Job 1':
   stage: one
@@ -24,3 +25,10 @@ stages:
     - deploy
   script:
     - echo 'Job - 3'
+
+'Job 4':
+  stage: four
+  tags:
+    - local
+  script:
+    - echo 'Job - 4'

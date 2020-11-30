@@ -78,9 +78,8 @@ def main():
     parser.add_argument('-R', '--no-regex', dest='no_regex', action='store_true',
                         help='Disable regex search of names')
     parser.add_argument(
-        '-t', dest='tags', action='append',
-        help='Handle listed tags as manual jobs\nDefault list: [\'%s\']' %
-        ('\', \''.join(tagsDefault)))
+        '-t', dest='tags', help='Handle listed tags as manual jobs\nDefault list: %s' %
+        (','.join(tagsDefault)))
     parser.add_argument('--tags-default', dest='tags_default', action='store_true',
                         help=argparse.SUPPRESS)
     parser.add_argument('-r', '--real-paths', dest='real_paths', action='store_true',
@@ -158,7 +157,9 @@ def main():
     options.path = options.configuration.parent
 
     # Prepare tags
-    if not options.tags:
+    if options.tags:
+        options.tags = options.tags.split(',')
+    else:
         options.tags = tagsDefault
         options.tags_default = True
 

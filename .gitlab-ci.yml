@@ -148,7 +148,10 @@ stages:
     - gitlabci-local -c ./tests/stages/.gitlab-ci.yml -s -p one two </dev/null
     - gitlabci-local -c ./tests/tags/.gitlab-ci.yml -p
     - gitlabci-local -c ./tests/tags/.gitlab-ci.yml -m -p && exit 1 || true
-    - gitlabci-local -c ./tests/tags/.gitlab-ci.yml -t 'upload' -p && exit 1 || true
+    - gitlabci-local -c ./tests/tags/.gitlab-ci.yml -t upload -p && exit 1 || true
+    - gitlabci-local -c ./tests/tags/.gitlab-ci.yml -t publish -p
+    - gitlabci-local -c ./tests/tags/.gitlab-ci.yml -t deploy,publish -p
+    - gitlabci-local -c ./tests/tags/.gitlab-ci.yml -t deploy,local,publish -p
     - gitlabci-local -c ./tests/tags/.gitlab-ci.yml 'Job 3'
     - gitlabci-local -c ./tests/tags/.gitlab-ci.yml -p three && exit 1 || true
     - gitlabci-local -c ./tests/tags/.gitlab-ci.yml -m -p three
