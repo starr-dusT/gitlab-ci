@@ -2,7 +2,7 @@
 
 # Standard libraries
 from os import sep
-from pathlib import PurePosixPath
+from pathlib import Path, PurePosixPath
 from sys import platform, stdin, stdout
 
 # Platform
@@ -21,3 +21,14 @@ class Platform:
     # TTYs
     IS_TTY_STDIN = stdin.isatty() and stdin.encoding != 'cp1252'
     IS_TTY_STDOUT = stdout.isatty()
+
+    # Userspace
+    @staticmethod
+    def userspace(name):
+
+        # Windows userspace
+        if Platform.IS_WINDOWS:
+            return Path.home() / 'AppData' / 'Local' / name
+
+        # Linux userspace
+        return Path.home() / '.config' / name

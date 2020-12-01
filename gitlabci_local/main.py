@@ -15,6 +15,7 @@ from .dumper import dumper
 from .menu import selector
 from .engines.engine import supported as engine_supported
 from .package.names import ALIAS, CONFIGURATION, NAME
+from .package.settings import Settings
 from .package.version import Version
 from .parser import reader
 from .puller import puller
@@ -129,6 +130,9 @@ def main():
         parser.print_help()
         print(' ', flush=True)
         exit(0)
+
+    # Instantiate settings
+    settings = Settings(NAME)
 
     # Version informations
     if options.version:
