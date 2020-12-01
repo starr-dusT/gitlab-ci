@@ -1,7 +1,0 @@
-pip>=20.0.2
-pexpect>=4.2.1
-setuptools-scm>=4.1.2
-twine>=3.1.1
-unify>=0.5
-wheel>=0.33.6
-yapf>=0.29.0

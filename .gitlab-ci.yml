@@ -51,7 +51,10 @@ stages:
   image: local:quiet
   script:
     - sudo pip3 install -r requirements.txt --upgrade
-    - sudo pip3 install -r requirements-dev.txt --upgrade
+    - sudo pip3 install -r requirements-build.txt --upgrade
+    - sudo pip3 install -r requirements-deploy.txt --upgrade
+    - sudo pip3 install -r requirements-docs.txt --upgrade
+    - sudo pip3 install -r requirements-quality.txt --upgrade
   only:
     - local
 
@@ -67,7 +70,7 @@ stages:
   stage: build
   script:
     - pip3 install -r requirements.txt --upgrade
-    - pip3 install -r requirements-dev.txt --upgrade
+    - pip3 install -r requirements-build.txt --upgrade
     - rm -rf build dist *.egg-info .eggs
     - python3 setup.py bdist_wheel
   artifacts:
@@ -127,6 +130,8 @@ stages:
 
 .unit-tests-template:
   stage: test
+  dependencies:
+    - Build
   timeout: 10m
   variables:
     FORCE_STYLING: 'true'
@@ -279,24 +284,26 @@ stages:
 
 'Deploy Release':
   stage: deploy
+  dependencies:
+    - Build
   variables:
     TWINE_PASSWORD: ${TWINE_PASSWORD}
   before_script:
     - if [ ! "${CI_COMMIT_REF_PROTECTED}" = 'true' ]; then echo '[ERROR] Please protect this tag...'; exit 1; fi
   script:
-    - pip3 install -r requirements-dev.txt --upgrade
-    - python3 setup.py bdist_wheel
+    - pip3 install -r requirements-deploy.txt --upgrade
     - twine upload -u '__token__' -p "${TWINE_PASSWORD}" dist/*
   only:
     - tags
 
 'Deploy Trial':
   stage: deploy
+  dependencies:
+    - Build
   variables:
     TWINE_PASSWORD_TEST: ${TWINE_PASSWORD_TEST}
   script:
-    - pip3 install -r requirements-dev.txt --upgrade
-    - python3 setup.py bdist_wheel
+    - pip3 install -r requirements-deploy.txt --upgrade
     - twine upload -u '__token__' -p "${TWINE_PASSWORD_TEST}" --repository testpypi dist/*
   only:
     - local
