@@ -176,6 +176,8 @@ stages:
     - mount
     - pip show gitlabci-local
     - gitlabci-local -h
+    - gitlabci-local --version
+    - gitlabci-local --update-check
     - gitlabci-local -c unknown/.gitlab-ci.yml && exit 1 || true
     - gitlabci-local -c ./examples/.gitlab-ci.yml -d
     - gitlabci-local -c ./tests/simple/.gitlab-ci.yml </dev/null && exit 1 || true

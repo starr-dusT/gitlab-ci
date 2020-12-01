@@ -16,6 +16,7 @@ from .menu import selector
 from .engines.engine import supported as engine_supported
 from .package.names import ALIAS, CONFIGURATION, NAME
 from .package.settings import Settings
+from .package.updates import Updates
 from .package.version import Version
 from .parser import reader
 from .puller import puller
@@ -47,6 +48,8 @@ def main():
                         help='Show this help message')
     parser.add_argument('--version', dest='version', action='store_true',
                         help='Show the current version')
+    parser.add_argument('--update-check', dest='update_check', action='store_true',
+                        help='Check for newer package updates')
 
     # Arguments optional definitions
     parser.add_argument('-q', '--quiet', dest='quiet', action='store_true',
@@ -134,12 +137,24 @@ def main():
     # Instantiate settings
     settings = Settings(NAME)
 
+    # Instantiate updates
+    updates = Updates(NAME, settings)
+
     # Version informations
     if options.version:
         print(
             '%s %s from %s (python %s)' %
             (NAME, Version.get(), Version.path(), Version.python()), flush=True)
         exit(0)
+
+    # Check for current updates
+    if options.update_check:
+        updates.check(False)
+        exit(0)
+
+    # Check for daily updates
+    if updates.enabled() and updates.daily():
+        updates.check(True)
 
     # Prepare configuration
     if Path(options.configuration).is_dir():

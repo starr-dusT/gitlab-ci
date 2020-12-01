@@ -40,10 +40,9 @@ is the common and unique interface between GitLab CI and gitlabci-local.
 ## Usage
 
 ```shell
-usage: gitlabci-local [-h] [--version] [-q] [-c CONFIGURATION] [-B] [-A] [-m] [-n NETWORK]
-                      [-p] [-e ENV] [-E ENGINE] [-H] [-R] [-t TAGS] [-r] [-S] [-v VOLUME]
-                      [-w WORKDIR] [--all] [--defaults] [--bash | --debug]
-                      [-d | -s | -l | --pull]
+usage: gitlabci-local [-h] [--version] [--update-check] [-q] [-c CONFIGURATION] [-B] [-A] [-m]
+                      [-n NETWORK] [-p] [-e ENV] [-E ENGINE] [-H] [-R] [-t TAGS] [-r] [-S] [-v VOLUME]
+                      [-w WORKDIR] [--all] [--defaults] [--bash | --debug] [-d | -s | -l | --pull]
                       [names [names ...]]
 
 gitlabci-local: Launch .gitlab-ci.yml jobs locally (aliases: gcil)
@@ -57,6 +56,7 @@ gitlabci-local: Launch .gitlab-ci.yml jobs locally (aliases: gcil)
 | -------------------- | --------------------------------------------------------------------------------------- |
 | -h, --help           | Show this help message                                                                  |
 | --version            | Show the current version                                                                |
+| --update-check       | Check for newer package updates                                                         |
 | -q, --quiet          | Hide jobs execution context                                                             |
 | -c CONFIGURATION     | Path to the .gitlab-ci.yml configuration file or folder                                 |
 | -B, --no-before      | Disable before_script executions                                                        |
@@ -267,6 +267,7 @@ JOB_NAME:
 - [oyaml](https://pypi.org/project/oyaml/): Ordered YAML dictionnaries
 - [PyInquirer](https://pypi.org/project/PyInquirer/): Interactive terminal user interfaces
 - [python-dotenv](https://pypi.org/project/python-dotenv/): Support for .env files parsing
+- [update-checker](https://pypi.org/project/update-checker/): Check for package updates on PyPI
 
 ---
 
