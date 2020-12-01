@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 
-# Libraries
-import getpass
-import os
-import pexpect
-import sys
-import time
+# Standard libraries
+from getpass import getuser
+from os import chdir, environ
+from time import sleep
+
+# Modules libraries
+from pexpect import spawn
 
 # Executor
 class Executor:
@@ -23,22 +24,22 @@ class Executor:
     def __init__(self, command, workdir=None):
         if workdir:
             self.prompt('cd %s' % workdir)
-            os.chdir(workdir)
+            chdir(workdir)
         self.prompt(command)
         if command:
-            self.child = pexpect.spawn(command)
+            self.child = spawn(command)
 
     # Prompter
     def prompt(self, command):
-        print('\033[32m%s@preview \033[33mgitlabci-local\033[0m $ ' % (getpass.getuser()),
-              end='', flush=True)
-        time.sleep(1)
+        print('\033[32m%s@preview \033[33mgitlabci-local\033[0m $ ' % (getuser()), end='',
+              flush=True)
+        sleep(1)
         if command:
             print('%s ' % (command), end='', flush=True)
         else:
-            time.sleep(10)
+            sleep(10)
             print('', flush=True)
-        time.sleep(2)
+        sleep(2)
         print(' ', flush=True)
 
     # Interactor
@@ -62,24 +63,24 @@ class Executor:
 
     # Waiter
     def wait(self, delay):
-        time.sleep(delay)
+        sleep(delay)
         return self
 
     # Finished
     def finish(self):
         self.read()
-        time.sleep(1)
+        sleep(1)
         return self
 
 # Engine
-os.environ['CI_LOCAL_ENGINE'] = 'docker,auto'
+environ['CI_LOCAL_ENGINE'] = 'docker,auto'
 
 # Header
 for i in range(1, 100):
     print(' ', flush=True)
 
 # Delay
-time.sleep(3)
+sleep(3)
 
 # Jobs selector
 Executor('gitlabci-local', './examples/').\
@@ -196,4 +197,4 @@ Executor('').\
     finish()
 
 # Delay
-time.sleep(10)
+sleep(10)
