@@ -1,5 +1,5 @@
-# Libraries
-import setuptools
+# Standard libraries
+from setuptools import find_packages, setup
 
 # Requirements
 requirements = []
@@ -7,12 +7,12 @@ with open('requirements.txt') as f:
     requirements = [line for line in f.read().splitlines() if not line.startswith('#')]
 
 # Long description
-long_description = ''
+long_description = '' # pylint: disable=invalid-name
 with open('README.md', 'r') as f:
     long_description = f.read()
 
 # Setup configurations
-setuptools.setup(
+setup(
     name='gitlabci-local',
     use_scm_version=True,
     author='Adrian DC',
@@ -29,7 +29,7 @@ setuptools.setup(
         'Source': 'https://gitlab.com/AdrianDC/gitlabci-local',
         'Statistics': 'https://pypistats.org/packages/gitlabci-local'
     },
-    packages=setuptools.find_packages(exclude=['tests']),
+    packages=find_packages(exclude=['tests']),
     setup_requires=['setuptools_scm'],
     install_requires=requirements,
     classifiers=[
