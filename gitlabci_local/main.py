@@ -1,27 +1,25 @@
 #!/usr/bin/env python3
 
-# Libraries
-import argparse
-import colored
-import os
+# Standard libraries
+from argparse import ArgumentParser, RawTextHelpFormatter, SUPPRESS
+from os import environ
 from pathlib import Path
-import pkg_resources
-import subprocess
-import sys
+from subprocess import check_output, DEVNULL, Popen
+from sys import argv, exit
 
-# Constants
-ALIAS = 'gcil'
-CONFIGURATION = '.gitlab-ci.yml'
-NAME = 'gitlabci-local'
+# Modules libraries
+from colored import attr, fg
 
 # Components
-from .const import Platform
 from .dumper import dumper
 from .menu import selector
-from .engine import supported as engine_supported
+from .engines.engine import supported as engine_supported
+from .package.names import ALIAS, CONFIGURATION, NAME
+from .package.version import Version
 from .parser import reader
 from .puller import puller
 from .runner import launcher
+from .system.platform import Platform
 
 # Main
 def main():
@@ -32,16 +30,16 @@ def main():
     result = False
 
     # Arguments creation
-    parser = argparse.ArgumentParser(
+    parser = ArgumentParser(
         prog=NAME, description='%s: Launch %s jobs locally (aliases: %s)' %
         (NAME, CONFIGURATION, ALIAS), add_help=False,
-        formatter_class=argparse.RawTextHelpFormatter)
+        formatter_class=RawTextHelpFormatter)
 
     # Arguments default definitions
-    tagsDefault = ['deploy', 'local', 'publish']
+    tags_default = ['deploy', 'local', 'publish']
 
     # Arguments enumerations definitions
-    networksEnum = ['bridge', 'host', 'none']
+    networks_enum = ['bridge', 'host', 'none']
 
     # Arguments internal definitions
     parser.add_argument('-h', '--help', dest='help', action='store_true',
@@ -64,7 +62,7 @@ def main():
     parser.add_argument(
         '-n', dest='network',
         help='Configure the network mode used\nChoices: %s. Default: %s' %
-        (', '.join(networksEnum), networksEnum[0]))
+        (', '.join(networks_enum), networks_enum[0]))
     parser.add_argument('-p', '--pipeline', dest='pipeline', action='store_true',
                         help='Automatically run pipeline stages rather than jobs')
     parser.add_argument('-e', dest='env', action='append',
@@ -79,9 +77,9 @@ def main():
                         help='Disable regex search of names')
     parser.add_argument(
         '-t', dest='tags', help='Handle listed tags as manual jobs\nDefault list: %s' %
-        (','.join(tagsDefault)))
+        (','.join(tags_default)))
     parser.add_argument('--tags-default', dest='tags_default', action='store_true',
-                        help=argparse.SUPPRESS)
+                        help=SUPPRESS)
     parser.add_argument('-r', '--real-paths', dest='real_paths', action='store_true',
                         help='Mount real folder paths in the container (Linux only)')
     parser.add_argument('-S', '--sockets', dest='sockets', action='store_true',
@@ -103,7 +101,7 @@ def main():
                        help='Keep runners active for debugging purposes')
 
     # Arguments internal definitions
-    parser.add_argument('--image', dest='image', help=argparse.SUPPRESS)
+    parser.add_argument('--image', dest='image', help=SUPPRESS)
 
     # Arguments exclusive definitions
     group = parser.add_mutually_exclusive_group()
@@ -130,27 +128,24 @@ def main():
         print(' ')
         parser.print_help()
         print(' ', flush=True)
-        sys.exit(0)
+        exit(0)
 
     # Version informations
     if options.version:
-        name = __name__.split('.')[0]
-        version = pkg_resources.require(name)[0].version
         print(
-            '%s %s from %s (python %s.%s)' %
-            (name, version, __file__, sys.version_info.major, sys.version_info.minor),
-            flush=True)
-        sys.exit(0)
+            '%s %s from %s (python %s)' %
+            (NAME, Version.get(), Version.path(), Version.python()), flush=True)
+        exit(0)
 
     # Prepare configuration
     if Path(options.configuration).is_dir():
         options.configuration = Path(options.configuration) / CONFIGURATION
 
     # Prepare engine
-    if not options.engine and 'CI_LOCAL_ENGINE' in os.environ:
-        options.engine = os.environ['CI_LOCAL_ENGINE']
+    if not options.engine and 'CI_LOCAL_ENGINE' in environ:
+        options.engine = environ['CI_LOCAL_ENGINE']
     elif options.engine:
-        os.environ['CI_LOCAL_ENGINE'] = options.engine
+        environ['CI_LOCAL_ENGINE'] = options.engine
 
     # Prepare paths
     options.configuration = Path(options.configuration).resolve()
@@ -160,13 +155,13 @@ def main():
     if options.tags:
         options.tags = options.tags.split(',')
     else:
-        options.tags = tagsDefault
+        options.tags = tags_default
         options.tags_default = True
 
     # Read configuration
     jobs = reader(options)
     if not jobs:
-        sys.exit(1)
+        exit(1)
 
     # Header
     print(' ', flush=True)
@@ -209,32 +204,30 @@ def main():
     else:
 
         # Windows WinPTY compatibility
-        if Platform.IS_WINDOWS and not 'CI_LOCAL_WINPTY' in os.environ:
+        if Platform.IS_WINDOWS and not 'CI_LOCAL_WINPTY' in environ:
             hint = ' (on Windows, winpty is required)'
             try:
-                winpty = subprocess.check_output(['where', 'winpty.exe'],
-                                                 stderr=subprocess.DEVNULL).strip()
+                winpty = check_output(['where', 'winpty.exe'], stderr=DEVNULL).strip()
             except:
                 pass
             else:
-                _environ = dict(os.environ)
+                _environ = dict(environ)
                 _environ['CI_LOCAL_WINPTY'] = 'true'
-                process = subprocess.Popen([winpty] + sys.argv, env=_environ)
+                process = Popen([winpty] + argv, env=_environ)
                 process.wait()
-                sys.exit(process.returncode)
+                exit(process.returncode)
 
         # Unsupported interactive terminal
         print(' %s%s: %sERROR: %sUnsupported non-interactive context%s...%s' %
-              (colored.fg('green') + colored.attr('bold'), NAME,
-               colored.fg('red') + colored.attr('bold'),
-               colored.attr('reset') + colored.attr('bold'), hint, colored.attr('reset')))
+              (fg('green') + attr('bold'), NAME, fg('red') + attr('bold'),
+               attr('reset') + attr('bold'), hint, attr('reset')))
         print(' ', flush=True)
 
     # Result
     if result:
-        sys.exit(0)
+        exit(0)
     else:
-        sys.exit(1)
+        exit(1)
 
 # Entrypoint
 if __name__ == '__main__':

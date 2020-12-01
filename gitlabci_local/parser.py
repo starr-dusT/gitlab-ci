@@ -1,17 +1,21 @@
 #!/usr/bin/env python3
 
-# Libraries
-import collections
-import colored
-from dotenv import dotenv_values
-import os
+# Standard libraries
+from collections import OrderedDict
+from os import environ
+from os.path import expandvars
 from pathlib import Path
-import oyaml as yaml
-import sys
+from sys import exc_info
+
+# Modules libraries
+from colored import attr, fg
+from dotenv import dotenv_values
+from oyaml import safe_load as yaml_safe_load
+from oyaml import YAMLError
 
 # Components
-from .main import NAME
 from .menu import configurator
+from .package.names import NAME
 
 # Reader
 def reader(options):
@@ -25,14 +29,14 @@ def reader(options):
 
     # Parse environment options
     if options.env:
-        for env in [env for env in options.env]:
+        for env in options.env:
             env_parsed = env.split('=', 1)
 
             # Parse VARIABLE=value
             if len(env_parsed) == 2:
                 variable = env_parsed[0]
                 value = env_parsed[1]
-                os.environ[variable] = value
+                environ[variable] = value
                 environment['parameters'][variable] = value
 
             # Parse ENVIRONMENT_FILE
@@ -42,8 +46,8 @@ def reader(options):
             # Parse VARIABLE
             else:
                 variable = env
-                if variable in os.environ:
-                    environment['parameters'][variable] = os.environ[variable]
+                if variable in environ:
+                    environment['parameters'][variable] = environ[variable]
                 else:
                     environment['parameters'][variable] = ''
 
@@ -65,23 +69,21 @@ def reader(options):
     # Read GitLab CI YAML
     try:
         with open(options.configuration, 'r') as configuration_data:
-            data = yaml.safe_load(configuration_data)
+            data = yaml_safe_load(configuration_data)
             return parser(options, data, environment)
-    except yaml.YAMLError as exc:
+    except YAMLError as exc:
         print(' ')
         print(' %s%s: %sERROR: %s%s%s' %
-              (colored.fg('green') + colored.attr('bold'), NAME,
-               colored.fg('red') + colored.attr('bold'),
-               colored.attr('reset') + colored.attr('bold'), exc, colored.attr('reset')))
+              (fg('green') + attr('bold'), NAME, fg('red') + attr('bold'),
+               attr('reset') + attr('bold'), exc, attr('reset')))
         print(' ')
     except KeyboardInterrupt:
         pass
     except:
         print(' ')
         print(' %s%s: %sERROR: %s%s%s' %
-              (colored.fg('green') + colored.attr('bold'), NAME, colored.fg('red') +
-               colored.attr('bold'), colored.attr('reset') + colored.attr('bold'),
-               str(sys.exc_info()[1]), colored.attr('reset')))
+              (fg('green') + attr('bold'), NAME, fg('red') + attr('bold'),
+               attr('reset') + attr('bold'), str(exc_info()[1]), attr('reset')))
         print(' ')
 
     # Failure
@@ -112,7 +114,7 @@ def parser(options, data, environment):
                 file_path = include_node['local'].lstrip('/')
                 if (Path(options.path) / file_path).is_file():
                     with open(Path(options.path) / file_path, 'r') as include_data:
-                        include_additions = yaml.safe_load(include_data)
+                        include_additions = yaml_safe_load(include_data)
                         data_new.update(include_additions)
 
         # Agregate included data
@@ -173,7 +175,7 @@ def parser(options, data, environment):
                     variable = env_parsed[0]
                     value = env_parsed[1]
                     if variable not in global_values['variables']:
-                        os.environ[variable] = value
+                        environ[variable] = value
                         global_values['variables'][variable] = value
 
                 # Parse ENVIRONMENT_FILE
@@ -195,8 +197,8 @@ def parser(options, data, environment):
                 else:
                     variable = env
                     if variable not in global_values['variables']:
-                        if variable in os.environ:
-                            global_values['variables'][variable] = os.environ[variable]
+                        if variable in environ:
+                            global_values['variables'][variable] = environ[variable]
                         else:
                             global_values['variables'][variable] = ''
 
@@ -261,31 +263,31 @@ def parser(options, data, environment):
 
         # Parse local configurations
         if 'configurations' in local:
-            configuredVariables = configurator(options, local['configurations'])
-            global_values['variables'].update(configuredVariables)
+            configured_variables = configurator(options, local['configurations'])
+            global_values['variables'].update(configured_variables)
 
     # Prepare default variables
     if environment['default']:
         for variable in environment['default']:
             if variable in global_values['variables']:
                 pass
-            elif variable in os.environ:
-                global_values['variables'][variable] = os.environ[variable]
+            elif variable in environ:
+                global_values['variables'][variable] = environ[variable]
             else:
                 global_values['variables'][variable] = environment['default'][variable]
-            if variable not in os.environ:
-                os.environ[variable] = global_values['variables'][variable]
+            if variable not in environ:
+                environ[variable] = global_values['variables'][variable]
 
     # Prepare global values
     if options.image:
         if isinstance(options.image, dict):
-            global_values['image'] = os.path.expandvars(options.image['name'])
+            global_values['image'] = expandvars(options.image['name'])
             if 'entrypoint' in options.image and len(options.image['entrypoint']) > 0:
                 global_values['entrypoint'] = options.image['entrypoint'][:]
             else:
                 global_values['entrypoint'] = None
         else:
-            global_values['image'] = os.path.expandvars(options.image)
+            global_values['image'] = expandvars(options.image)
             global_values['entrypoint'] = None
 
     # Iterate through nodes
@@ -300,13 +302,13 @@ def parser(options, data, environment):
             if not global_values['image']:
                 image_data = data[node]
                 if isinstance(image_data, dict):
-                    global_values['image'] = os.path.expandvars(image_data['name'])
+                    global_values['image'] = expandvars(image_data['name'])
                     if 'entrypoint' in image_data and len(image_data['entrypoint']) > 0:
                         global_values['entrypoint'] = image_data['entrypoint'][:]
                     else:
                         global_values['entrypoint'] = None
                 else:
-                    global_values['image'] = os.path.expandvars(image_data)
+                    global_values['image'] = expandvars(image_data)
                     global_values['entrypoint'] = None
             continue
 
@@ -344,8 +346,8 @@ def parser(options, data, environment):
             continue
 
     # Prepare environment
-    _environ = dict(os.environ) # or os.environ.copy()
-    os.environ.update(global_values['variables'])
+    _environ = dict(environ)
+    environ.update(global_values['variables'])
 
     # Iterate through nodes
     for node in data:
@@ -378,12 +380,11 @@ def parser(options, data, environment):
             stages['unknown'] = list(stages.values())[-1] + 1
 
     # Sort jobs based on stages
-    jobs = collections.OrderedDict(
-        sorted(jobs.items(), key=lambda x: stages[x[1]['stage']]))
+    jobs = OrderedDict(sorted(jobs.items(), key=lambda x: stages[x[1]['stage']]))
 
     # Restore environment
-    os.environ.clear()
-    os.environ.update(_environ)
+    environ.clear()
+    environ.update(_environ)
 
     # Result
     return jobs
@@ -502,13 +503,13 @@ def stager(options, job_name, data, global_values):
     if 'image' in job_data and job_data['image']:
         image_data = job_data['image']
         if isinstance(image_data, dict):
-            job['image'] = os.path.expandvars(image_data['name'])
+            job['image'] = expandvars(image_data['name'])
             if 'entrypoint' in image_data and len(image_data['entrypoint']) > 0:
                 job['entrypoint'] = image_data['entrypoint'][:]
             else:
                 job['entrypoint'] = None
         else:
-            job['image'] = os.path.expandvars(image_data)
+            job['image'] = expandvars(image_data)
             job['entrypoint'] = None
 
     # Extract job variables

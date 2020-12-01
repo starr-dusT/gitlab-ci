@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 
-# Libraries
-import PyInquirer
+# Standard libraries
 from PyInquirer import Separator
+from PyInquirer.prompts import list as PyInquirer_prompts_list
 from PyInquirer.prompts.common import if_mousedown
 from PyInquirer.prompts.list import basestring
 from prompt_toolkit.layout.controls import TokenListControl
 from prompt_toolkit.token import Token
+
+# pylint: skip-file
 
 # Override with https://github.com/CITGuru/PyInquirer/pull/88
 class InquirerControl(TokenListControl):
@@ -82,5 +84,11 @@ class InquirerControl(TokenListControl):
     def get_selection(self):
         return self.choices[self.selected_option_index]
 
-# Apply library patches
-PyInquirer.prompts.list.InquirerControl = InquirerControl
+# Patcher class
+class Patcher:
+
+    # Constructor
+    def __init__(self):
+
+        # Apply library patches
+        PyInquirer_prompts_list.InquirerControl = InquirerControl

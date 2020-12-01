@@ -1,24 +1,21 @@
 #!/usr/bin/env python3
 
-# Libraries
-import os
-import stat
-import subprocess
-import tempfile
-import time
+# Standard libraries
+from os import environ
+from subprocess import DEVNULL, PIPE, Popen, run
 
 # Podman class
 class Podman:
 
     # Members
-    _binary = 'podman'
+    __binary = 'podman'
 
     # Constructor
     def __init__(self):
 
         # Configure binary
-        if 'PODMAN_BINARY_PATH' in os.environ:
-            self._binary = os.environ['PODMAN_BINARY_PATH']
+        if 'PODMAN_BINARY_PATH' in environ:
+            self.__binary = environ['PODMAN_BINARY_PATH']
 
         # Check engine support
         result = self.__exec(['system', 'info'], True)
@@ -28,17 +25,13 @@ class Podman:
     # Internal execution
     def __exec(self, arguments, quiet=False):
         if quiet:
-            return subprocess.run([self._binary] + arguments, stdout=subprocess.DEVNULL,
-                                  stderr=subprocess.DEVNULL)
-        else:
-            return subprocess.run([self._binary] + arguments, stdout=subprocess.PIPE,
-                                  stderr=subprocess.PIPE)
+            return run([self.__binary] + arguments, check=False, stdout=DEVNULL,
+                       stderr=DEVNULL)
+        return run([self.__binary] + arguments, check=False, stdout=PIPE, stderr=PIPE)
 
     # Internal watcher
     def __watch(self, arguments):
-        return iter(
-            subprocess.Popen([self._binary] + arguments,
-                             stdout=subprocess.PIPE).stdout.readline, b'')
+        return iter(Popen([self.__binary] + arguments, stdout=PIPE).stdout.readline, b'')
 
     # Exec
     def exec(self, container, command):
@@ -54,11 +47,10 @@ class Podman:
     def help(self, command):
 
         # Exec command
-        if command is 'exec':
-            if 'SUDO_USER' in os.environ:
+        if command == 'exec':
+            if 'SUDO_USER' in environ:
                 return 'sudo podman exec -it'
-            else:
-                return 'podman exec -it'
+            return 'podman exec -it'
 
         # Default fallback
         return ''
@@ -186,7 +178,7 @@ class Podman:
         self.__exec(['stop', '--time', str(timeout), container])
 
     # Supports
-    def supports(self, image, container, binary):
+    def supports(self, container, binary):
 
         # Validate binary support
         result = self.exec(container, ['whereis', binary])

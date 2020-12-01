@@ -1,53 +1,55 @@
 #!/usr/bin/env python3
 
-# Libraries
-import colored
-import datetime
-import os
+# Standard libraries
+from os import chmod, environ, stat, system
+from os.path import expandvars
 from pathlib import Path, PurePosixPath
-import signal
-import stat
-import sys
-import tempfile
-import time
+from signal import getsignal, SIGINT, signal, SIGTERM
+from stat import S_IRGRP, S_IROTH, S_IXGRP, S_IXOTH, S_IXUSR
+from sys import stdout
+from tempfile import NamedTemporaryFile
+from time import sleep, time
+
+# Modules libraries
+from colored import attr, fg
 
 # Components
-from .const import Platform
-from .engine import Engine
-from .main import NAME
-from .types import Volumes
-from .utils import getPath, nameCheck, resolvePath
+from .engines.engine import Engine
+from .system.platform import Platform
+from .types.lists import Lists
+from .types.paths import Paths
+from .types.volumes import Volumes
 
 # Constants
-marker_debug = '__GITLAB_CI_LOCAL_DEBUG__'
-marker_result = '__GITLAB_CI_LOCAL_RESULT__'
+__MARKER_DEBUG = '__GITLAB_CI_LOCAL_DEBUG__'
+__MARKER_RESULT = '__GITLAB_CI_LOCAL_RESULT__'
 
 # Variables
-engine = None
+__engine = None # pylint: disable=invalid-name
 
 # Launcher
 def launcher(options, jobs):
 
     # Variables
-    jobs_status = {'jobs_count': 0, 'quiet': True, 'time_launcher': time.time()}
+    jobs_status = {'jobs_count': 0, 'quiet': True, 'time_launcher': time()}
     result = None
 
     # Run selected jobs
     for job in jobs:
 
         # Filter jobs list
-        if not options.pipeline and not nameCheck(job, options.names, options.no_regex):
+        if not options.pipeline and not Lists.match(options.names, job, options.no_regex):
             continue
 
         # Filter stages list
-        if options.pipeline and options.names and not nameCheck(
-                jobs[job]['stage'], options.names, options.no_regex):
+        if options.pipeline and options.names and not Lists.match(
+                options.names, jobs[job]['stage'], options.no_regex):
             continue
 
         # Filter manual jobs
         job_manual = (jobs[job]['when'] == 'manual')
-        if job_manual and not options.manual and not nameCheck(job, options.names,
-                                                               options.no_regex):
+        if job_manual and not options.manual and not Lists.match(
+                options.names, job, options.no_regex):
             continue
 
         # Filter disabled jobs
@@ -55,7 +57,7 @@ def launcher(options, jobs):
             continue
 
         # Raise initial result
-        if result == None:
+        if result is None:
             result = True
 
         # Run job
@@ -77,7 +79,7 @@ def launcher(options, jobs):
         if jobs_status['jobs_count'] > 1:
 
             # Evaluate duration total time
-            time_total_duration = time.time() - jobs_status['time_launcher']
+            time_total_duration = time() - jobs_status['time_launcher']
             time_total_seconds = '%.0f second%s' % (time_total_duration % 60, 's' if
                                                     time_total_duration % 60 > 1 else '')
             time_total_minutes = ''
@@ -88,10 +90,9 @@ def launcher(options, jobs):
 
             # Final footer
             print(' %s> Pipeline: %s in %s total%s' %
-                  (colored.fg('yellow') + colored.attr('bold'), colored.attr('reset') +
-                   colored.attr('bold') + 'Success' if result else colored.fg('red') +
-                   colored.attr('bold') + 'Failure', time_total_string,
-                   colored.attr('reset')))
+                  (fg('yellow') + attr('bold'), attr('reset') + attr('bold') +
+                   'Success' if result else fg('red') + attr('bold') + 'Failure',
+                   time_total_string, attr('reset')))
             print(' ')
             print(' ', flush=True)
 
@@ -100,20 +101,20 @@ def launcher(options, jobs):
             print(' ', flush=True)
 
     # Result
-    return True if result else False
+    return bool(result)
 
 # Runner
 def runner(options, job_data, last_result, jobs_status):
 
     # Globals
-    global engine
+    global __engine # pylint: disable=global-statement,invalid-name
 
     # Variables
     host = False
     quiet = options.quiet
     real_paths = options.real_paths and Platform.IS_LINUX
     result = False
-    time_start = time.time()
+    time_start = time()
 
     # Filter when
     if last_result and job_data['when'] not in ['on_success', 'manual', 'always']:
@@ -142,9 +143,9 @@ def runner(options, job_data, last_result, jobs_status):
 
     # Prepare engine execution
     if not host:
-        if engine is None:
-            engine = Engine(options)
-        engine_type = engine.name()
+        if __engine is None:
+            __engine = Engine(options)
+        engine_type = __engine.name()
 
     # Prepare native execution
     else:
@@ -155,172 +156,170 @@ def runner(options, job_data, last_result, jobs_status):
         if jobs_status['jobs_count'] > 1:
             print(' ')
         print(' %s===[ %s%s: %s%s %s(%s, %s) %s]===%s' %
-              (colored.fg('green') + colored.attr('bold'),
-               colored.fg('yellow') + colored.attr('bold'), job_data['stage'],
-               colored.fg('yellow') + colored.attr('bold'), job_data['name'],
-               colored.fg('cyan') + colored.attr('bold'), image, engine_type,
-               colored.fg('green') + colored.attr('bold'), colored.attr('reset')))
+              (fg('green') + attr('bold'), fg('yellow') + attr('bold'), job_data['stage'],
+               fg('yellow') + attr('bold'), job_data['name'], fg('cyan') + attr('bold'),
+               image, engine_type, fg('green') + attr('bold'), attr('reset')))
         print(' ', flush=True)
 
     # Acquire project paths
-    pathProject = resolvePath(options.path)
-    pathParent = resolvePath(Path(options.path).parent)
+    path_project = Paths(options.path).resolve()
+    path_parent = Paths(Path(options.path).parent).resolve()
 
     # Acquire project targets
     if real_paths:
-        pathTargetProject = pathProject
-        pathTargetParent = pathParent
+        target_project = path_project
+        target_parent = path_parent
     else:
-        pathTargetProject = getPath(Platform.BUILDS_DIR / Path(pathProject).name)
-        pathTargetParent = getPath(Platform.BUILDS_DIR)
+        target_project = Paths(Platform.BUILDS_DIR / Path(path_project).name).get()
+        target_parent = Paths(Platform.BUILDS_DIR).get()
 
     # Prepare working directory
     if options.workdir:
         if options.workdir.startswith('.local:'):
             workdir = options.workdir[len('.local:'):]
             if host or real_paths:
-                pathWorkDir = getPath((options.path / workdir).resolve())
+                target_workdir = Paths((options.path / workdir).resolve()).get()
             else:
-                pathWorkDir = getPath(PurePosixPath(pathTargetProject) / workdir)
+                target_workdir = Paths(PurePosixPath(target_project) / workdir).get()
         else:
             if host or real_paths:
-                pathWorkDir = getPath((Path('.') / options.workdir).resolve())
+                target_workdir = Paths((Path('.') / options.workdir).resolve()).get()
             else:
-                pathWorkDir = getPath(PurePosixPath(pathTargetProject) / options.workdir)
+                target_workdir = Paths(
+                    PurePosixPath(target_project) / options.workdir).get()
     elif host or real_paths:
-        pathWorkDir = getPath(options.path)
+        target_workdir = Paths(options.path).get()
     else:
-        pathWorkDir = pathTargetProject
+        target_workdir = target_project
 
     # Prepare entrypoint and scripts
     entrypoint = job_data['entrypoint']
-    scriptsAfter = []
-    scriptsBefore = []
-    scriptsCommands = []
-    scriptsDebug = []
+    scripts_after = []
+    scripts_before = []
+    scripts_commands = []
+    scripts_debug = []
 
     # Prepare before_scripts
     if options.before:
-        scriptsBefore += job_data['before_script']
+        scripts_before += job_data['before_script']
 
     # Prepare scripts
-    scriptsCommands += job_data['script']
+    scripts_commands += job_data['script']
     if not host:
         if options.bash:
-            scriptsCommands = []
+            scripts_commands = []
         if options.bash or options.debug:
-            scriptsDebug += ['echo "' + marker_debug + '"', 'tail -f /dev/null']
+            scripts_debug += ['echo "' + __MARKER_DEBUG + '"', 'tail -f /dev/null']
 
     # Prepare after_scripts
     if options.after:
-        scriptsAfter += job_data['after_script']
+        scripts_after += job_data['after_script']
 
     # Prepare temporary script
-    scriptFile = tempfile.NamedTemporaryFile(delete=False, dir=pathParent, mode='wt',
-                                             newline='\n', prefix='.tmp.entrypoint.')
-    scriptTargetPath = getPath(Path(pathTargetParent) / Path(scriptFile.name).name)
+    script_file = NamedTemporaryFile(delete=False, dir=path_parent, mode='wt',
+                                     newline='\n', prefix='.tmp.entrypoint.')
+    target_file = Paths(Path(target_parent) / Path(script_file.name).name).get()
 
     # Prepare execution context
-    scriptFile.write('#!/bin/sh')
-    scriptFile.write('\n')
-    scriptFile.write('result=1')
-    scriptFile.write('\n')
+    script_file.write('#!/bin/sh')
+    script_file.write('\n')
+    script_file.write('result=1')
+    script_file.write('\n')
 
     # Prepare host working directory
     if host:
-        scriptFile.write('cd "%s"' % pathWorkDir)
-        scriptFile.write('\n')
+        script_file.write('cd "%s"' % target_workdir)
+        script_file.write('\n')
 
     # Prepare before_script/script context
-    scriptFile.write('(')
-    scriptFile.write('\n')
+    script_file.write('(')
+    script_file.write('\n')
     if job_data['options']['silent']:
-        scriptFile.write('set -e')
+        script_file.write('set -e')
     else:
-        scriptFile.write('set -ex')
-    scriptFile.write('\n')
+        script_file.write('set -ex')
+    script_file.write('\n')
 
     # Prepare before_script commands
-    if len(scriptsBefore) > 0:
-        scriptFile.write('{')
-        scriptFile.write('\n')
-        scriptFile.write('\n'.join(scriptsBefore))
-        scriptFile.write('\n')
-        scriptFile.write('} && ')
-        scriptFile.flush()
+    if len(scripts_before) > 0:
+        script_file.write('{')
+        script_file.write('\n')
+        script_file.write('\n'.join(scripts_before))
+        script_file.write('\n')
+        script_file.write('} && ')
+        script_file.flush()
 
     # Prepare script commands
-    if len(scriptsCommands) > 0:
-        scriptFile.write('{')
-        scriptFile.write('\n')
-        scriptFile.write('\n'.join(scriptsCommands))
-        scriptFile.write('\n')
-        scriptFile.write('}')
-        scriptFile.flush()
+    if len(scripts_commands) > 0:
+        script_file.write('{')
+        script_file.write('\n')
+        script_file.write('\n'.join(scripts_commands))
+        script_file.write('\n')
+        script_file.write('}')
+        script_file.flush()
     else:
-        scriptFile.write('false')
-        scriptFile.flush()
+        script_file.write('false')
+        script_file.flush()
 
     # Finish before_script/script context
-    scriptFile.write('\n')
-    scriptFile.write(') 2>&1')
-    scriptFile.write('\n')
-    scriptFile.write('result=${?}')
-    scriptFile.flush()
+    script_file.write('\n')
+    script_file.write(') 2>&1')
+    script_file.write('\n')
+    script_file.write('result=${?}')
+    script_file.flush()
 
     # Prepare debug script commands
-    if len(scriptsDebug) > 0:
-        scriptFile.write('\n')
-        scriptFile.write('(')
-        scriptFile.write('\n')
+    if len(scripts_debug) > 0:
+        script_file.write('\n')
+        script_file.write('(')
+        script_file.write('\n')
         if not job_data['options']['silent']:
-            scriptFile.write('set -x')
-        scriptFile.write('\n')
-        scriptFile.write('\n'.join(scriptsDebug))
-        scriptFile.write('\n')
-        scriptFile.write(') 2>&1')
-        scriptFile.flush()
+            script_file.write('set -x')
+        script_file.write('\n')
+        script_file.write('\n'.join(scripts_debug))
+        script_file.write('\n')
+        script_file.write(') 2>&1')
+        script_file.flush()
 
     # Prepare after_script commands
-    if len(scriptsAfter) > 0:
-        scriptFile.write('\n')
-        scriptFile.write('(')
-        scriptFile.write('\n')
+    if len(scripts_after) > 0:
+        script_file.write('\n')
+        script_file.write('(')
+        script_file.write('\n')
         if job_data['options']['silent']:
-            scriptFile.write('set -e')
+            script_file.write('set -e')
         else:
-            scriptFile.write('set -ex')
-        scriptFile.write('\n')
-        scriptFile.write('{')
-        scriptFile.write('\n')
-        scriptFile.write('\n'.join(scriptsAfter))
-        scriptFile.write('\n')
-        scriptFile.write('}')
-        scriptFile.write('\n')
-        scriptFile.write(') 2>&1')
-        scriptFile.flush()
+            script_file.write('set -ex')
+        script_file.write('\n')
+        script_file.write('{')
+        script_file.write('\n')
+        script_file.write('\n'.join(scripts_after))
+        script_file.write('\n')
+        script_file.write('}')
+        script_file.write('\n')
+        script_file.write(') 2>&1')
+        script_file.flush()
 
     # Prepare container result
     if not host:
-        scriptFile.write('\n')
-        scriptFile.write('echo "%s:${result}"' % (marker_result))
+        script_file.write('\n')
+        script_file.write('echo "%s:${result}"' % (__MARKER_RESULT))
 
     # Prepare execution result
-    scriptFile.write('\n')
-    scriptFile.write('exit "${result}"')
-    scriptFile.write('\n')
+    script_file.write('\n')
+    script_file.write('exit "${result}"')
+    script_file.write('\n')
 
     # Prepare script execution
-    script_stat = os.stat(scriptFile.name)
-    os.chmod(
-        scriptFile.name, script_stat.st_mode | stat.S_IXUSR | stat.S_IXGRP
-        | stat.S_IRGRP | stat.S_IROTH | stat.S_IXOTH)
-    scriptFile.file.close()
+    script_stat = stat(script_file.name)
+    chmod(script_file.name, script_stat.st_mode | S_IXUSR | S_IXGRP
+          | S_IRGRP | S_IROTH | S_IXOTH)
+    script_file.file.close()
 
     # Prepare variables
     variables = dict()
     for variable in job_data['variables']:
-        variables[variable] = os.path.expandvars(str(job_data['variables'][variable]))
+        variables[variable] = expandvars(str(job_data['variables'][variable]))
 
     # Configure local variables
     variables['CI_LOCAL'] = 'true'
@@ -329,13 +328,13 @@ def runner(options, job_data, last_result, jobs_status):
     if not host:
 
         # Configure engine variables
-        variables['CI_LOCAL_ENGINE_NAME'] = engine.name()
+        variables['CI_LOCAL_ENGINE_NAME'] = __engine.name()
 
         # Prepare volumes mounts
         volumes = Volumes()
 
         # Mount repository folder
-        volumes.add(pathParent, pathTargetParent, 'rw', True)
+        volumes.add(path_parent, target_parent, 'rw', True)
 
         # Extend mounts
         if options.volume:
@@ -352,20 +351,20 @@ def runner(options, job_data, last_result, jobs_status):
 
                 # Parse HOST:TARGET:MODE
                 if len(volume_nodes) == 3:
-                    volume_host = resolvePath(cwd / os.path.expandvars(volume_nodes[0]))
-                    volume_target = os.path.expandvars(volume_nodes[1])
+                    volume_host = Paths(cwd / expandvars(volume_nodes[0])).resolve()
+                    volume_target = expandvars(volume_nodes[1])
                     volume_mode = volume_nodes[2]
 
                 # Parse HOST:TARGET
                 elif len(volume_nodes) == 2:
-                    volume_host = resolvePath(cwd / os.path.expandvars(volume_nodes[0]))
-                    volume_target = os.path.expandvars(volume_nodes[1])
+                    volume_host = Paths(cwd / expandvars(volume_nodes[0])).resolve()
+                    volume_target = expandvars(volume_nodes[1])
                     volume_mode = 'rw'
 
                 # Parse VOLUME
                 else:
-                    volume_host = resolvePath(cwd / os.path.expandvars(volume))
-                    volume_target = resolvePath(cwd / os.path.expandvars(volume))
+                    volume_host = Paths(cwd / expandvars(volume)).resolve()
+                    volume_target = Paths(cwd / expandvars(volume)).resolve()
                     volume_mode = 'rw'
 
                 # Append volume mounts
@@ -373,59 +372,59 @@ def runner(options, job_data, last_result, jobs_status):
 
         # Append sockets mounts
         if options.sockets:
-            engine.sockets(volumes)
+            __engine.sockets(volumes)
 
         # Image validation
         if not image:
             raise ValueError(
                 'Missing image for "%s / %s"' % (job_data['stage'], job_data['name']))
-        engine.get(image)
+        __engine.get(image)
 
         # Launch container
-        container = engine.run(image, scriptTargetPath, entrypoint, variables, network,
-                               volumes, pathWorkDir)
+        container = __engine.run(image, target_file, entrypoint, variables, network,
+                                 volumes, target_workdir)
 
         # Create interruption handler
-        def interruptHandler(signal, frame):
+        def interrupt_handler(unused_signalnum, unused_handler):
             print(' ')
             print(' ')
             print(
                 ' %s> WARNING: %sUser interruption detected, stopping the container...%s'
-                % (colored.fg('yellow') + colored.attr('bold'),
-                   colored.attr('reset') + colored.attr('bold'), colored.attr('reset')))
+                % (fg('yellow') + attr('bold'), attr('reset') + attr('bold'),
+                   attr('reset')))
             print(' ', flush=True)
-            engine.stop(container, 0)
+            __engine.stop(container, 0)
 
         # Register interruption handler
-        originalINTHandler = signal.getsignal(signal.SIGINT)
-        originalTERMHandler = signal.getsignal(signal.SIGTERM)
-        signal.signal(signal.SIGINT, interruptHandler)
-        signal.signal(signal.SIGTERM, interruptHandler)
+        handler_int_original = getsignal(SIGINT)
+        handler_term_original = getsignal(SIGTERM)
+        signal(SIGINT, interrupt_handler)
+        signal(SIGTERM, interrupt_handler)
 
         # Execution wrapper
-        scriptResult = 1
+        script_result = 1
         success = False
 
         # Show container logs
         try:
-            for line in engine.logs(container):
+            for line in __engine.logs(container):
                 if isinstance(line, bytes):
                     line_decoded = line.decode()
-                    if marker_debug in line_decoded:
+                    if __MARKER_DEBUG in line_decoded:
                         break
-                    elif marker_result in line_decoded:
-                        scriptResult = int(line_decoded.split(':')[-1])
+                    if __MARKER_RESULT in line_decoded:
+                        script_result = int(line_decoded.split(':')[-1])
                         break
-                    sys.stdout.buffer.write(line)
-                    sys.stdout.buffer.flush()
+                    stdout.buffer.write(line)
+                    stdout.buffer.flush()
                 else:
-                    if marker_debug in line:
+                    if __MARKER_DEBUG in line:
                         break
-                    elif marker_result in line:
-                        scriptResult = int(line.split(':')[-1])
+                    if __MARKER_RESULT in line:
+                        script_result = int(line.split(':')[-1])
                         break
-                    sys.stdout.write(line)
-                    sys.stdout.flush()
+                    stdout.write(line)
+                    stdout.flush()
         except:
             pass
 
@@ -434,36 +433,35 @@ def runner(options, job_data, last_result, jobs_status):
 
             # Select shell
             shell = 'sh'
-            if engine.supports(image, container, 'bash'):
+            if __engine.supports(container, 'bash'):
                 shell = 'bash'
 
             # Acquire container informations
-            container_exec = engine.help('exec')
-            container_name = engine.name(container)
+            container_exec = __engine.help('exec')
+            container_name = __engine.name(container)
 
             # Footer debugging informations
             print(' ')
             print(
                 ' %s> INFORMATION: %sUse \'%s%s %s %s%s\' commands for debugging. Interrupt with Ctrl+C...%s'
-                % (colored.fg('yellow') + colored.attr('bold'),
-                   colored.attr('reset') + colored.attr('bold'),
-                   colored.fg('cyan'), container_exec, container_name, shell,
-                   colored.attr('reset') + colored.attr('bold'), colored.attr('reset')))
+                % (fg('yellow') + attr('bold'), attr('reset') + attr('bold'), fg('cyan'),
+                   container_exec, container_name, shell, attr('reset') + attr('bold'),
+                   attr('reset')))
             print(' ', flush=True)
 
         # Check container status
-        success = engine.wait(container, scriptResult)
+        success = __engine.wait(container, script_result)
 
         # Stop container
-        engine.stop(container, 0)
-        time.sleep(0.1)
+        __engine.stop(container, 0)
+        sleep(0.1)
 
         # Remove container
-        engine.remove(container)
+        __engine.remove(container)
 
         # Unregister interruption handler
-        signal.signal(signal.SIGINT, originalINTHandler)
-        signal.signal(signal.SIGTERM, originalTERMHandler)
+        signal(SIGINT, handler_int_original)
+        signal(SIGTERM, handler_term_original)
 
         # Result evaluation
         if job_data['when'] in ['on_failure', 'always']:
@@ -475,8 +473,8 @@ def runner(options, job_data, last_result, jobs_status):
     else:
 
         # Prepare environment
-        _environ = dict(os.environ) # or os.environ.copy()
-        os.environ.update(variables)
+        _environ = dict(environ)
+        environ.update(variables)
 
         # Native execution
         scripts = []
@@ -484,8 +482,8 @@ def runner(options, job_data, last_result, jobs_status):
             scripts += entrypoint
         if not scripts:
             scripts = ['sh']
-        scripts += ['"%s"' % scriptFile.name]
-        success = (os.system(' '.join(scripts)) == 0)
+        scripts += ['"%s"' % script_file.name]
+        success = (system(' '.join(scripts)) == 0)
 
         # Result evaluation
         if job_data['when'] in ['on_failure', 'always']:
@@ -494,11 +492,11 @@ def runner(options, job_data, last_result, jobs_status):
             result = True
 
         # Restore environment
-        os.environ.clear()
-        os.environ.update(_environ)
+        environ.clear()
+        environ.update(_environ)
 
     # Close temporary script
-    Path(scriptFile.name).unlink()
+    Path(script_file.name).unlink()
 
     # Initial job details
     job_details = ''
@@ -517,7 +515,7 @@ def runner(options, job_data, last_result, jobs_status):
         job_details = ' (' + ', '.join(job_details_list) + ')'
 
     # Evaluate duration time
-    time_duration = time.time() - time_start
+    time_duration = time() - time_start
     time_seconds = '%.0f second%s' % (time_duration % 60,
                                       's' if time_duration % 60 > 1 else '')
     time_minutes = ''
@@ -530,10 +528,9 @@ def runner(options, job_data, last_result, jobs_status):
     print(' ', flush=True)
     if not quiet:
         print(' %s> Result: %s in %s%s%s' %
-              (colored.fg('yellow') + colored.attr('bold'), colored.fg('green') +
-               colored.attr('bold') + 'Success' if result else colored.fg('red') +
-               colored.attr('bold') + 'Failure', time_string, colored.fg('cyan') +
-               colored.attr('bold') + job_details, colored.attr('reset')))
+              (fg('yellow') + attr('bold'), fg('green') + attr('bold') +
+               'Success' if result else fg('red') + attr('bold') + 'Failure', time_string,
+               fg('cyan') + attr('bold') + job_details, attr('reset')))
         print(' ', flush=True)
 
     # Allowed failure result

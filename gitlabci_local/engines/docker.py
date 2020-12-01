@@ -1,23 +1,24 @@
 #!/usr/bin/env python3
 
-# Libraries
-import docker
+# Standard libraries
+from docker import from_env
+from docker.errors import ImageNotFound
 
 # Components
-from ..const import Platform
+from ..system.platform import Platform
 
 # Docker class
 class Docker:
 
     # Members
-    _client = None
+    __client = None
 
     # Constructor
     def __init__(self):
 
         # Engine client
-        self._client = docker.from_env()
-        self._client.ping()
+        self.__client = from_env()
+        self.__client.ping()
 
     # Exec
     def exec(self, container, command):
@@ -29,7 +30,7 @@ class Docker:
     def help(self, command):
 
         # Exec command
-        if command is 'exec':
+        if command == 'exec':
             return 'docker exec -it'
 
         # Default fallback
@@ -40,10 +41,10 @@ class Docker:
 
         # Validate image exists
         try:
-            self._client.images.get(image)
+            self.__client.images.get(image)
 
         # Pull missing image
-        except docker.errors.ImageNotFound:
+        except ImageNotFound:
             self.pull(image)
 
     # Logs
@@ -62,7 +63,7 @@ class Docker:
     def pull(self, image):
 
         # Pull image with logs stream
-        for data in self._client.api.pull(image, stream=True, decode=True):
+        for data in self.__client.api.pull(image, stream=True, decode=True):
 
             # Layer progress logs
             if 'progress' in data:
@@ -99,7 +100,7 @@ class Docker:
     def run(self, image, command, entrypoint, variables, network, volumes, directory):
 
         # Run container image
-        return self._client.containers.run(
+        return self.__client.containers.run(
             image, command=command, detach=True, entrypoint=entrypoint,
             environment=variables, network_mode=network, privileged=True, remove=False,
             stdout=True, stderr=True, stream=True, volumes=volumes.get(),
@@ -119,10 +120,10 @@ class Docker:
         container.stop(timeout=timeout)
 
     # Supports
-    def supports(self, image, container, binary):
+    def supports(self, container, binary):
 
         # Validate binary support
-        exit_code, output = self.exec(container, 'whereis %s' % (binary))
+        exit_code, unused_output = self.exec(container, 'whereis %s' % (binary))
 
         # Result
         return exit_code == 0

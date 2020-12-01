@@ -1,38 +1,47 @@
 #!/usr/bin/env python3
 
-# Libraries
-import colored
-import json
-import os
-import oyaml as yaml
+# Standard libraries
+from json import load as json_load
+from os import environ
 from pathlib import Path
-import PyInquirer
+from PyInquirer import prompt as PyInquirer_prompt
+from PyInquirer import Separator as PyInquirer_Separator
+from PyInquirer import style_from_dict as PyInquirer_style_from_dict
+from PyInquirer import Token as PyInquirer_Token
+
+# Modules libraries
+from colored import attr, fg
+from oyaml import safe_load as yaml_safe_load
 
 # Components
-from .const import Platform
-from .main import NAME
-from .patcher import InquirerControl
+from .package.names import NAME
+from .package.patcher import Patcher
 from .runner import launcher
-from .utils import dictGet, nameCheck
+from .system.platform import Platform
+from .types.dicts import Dicts
+from .types.lists import Lists
+
+# Patch theme
+Patcher()
 
 # Selector theme
-SelectorTheme = PyInquirer.style_from_dict({
-    PyInquirer.Token.Separator: '#FFFF00 bold',
-    PyInquirer.Token.QuestionMark: '#FFFF00 bold',
-    PyInquirer.Token.Selected: '#00FF00 bold',
-    PyInquirer.Token.Instruction: '#00FFFF bold',
-    PyInquirer.Token.Pointer: '#FFFF00 bold',
-    PyInquirer.Token.Answer: '#00FFFF bold',
-    PyInquirer.Token.Question: '#00FF00 bold',
+__SelectorTheme = PyInquirer_style_from_dict({
+    PyInquirer_Token.Separator: '#FFFF00 bold',
+    PyInquirer_Token.QuestionMark: '#FFFF00 bold',
+    PyInquirer_Token.Selected: '#00FF00 bold',
+    PyInquirer_Token.Instruction: '#00FFFF bold',
+    PyInquirer_Token.Pointer: '#FFFF00 bold',
+    PyInquirer_Token.Answer: '#00FFFF bold',
+    PyInquirer_Token.Question: '#00FF00 bold',
 })
 
 # Configurations theme
-ConfigurationsTheme = PyInquirer.style_from_dict({
-    PyInquirer.Token.Selected: '#00FF00 bold',
-    PyInquirer.Token.Instruction: '#00FFFF bold',
-    PyInquirer.Token.Pointer: '#FFFF00 bold',
-    PyInquirer.Token.Answer: '#00FFFF bold',
-    PyInquirer.Token.Question: '#FFFF00 bold',
+__ConfigurationsTheme = PyInquirer_style_from_dict({
+    PyInquirer_Token.Selected: '#00FF00 bold',
+    PyInquirer_Token.Instruction: '#00FFFF bold',
+    PyInquirer_Token.Pointer: '#FFFF00 bold',
+    PyInquirer_Token.Answer: '#00FFFF bold',
+    PyInquirer_Token.Question: '#FFFF00 bold',
 })
 
 # Selector
@@ -53,19 +62,19 @@ def selector(options, jobs):
         if options.names:
 
             # Filter jobs list
-            if not options.pipeline and not nameCheck(job, options.names,
-                                                      options.no_regex):
+            if not options.pipeline and not Lists.match(options.names, job,
+                                                        options.no_regex):
                 continue
 
             # Filter stages list
-            if options.pipeline and not nameCheck(jobs[job]['stage'], options.names,
-                                                  options.no_regex):
+            if options.pipeline and not Lists.match(options.names, jobs[job]['stage'],
+                                                    options.no_regex):
                 continue
 
         # Stages separator
         if stage != jobs[job]['stage']:
             stage = jobs[job]['stage']
-            jobs_choices += PyInquirer.Separator('\n Stage %s:' % (stage)),
+            jobs_choices += [PyInquirer_Separator('\n Stage %s:' % (stage))]
 
         # Initial job details
         job_details = ''
@@ -121,14 +130,12 @@ def selector(options, jobs):
 
     # Request jobs selection
     if jobs_choices and jobs_available:
-        answers = PyInquirer.prompt(selection_prompt, style=SelectorTheme)
+        answers = PyInquirer_prompt(selection_prompt, style=__SelectorTheme)
     else:
         print(
             ' %s%s: %sERROR: %sNo jobs found for selection%s' %
-            (colored.fg('green') + colored.attr('bold'), NAME,
-             colored.fg('red') + colored.attr('bold'),
-             colored.attr('reset') + colored.attr('bold'), colored.attr('reset')),
-            flush=True)
+            (fg('green') + attr('bold'), NAME, fg('red') + attr('bold'),
+             attr('reset') + attr('bold'), attr('reset')), flush=True)
         answers = None
 
     # Parse jobs selection
@@ -160,9 +167,8 @@ def configurator(options, configurations):
     # Header
     print(' ')
     print(' %s===[ %sConfigurations menu %s]===%s' %
-          (colored.fg('green') + colored.attr('bold'),
-           colored.fg('yellow') + colored.attr('bold'),
-           colored.fg('green') + colored.attr('bold'), colored.attr('reset')))
+          (fg('green') + attr('bold'), fg('yellow') + attr('bold'),
+           fg('green') + attr('bold'), attr('reset')))
     print(' ', flush=True)
 
     # Walk through configurations
@@ -188,8 +194,8 @@ def configurator(options, configurations):
         }]
 
         # Extract environment variable
-        if variable in os.environ:
-            variable_default = os.environ[variable]
+        if variable in environ:
+            variable_default = environ[variable]
             variable_set = True
 
         # Parse configuration types: boolean
@@ -241,8 +247,8 @@ def configurator(options, configurations):
                 configuration_path = Path(options.path) / variable_node['path']
                 configuration_key = variable_node['key']
                 with open(configuration_path, 'r') as configuration_data:
-                    variable_values = dictGet(json.load(configuration_data),
-                                              configuration_key)
+                    configuration_dict = json_load(configuration_data)
+                    variable_values = Dicts.find(configuration_dict, configuration_key)
                     if not variable_values:
                         raise ValueError(
                             'Unknown "%s" key in %s for "%s"' %
@@ -263,8 +269,8 @@ def configurator(options, configurations):
                 configuration_path = Path(options.path) / variable_node['path']
                 configuration_key = variable_node['key']
                 with open(configuration_path, 'r') as configuration_data:
-                    variable_values = dictGet(yaml.safe_load(configuration_data),
-                                              configuration_key)
+                    configuration_dict = yaml_safe_load(configuration_data)
+                    variable_values = Dicts.find(configuration_dict, configuration_key)
                     if not variable_values:
                         raise ValueError(
                             'Unknown "%s" key in %s for "%s"' %
@@ -283,25 +289,23 @@ def configurator(options, configurations):
         else:
             print(' ')
             print(' %s%s: %sERROR: %sUnsupported configuration type "%s"...%s' %
-                  (colored.fg('green') + colored.attr('bold'), NAME, colored.fg('red') +
-                   colored.attr('bold'), colored.attr('reset') + colored.attr('bold'),
-                   variable_type, colored.attr('reset')))
+                  (fg('green') + attr('bold'), NAME, fg('red') + attr('bold'),
+                   attr('reset') + attr('bold'), variable_type, attr('reset')))
             print(' ', flush=True)
 
         # Extract environment variable
-        if variable in os.environ:
-            variable_default = os.environ[variable]
+        if variable in environ:
+            variable_default = environ[variable]
             variable_set = True
 
         # Request configuration selection
         if not Platform.IS_TTY_STDIN or variable_set or options.defaults:
             result[variable] = str(variable_default)
             print(' %s%s  %s%s%s' %
-                  (colored.fg('yellow') + colored.attr('bold'),
-                   configuration_prompt[0]['message'], colored.fg('cyan') +
-                   colored.attr('bold'), result[variable], colored.attr('reset')))
+                  (fg('yellow') + attr('bold'), configuration_prompt[0]['message'],
+                   fg('cyan') + attr('bold'), result[variable], attr('reset')))
         else:
-            answers = PyInquirer.prompt(configuration_prompt, style=ConfigurationsTheme)
+            answers = PyInquirer_prompt(configuration_prompt, style=__ConfigurationsTheme)
             if not answers:
                 raise KeyboardInterrupt
             result[variable] = str(answers[variable])
