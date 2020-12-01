@@ -79,6 +79,31 @@ stages:
     - git diff --quiet
   allow_failure: true
 
+'Lint':
+  stage: prepare
+  variables:
+    PIP_DISABLE_PIP_VERSION_CHECK: 1
+  script:
+    - pip3 install -q -r requirements.txt --upgrade
+    - pip3 install -q -r requirements-docs.txt --upgrade
+    - pip3 install -q -r requirements-quality.txt --upgrade
+    - pylint --errors-only ./docs/ ./gitlabci_local/ ./setup.py
+    - |
+      pylint \
+        --disable=bare-except \
+        --disable=line-too-long \
+        --disable=missing-docstring \
+        --disable=no-self-use \
+        --disable=too-few-public-methods \
+        --disable=too-many-arguments \
+        --disable=too-many-branches \
+        --disable=too-many-locals \
+        --disable=too-many-nested-blocks \
+        --disable=too-many-statements \
+        --redefining-builtins-modules=sys \
+        ./docs/ ./gitlabci_local/ ./setup.py
+  allow_failure: true
+
 'Build':
   stage: build
   variables:
