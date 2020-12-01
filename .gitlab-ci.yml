@@ -80,7 +80,7 @@ stages:
   script:
     - sudo rm -rf build dist *.egg-info .eggs
     - python3 setup.py bdist_wheel
-    - sudo pip3 install --upgrade --no-deps dist/*.whl
+    - sudo pip3 install --force-reinstall --no-deps --upgrade dist/*.whl
   only:
     - local
 
@@ -110,7 +110,7 @@ stages:
   before_script:
     - mkdir -p ./.tmp/
     - pip install dist/*.whl
-    - pip install --no-deps --upgrade dist/*.whl
+    - pip install --force-reinstall --no-deps --upgrade dist/*.whl
 
 .unit-tests-podman:
   before_script:
@@ -123,7 +123,7 @@ stages:
     - sed -i 's#driver = ""#driver = "vfs"#g' /etc/containers/storage.conf
     - mkdir -p ./.tmp/
     - pip install dist/*.whl
-    - pip install --no-deps --upgrade dist/*.whl
+    - pip install --force-reinstall --no-deps --upgrade dist/*.whl
 
 .unit-tests-template:
   stage: test
