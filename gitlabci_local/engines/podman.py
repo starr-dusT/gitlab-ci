@@ -159,7 +159,7 @@ class Podman:
 
         # Create container image
         result = self.__exec(['create'] + args_entrypoint + args_env + ['--tty'] +
-                             args_volumes + ['--privileged'] +
+                             args_volumes + ['--network', network] + ['--privileged'] +
                              ['--security-opt', 'label=disable'] +
                              ['--workdir', directory] + [image] + args_command)
         if result.returncode == 0:
