@@ -1,4 +1,32 @@
 
+<a name="2.1.0"></a>
+## [2.1.0](https://gitlab.com/AdrianDC/gitlabci-local/compare/2.0.1...2.1.0) (2020-12-03)
+
+### Chore
+
+* resolve [#123](https://gitlab.com/AdrianDC/gitlabci-local/issues/123): isolate into classes and lint the sources
+* gitlab-ci: isolate pip install steps in 'before_script'
+* prepare [#123](https://gitlab.com/AdrianDC/gitlabci-local/issues/123): import only required libraries in setup.py
+* prepare [#123](https://gitlab.com/AdrianDC/gitlabci-local/issues/123): import only required libraries in preview.py
+* gitlab-ci: add local 'Lint' job as a pylint wrapper
+* gitlab-ci: disable pip updates warnings in relevant jobs
+* gitlab-ci: turn the 'Codestyle' job into a CI check job
+* gitlab-ci: quiet pip installation logs in 'deploy' jobs
+* gitlab-ci: isolate local jobs under a 'development' stage
+* gitlab-ci: isolate requirements and use built packages
+* gitlab-ci: add '--force-reinstall' to pip reinstallations
+
+### Docs
+
+* changelog: regenerate release tag changes history
+
+### Feat
+
+* implement [#124](https://gitlab.com/AdrianDC/gitlabci-local/issues/124): add daily PyPI updates notifications
+* implement [#125](https://gitlab.com/AdrianDC/gitlabci-local/issues/125): implement a settings storage class
+* implement [#126](https://gitlab.com/AdrianDC/gitlabci-local/issues/126): add network mode support in Podman engine
+
+
 <a name="2.0.1"></a>
 ## [2.0.1](https://gitlab.com/AdrianDC/gitlabci-local/compare/2.0.0...2.0.1) (2020-12-01)
 
