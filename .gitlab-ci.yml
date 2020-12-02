@@ -69,6 +69,8 @@ stages:
 
 'Codestyle':
   stage: prepare
+  variables:
+    PIP_DISABLE_PIP_VERSION_CHECK: 1
   script:
     - pip3 install -q -r requirements-quality.txt --upgrade
     - yapf -i ./docs/*.py ./gitlabci_local/*.py ./gitlabci_local/*/*.py ./setup.py
@@ -79,6 +81,8 @@ stages:
 
 'Build':
   stage: build
+  variables:
+    PIP_DISABLE_PIP_VERSION_CHECK: 1
   script:
     - pip3 install -r requirements.txt --upgrade
     - pip3 install -r requirements-build.txt --upgrade
@@ -288,6 +292,7 @@ stages:
   dependencies:
     - Build
   variables:
+    PIP_DISABLE_PIP_VERSION_CHECK: 1
     TWINE_PASSWORD: ${TWINE_PASSWORD}
   before_script:
     - if [ ! "${CI_COMMIT_REF_PROTECTED}" = 'true' ]; then echo '[ERROR] Please protect this tag...'; exit 1; fi
@@ -302,6 +307,7 @@ stages:
   dependencies:
     - Build
   variables:
+    PIP_DISABLE_PIP_VERSION_CHECK: 1
     TWINE_PASSWORD_TEST: ${TWINE_PASSWORD_TEST}
   script:
     - pip3 install -q -r requirements-deploy.txt --upgrade
