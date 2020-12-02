@@ -37,16 +37,6 @@ stages:
   only:
     - local
 
-'Codestyle':
-  stage: prepare
-  image: local
-  script:
-    - yapf -i ./docs/*.py ./gitlabci_local/*.py ./gitlabci_local/*/*.py ./setup.py
-    - unify -i --quote "'" ./docs/*.py ./gitlabci_local/*.py ./gitlabci_local/*/*.py ./setup.py
-    - echo '' && git diff --name-status
-  only:
-    - local
-
 'Dependencies':
   stage: development
   image: local:quiet
@@ -76,6 +66,16 @@ stages:
     - python3 ./docs/preview.py
   only:
     - local
+
+'Codestyle':
+  stage: prepare
+  script:
+    - pip3 install -q -r requirements-quality.txt --upgrade
+    - yapf -i ./docs/*.py ./gitlabci_local/*.py ./gitlabci_local/*/*.py ./setup.py
+    - unify -i --quote "'" ./docs/*.py ./gitlabci_local/*.py ./gitlabci_local/*/*.py ./setup.py
+    - echo '' && git diff --name-status
+    - git diff --quiet
+  allow_failure: true
 
 'Build':
   stage: build
