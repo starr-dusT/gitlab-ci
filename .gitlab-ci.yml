@@ -1,6 +1,7 @@
 image: python:3
 
 stages:
+  - development
   - prepare
   - build
   - test
@@ -12,7 +13,7 @@ stages:
   sockets: true
 
 'Changelog':
-  stage: prepare
+  stage: development
   image: local:silent
   script:
     - mkdir -p ./.tmp/
@@ -47,7 +48,7 @@ stages:
     - local
 
 'Dependencies':
-  stage: prepare
+  stage: development
   image: local:quiet
   script:
     - sudo pip3 install -r requirements.txt --upgrade
@@ -58,8 +59,18 @@ stages:
   only:
     - local
 
+'Development':
+  stage: development
+  image: local:quiet
+  script:
+    - sudo rm -rf build dist *.egg-info .eggs
+    - python3 setup.py bdist_wheel
+    - sudo pip3 install --force-reinstall --no-deps --upgrade dist/*.whl
+  only:
+    - local
+
 'Preview':
-  stage: prepare
+  stage: development
   image: local:silent
   script:
     - python3 ./docs/preview.py
@@ -76,16 +87,6 @@ stages:
   artifacts:
     paths:
       - dist/
-
-'Development':
-  stage: build
-  image: local:quiet
-  script:
-    - sudo rm -rf build dist *.egg-info .eggs
-    - python3 setup.py bdist_wheel
-    - sudo pip3 install --force-reinstall --no-deps --upgrade dist/*.whl
-  only:
-    - local
 
 'Test':
   stage: test
