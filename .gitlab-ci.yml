@@ -71,10 +71,12 @@ stages:
   stage: prepare
   variables:
     PIP_DISABLE_PIP_VERSION_CHECK: 1
-  script:
+  before_script:
     - pip3 install -q -r requirements-quality.txt --upgrade
+  script:
     - yapf -i ./docs/*.py ./gitlabci_local/*.py ./gitlabci_local/*/*.py ./setup.py
     - unify -i --quote "'" ./docs/*.py ./gitlabci_local/*.py ./gitlabci_local/*/*.py ./setup.py
+  after_script:
     - echo '' && git diff --name-status
     - git diff --quiet
   allow_failure: true
@@ -83,10 +85,11 @@ stages:
   stage: prepare
   variables:
     PIP_DISABLE_PIP_VERSION_CHECK: 1
-  script:
+  before_script:
     - pip3 install -q -r requirements.txt --upgrade
     - pip3 install -q -r requirements-docs.txt --upgrade
     - pip3 install -q -r requirements-quality.txt --upgrade
+  script:
     - pylint --errors-only ./docs/ ./gitlabci_local/ ./setup.py
     - |
       pylint \
@@ -108,9 +111,10 @@ stages:
   stage: build
   variables:
     PIP_DISABLE_PIP_VERSION_CHECK: 1
-  script:
+  before_script:
     - pip3 install -r requirements.txt --upgrade
     - pip3 install -r requirements-build.txt --upgrade
+  script:
     - rm -rf build dist *.egg-info .eggs
     - python3 setup.py bdist_wheel
   artifacts:
@@ -321,8 +325,8 @@ stages:
     TWINE_PASSWORD: ${TWINE_PASSWORD}
   before_script:
     - if [ ! "${CI_COMMIT_REF_PROTECTED}" = 'true' ]; then echo '[ERROR] Please protect this tag...'; exit 1; fi
-  script:
     - pip3 install -q -r requirements-deploy.txt --upgrade
+  script:
     - twine upload -u '__token__' -p "${TWINE_PASSWORD}" dist/*
   only:
     - tags
@@ -334,8 +338,9 @@ stages:
   variables:
     PIP_DISABLE_PIP_VERSION_CHECK: 1
     TWINE_PASSWORD_TEST: ${TWINE_PASSWORD_TEST}
-  script:
+  before_script:
     - pip3 install -q -r requirements-deploy.txt --upgrade
+  script:
     - twine upload -u '__token__' -p "${TWINE_PASSWORD_TEST}" --repository testpypi dist/*
   only:
     - local
