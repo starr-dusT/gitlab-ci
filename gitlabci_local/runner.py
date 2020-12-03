@@ -316,13 +316,18 @@ def runner(options, job_data, last_result, jobs_status):
           | S_IRGRP | S_IROTH | S_IXOTH)
     script_file.file.close()
 
+    # Configure local environment
+    environ['CI_LOCAL'] = 'true'
+
     # Prepare variables
     variables = dict()
+
+    # Prepare job variables
     for variable in job_data['variables']:
         variables[variable] = expandvars(str(job_data['variables'][variable]))
 
-    # Configure local variables
-    variables['CI_LOCAL'] = 'true'
+    # Prepare CI variables
+    variables['CI_LOCAL'] = environ['CI_LOCAL']
 
     # Container execution
     if not host:
