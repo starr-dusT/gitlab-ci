@@ -166,7 +166,7 @@ def runner(options, job_data, last_result, jobs_status):
     path_parent = Paths(Path(options.path).parent).resolve()
 
     # Acquire project targets
-    if real_paths:
+    if host or real_paths:
         target_project = path_project
         target_parent = path_parent
     else:
