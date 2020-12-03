@@ -221,6 +221,14 @@ stages:
     - gitlabci-local -c ./tests/variables/.gitlab-ci.yml -p && exit 1 || true
     - gitlabci-local -c ./tests/variables/.gitlab-ci.yml -e IMAGE_REFERENCE_1='alpine:3' -p && exit 1 || true
     - gitlabci-local -c ./tests/variables/.gitlab-ci.yml -e IMAGE_REFERENCE_1='alpine:3' -e IMAGE_REFERENCE_5='alpine:3' -p
+    - gitlabci-local -c ./tests/project/.gitlab-ci.yml -p
+    - gitlabci-local -c ./tests/project/.gitlab-ci.yml -H -p
+    - gitlabci-local -c ./tests/project/.gitlab-ci.yml 'Job 2' && exit 1 || true
+    - gitlabci-local -c ./tests/project/.gitlab-ci.yml -e CI_VARIABLE_DIR=. 'Job 2'
+    - CI_VARIABLE_DIR=. gitlabci-local -c ./tests/project/.gitlab-ci.yml 'Job 2' && exit 1 || true
+    - CI_VARIABLE_DIR=. gitlabci-local -c ./tests/project/.gitlab-ci.yml -e CI_VARIABLE_DIR 'Job 2'
+    - gitlabci-local -c ./tests/project/.gitlab-ci.yml 'Job 3' && exit 1 || true
+    - gitlabci-local -c ./tests/project/.gitlab-ci.yml -e CI_CONSTANT_PRE_DIR=. -e CI_CONSTANT_POST_DIR=. 'Job 3'
     - gitlabci-local -c ./tests/retry/.gitlab-ci.yml -p failure && exit 1 || true
     - gitlabci-local -c ./tests/retry/.gitlab-ci.yml -p success
     - gitlabci-local -c ./tests/local/.gitlab-ci.yml

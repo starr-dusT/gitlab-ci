@@ -1,0 +1,42 @@
+image: alpine:3
+
+variables:
+  PROJECT_FIRST_DIR: '$CI_PROJECT_DIR/first'
+  PROJECT_SECOND_DIR: '${CI_PROJECT_DIR}/second'
+  PROJECT_VARIABLE_DIR: '${CI_VARIABLE_DIR}/second'
+  CI_CONSTANT_PRE_DIR: .
+  PROJECT_CONSTANT_PRE_DIR: '${CI_CONSTANT_PRE_DIR}/second'
+  PROJECT_CONSTANT_POST_DIR: '${CI_CONSTANT_POST_DIR}/second'
+  CI_CONSTANT_POST_DIR: .
+
+stages:
+  - variables
+
+'Job 1':
+  stage: variables
+  script:
+    - echo "CI_JOB_NAME=${CI_JOB_NAME}"
+    - test -z "${CI_JOB_NAME}" && exit 1 || true
+    - echo "CI_PROJECT_DIR=${CI_PROJECT_DIR}"
+    - test -z "${CI_PROJECT_DIR}" && exit 1 || true
+    - pwd
+    - ls -la ./
+    - ls -la "${PROJECT_FIRST_DIR}"
+    - ls -la "${PROJECT_SECOND_DIR}"
+
+'Job 2':
+  stage: variables
+  script:
+    - ls -la "${PROJECT_FIRST_DIR}"
+    - ls -la "${PROJECT_SECOND_DIR}"
+    - ls -la "${PROJECT_VARIABLE_DIR}"
+    - echo "CI_VARIABLE_DIR=${CI_VARIABLE_DIR}"
+    - test -z "${CI_VARIABLE_DIR}" && exit 1 || true
+  when: manual
+
+'Job 3':
+  stage: variables
+  script:
+    - ls -la "${PROJECT_CONSTANT_PRE_DIR}"
+    - ls -la "${PROJECT_CONSTANT_POST_DIR}"
+  when: manual
