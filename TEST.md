@@ -11,6 +11,16 @@ The following engines are available :
 - **Docker :** https://docs.docker.com/engine/install/
 - **Podman :** https://podman.io/getting-started/installation#linux-distributions
 
+## Test on macOS
+
+The following tools are required for macOS hosts tests :
+
+- **PyPI :** https://pip.pypa.io/en/stable/installing/
+
+The following engines are available :
+
+- **Docker :** https://docs.docker.com/engine/install/
+
 ---
 
 ## Test on Windows
