@@ -110,7 +110,7 @@ class Docker:
     def sockets(self, volumes):
 
         # Add socket volume
-        if not Platform.IS_WINDOWS:
+        if Platform.IS_LINUX:
             volumes.add('/var/run/docker.sock', '/var/run/docker.sock', 'rw', True)
 
     # Stop
