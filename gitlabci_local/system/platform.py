@@ -31,5 +31,9 @@ class Platform:
         if Platform.IS_WINDOWS:
             return Path.home() / 'AppData' / 'Local' / name
 
+        # macOS userspace
+        if Platform.IS_MAC_OS:
+            return Path.home() / 'Library' / 'Preferences' / name
+
         # Linux userspace
         return Path.home() / '.config' / name

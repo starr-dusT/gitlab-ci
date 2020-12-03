@@ -31,12 +31,8 @@ class Paths:
         # Resolve path
         path = Path(self.__path).resolve()
 
-        # Linux path
-        if Platform.IS_LINUX:
-            path = str(path)
-
-        # Windows path
-        elif Platform.IS_WINDOWS:
+        # Linux, macOS or Windows path
+        if Platform.IS_LINUX or Platform.IS_MAC_OS or Platform.IS_WINDOWS:
             path = str(path)
 
         # Result

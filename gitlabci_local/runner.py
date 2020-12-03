@@ -112,7 +112,7 @@ def runner(options, job_data, last_result, jobs_status):
     # Variables
     host = False
     quiet = options.quiet
-    real_paths = options.real_paths and Platform.IS_LINUX
+    real_paths = options.real_paths and (Platform.IS_LINUX or Platform.IS_MAC_OS)
     result = False
     time_start = time()
 
