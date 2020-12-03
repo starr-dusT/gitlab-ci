@@ -316,6 +316,10 @@ def runner(options, job_data, last_result, jobs_status):
           | S_IRGRP | S_IROTH | S_IXOTH)
     script_file.file.close()
 
+    # Configure CI environment
+    environ['CI_JOB_NAME'] = job_data['name']
+    environ['CI_PROJECT_DIR'] = target_project
+
     # Configure local environment
     environ['CI_LOCAL'] = 'true'
 
@@ -327,6 +331,8 @@ def runner(options, job_data, last_result, jobs_status):
         variables[variable] = expandvars(str(job_data['variables'][variable]))
 
     # Prepare CI variables
+    variables['CI_JOB_NAME'] = environ['CI_JOB_NAME']
+    variables['CI_PROJECT_DIR'] = environ['CI_PROJECT_DIR']
     variables['CI_LOCAL'] = environ['CI_LOCAL']
 
     # Container execution
