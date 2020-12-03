@@ -10,7 +10,8 @@ class Platform:
 
     # Constants
     IS_LINUX = (platform in ['linux', 'linux2'])
-    IS_WINDOWS = (platform in ['win32'])
+    IS_MAC_OS = (platform in ['darwin'])
+    IS_WINDOWS = (platform in ['win32', 'win64'])
 
     # Paths
     BUILDS_DIR = PurePosixPath('/builds')
