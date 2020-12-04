@@ -5,6 +5,7 @@ from copy import deepcopy
 from oyaml import dump as yaml_dump
 
 # Components
+from .system.platform import Platform
 from .types.lists import Lists
 
 # Dumper
@@ -29,7 +30,8 @@ def dumper(options, jobs):
 
     # Dump configuration results
     print(yaml_dump(configuration, indent=2))
-    print(' ', flush=True)
+    print(' ')
+    Platform.flush()
 
     # Result
     return result

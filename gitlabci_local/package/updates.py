@@ -9,6 +9,7 @@ from update_checker import pretty_date, UpdateChecker
 from colored import attr, fg
 
 # Components
+from ..system.platform import Platform
 from .version import Version
 
 # Updates class
@@ -52,7 +53,8 @@ class Updates:
                    check.available_version,
                    ' ' + pretty_date(check.release_date) if check.release_date else '',
                    attr('reset') + attr('bold'), self.__version, attr('reset')))
-            print(' ', flush=True)
+            print(' ')
+            Platform.flush()
             return True
 
         # Failure upon check
@@ -64,7 +66,8 @@ class Updates:
                 ' %sWARNING: %s%s was not found, network might be down %s(current version is %s)%s'
                 % (fg('yellow') + attr('bold'), fg('red') + attr('bold'), self.__name,
                    attr('reset') + attr('bold'), self.__version, attr('reset')))
-            print(' ', flush=True)
+            print(' ')
+            Platform.flush()
             return True
 
         # Result

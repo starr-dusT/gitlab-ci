@@ -4,6 +4,9 @@
 from os import environ
 from subprocess import DEVNULL, PIPE, Popen, run
 
+# Components
+from ..system.platform import Platform
+
 # Podman class
 class Podman:
 
@@ -84,7 +87,8 @@ class Podman:
     def pull(self, image):
 
         # Header
-        print('Pulling from %s' % (image), flush=True)
+        print('Pulling from %s' % (image))
+        Platform.flush()
 
         # Pull image with logs stream
         result = self.__exec(['pull', image])
@@ -96,11 +100,13 @@ class Podman:
             print('Digest: %s' % (result.stdout.strip().decode('utf-8')))
             print('Status: Image is up to date for %s' % (image))
         else:
-            print('Status: Image not found for %s' % (image), flush=True)
+            print('Status: Image not found for %s' % (image))
+            Platform.flush()
             raise FileNotFoundError(result.stderr.decode('utf-8').replace('\\n', '\n'))
 
         # Footer
-        print(' ', flush=True)
+        print(' ')
+        Platform.flush()
 
     # Remove
     def remove(self, container):

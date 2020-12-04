@@ -23,6 +23,11 @@ class Platform:
     IS_TTY_STDIN = stdin.isatty() and stdin.encoding != 'cp1252'
     IS_TTY_STDOUT = stdout.isatty()
 
+    # Flush
+    @staticmethod
+    def flush():
+        print('', flush=Platform.IS_TTY_STDOUT, end='')
+
     # Userspace
     @staticmethod
     def userspace(name):

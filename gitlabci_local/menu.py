@@ -132,10 +132,9 @@ def selector(options, jobs):
     if jobs_choices and jobs_available:
         answers = PyInquirer_prompt(selection_prompt, style=__SelectorTheme)
     else:
-        print(
-            ' %s%s: %sERROR: %sNo jobs found for selection%s' %
-            (fg('green') + attr('bold'), NAME, fg('red') + attr('bold'),
-             attr('reset') + attr('bold'), attr('reset')), flush=True)
+        print(' %s%s: %sERROR: %sNo jobs found for selection%s' %
+              (fg('green') + attr('bold'), NAME, fg('red') + attr('bold'),
+               attr('reset') + attr('bold'), attr('reset')))
         answers = None
 
     # Parse jobs selection
@@ -149,7 +148,8 @@ def selector(options, jobs):
 
     # Footer
     print(' ')
-    print(' ', flush=True)
+    print(' ')
+    Platform.flush()
 
     # Launch jobs
     if options.names:
@@ -169,7 +169,8 @@ def configurator(options, configurations):
     print(' %s===[ %sConfigurations menu %s]===%s' %
           (fg('green') + attr('bold'), fg('yellow') + attr('bold'),
            fg('green') + attr('bold'), attr('reset')))
-    print(' ', flush=True)
+    print(' ')
+    Platform.flush()
 
     # Walk through configurations
     for variable in configurations:
@@ -291,7 +292,8 @@ def configurator(options, configurations):
             print(' %s%s: %sERROR: %sUnsupported configuration type "%s"...%s' %
                   (fg('green') + attr('bold'), NAME, fg('red') + attr('bold'),
                    attr('reset') + attr('bold'), variable_type, attr('reset')))
-            print(' ', flush=True)
+            print(' ')
+            Platform.flush()
 
         # Extract environment variable
         if variable in environ:
@@ -311,7 +313,8 @@ def configurator(options, configurations):
             result[variable] = str(answers[variable])
 
     # Footer
-    print(' ', flush=True)
+    print(' ')
+    Platform.flush()
 
     # Result
     return result

@@ -70,25 +70,28 @@ class Docker:
                 if Platform.IS_TTY_STDOUT:
                     print(
                         '\r\033[K%s: %s %s' %
-                        (data['id'], data['status'], data['progress']), end='',
-                        flush=True)
+                        (data['id'], data['status'], data['progress']), end='')
+                    Platform.flush()
 
             # Layer event logs
             elif 'progressDetail' in data:
                 if Platform.IS_TTY_STDOUT:
-                    print('\r\033[K%s: %s' % (data['id'], data['status']), end='',
-                          flush=True)
+                    print('\r\033[K%s: %s' % (data['id'], data['status']), end='')
+                    Platform.flush()
 
             # Layer completion logs
             elif 'id' in data:
-                print('\r\033[K%s: %s' % (data['id'], data['status']), flush=True)
+                print('\r\033[K%s: %s' % (data['id'], data['status']))
+                Platform.flush()
 
             # Image logs
             else:
-                print('\r\033[K%s' % (data['status']), flush=True)
+                print('\r\033[K%s' % (data['status']))
+                Platform.flush()
 
         # Footer
-        print(' ', flush=True)
+        print(' ')
+        Platform.flush()
 
     # Remove
     def remove(self, container):

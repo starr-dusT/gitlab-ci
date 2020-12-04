@@ -94,11 +94,13 @@ def launcher(options, jobs):
                    'Success' if result else fg('red') + attr('bold') + 'Failure',
                    time_total_string, attr('reset')))
             print(' ')
-            print(' ', flush=True)
+            print(' ')
+            Platform.flush()
 
         # Simple job footer
         else:
-            print(' ', flush=True)
+            print(' ')
+            Platform.flush()
 
     # Result
     return bool(result)
@@ -159,7 +161,8 @@ def runner(options, job_data, last_result, jobs_status):
               (fg('green') + attr('bold'), fg('yellow') + attr('bold'), job_data['stage'],
                fg('yellow') + attr('bold'), job_data['name'], fg('cyan') + attr('bold'),
                image, engine_type, fg('green') + attr('bold'), attr('reset')))
-        print(' ', flush=True)
+        print(' ')
+        Platform.flush()
 
     # Acquire project paths
     path_project = Paths(options.path).resolve()
@@ -403,7 +406,8 @@ def runner(options, job_data, last_result, jobs_status):
                 ' %s> WARNING: %sUser interruption detected, stopping the container...%s'
                 % (fg('yellow') + attr('bold'), attr('reset') + attr('bold'),
                    attr('reset')))
-            print(' ', flush=True)
+            print(' ')
+            Platform.flush()
             __engine.stop(container, 0)
 
         # Register interruption handler
@@ -458,7 +462,8 @@ def runner(options, job_data, last_result, jobs_status):
                 % (fg('yellow') + attr('bold'), attr('reset') + attr('bold'), fg('cyan'),
                    container_exec, container_name, shell, attr('reset') + attr('bold'),
                    attr('reset')))
-            print(' ', flush=True)
+            print(' ')
+            Platform.flush()
 
         # Check container status
         success = __engine.wait(container, script_result)
@@ -536,13 +541,15 @@ def runner(options, job_data, last_result, jobs_status):
     time_string = time_minutes + time_seconds
 
     # Footer
-    print(' ', flush=True)
+    print(' ')
+    Platform.flush()
     if not quiet:
         print(' %s> Result: %s in %s%s%s' %
               (fg('yellow') + attr('bold'), fg('green') + attr('bold') +
                'Success' if result else fg('red') + attr('bold') + 'Failure', time_string,
                fg('cyan') + attr('bold') + job_details, attr('reset')))
-        print(' ', flush=True)
+        print(' ')
+        Platform.flush()
 
     # Allowed failure result
     if job_data['when'] not in ['on_failure', 'always'

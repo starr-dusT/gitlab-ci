@@ -131,7 +131,8 @@ def main():
     if options.help:
         print(' ')
         parser.print_help()
-        print(' ', flush=True)
+        print(' ')
+        Platform.flush()
         exit(0)
 
     # Instantiate settings
@@ -142,9 +143,9 @@ def main():
 
     # Version informations
     if options.version:
-        print(
-            '%s %s from %s (python %s)' %
-            (NAME, Version.get(), Version.path(), Version.python()), flush=True)
+        print('%s %s from %s (python %s)' %
+              (NAME, Version.get(), Version.path(), Version.python()))
+        Platform.flush()
         exit(0)
 
     # Check for current updates
@@ -183,7 +184,8 @@ def main():
         exit(1)
 
     # Header
-    print(' ', flush=True)
+    print(' ')
+    Platform.flush()
 
     # Dump configuration
     if options.dump:
@@ -240,7 +242,8 @@ def main():
         print(' %s%s: %sERROR: %sUnsupported non-interactive context%s...%s' %
               (fg('green') + attr('bold'), NAME, fg('red') + attr('bold'),
                attr('reset') + attr('bold'), hint, attr('reset')))
-        print(' ', flush=True)
+        print(' ')
+        Platform.flush()
 
     # Result
     if result:
