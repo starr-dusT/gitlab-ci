@@ -3,6 +3,7 @@
     "python.formatting.provider": "yapf",
     "telemetry.enableCrashReporter": false,
     "telemetry.enableTelemetry": false,
+    "terminal.enableAppInsights": false,
     "workbench.settings.enableNaturalLanguageSearch": false,
     "workbench.enableExperiments": false,
     "yaml.format.singleQuote": true
