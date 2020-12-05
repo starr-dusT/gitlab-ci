@@ -3,11 +3,11 @@
 # Standard libraries
 from configparser import ConfigParser
 
-# Components
-from ..system.platform import Platform
-
 # Modules libraries
 from colored import attr, fg
+
+# Components
+from ..system.platform import Platform
 
 # Settings class
 class Settings:
