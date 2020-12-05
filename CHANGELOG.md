@@ -1,4 +1,30 @@
 
+<a name="2.1.2"></a>
+## [2.1.2](https://gitlab.com/AdrianDC/gitlabci-local/compare/2.1.1...2.1.2) (2020-12-05)
+
+### Chore
+
+* tests: add 'images' test job for native and container jobs
+* types: refactor 'Dicts.find' without regex dependency
+* readme: add command usage entrypoint and shortcuts table
+* readme: drop the unreadable and old usage short help header
+* types: turn 'Paths' class methods into static methods
+
+### Docs
+
+* changelog: regenerate release tag changes history
+* resolve [#129](https://gitlab.com/AdrianDC/gitlabci-local/issues/129): document the settings configurations and goals
+
+### Feat
+
+* prepare [#129](https://gitlab.com/AdrianDC/gitlabci-local/issues/129): add '--settings' to show the path and contents
+
+### Fix
+
+* resolve [#130](https://gitlab.com/AdrianDC/gitlabci-local/issues/130): respect list selector single choice inputs
+* resolve [#129](https://gitlab.com/AdrianDC/gitlabci-local/issues/129): import modules libraries before components
+
+
 <a name="2.1.1"></a>
 ## [2.1.1](https://gitlab.com/AdrianDC/gitlabci-local/compare/2.1.0...2.1.1) (2020-12-05)
 
