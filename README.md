@@ -39,15 +39,6 @@ is the common and unique interface between GitLab CI and gitlabci-local.
 
 ## Usage
 
-```yml
-usage: gitlabci-local [-h] [--version] [--update-check] [-q] [-c CONFIGURATION] [-B] [-A] [-m]
-                      [-n NETWORK] [-p] [-e ENV] [-E ENGINE] [-H] [-R] [-t TAGS] [-r] [-S] [-v VOLUME]
-                      [-w WORKDIR] [--all] [--defaults] [--bash | --debug] [-d | -s | -l | --pull]
-                      [names [names ...]]
-
-gitlabci-local: Launch .gitlab-ci.yml jobs locally (aliases: gcil)
-```
-
 | positional arguments |                                                                                                           |
 | -------------------- | --------------------------------------------------------------------------------------------------------- |
 | names                | Names of specific jobs (or stages with --pipeline)<br>Regex names are supported unless --no-regex is used |
