@@ -139,7 +139,10 @@ def selector(options, jobs):
 
     # Parse jobs selection
     if answers and 'jobs' in answers:
-        options.names = answers['jobs']
+        if options.list:
+            options.names = [answers['jobs']]
+        else:
+            options.names = answers['jobs']
     else:
         options.names = []
 
