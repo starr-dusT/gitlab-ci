@@ -39,11 +39,16 @@ is the common and unique interface between GitLab CI and gitlabci-local.
 
 ## Usage
 
-| positional arguments |                                                                                                           |
+| Command        |                                     |
+| -------------- | ----------------------------------- |
+| gitlabci-local | Main entrypoint to this project     |
+| gcil           | Shortcut entrypoint to this project |
+
+| Positional arguments |                                                                                                           |
 | -------------------- | --------------------------------------------------------------------------------------------------------- |
 | names                | Names of specific jobs (or stages with --pipeline)<br>Regex names are supported unless --no-regex is used |
 
-| optional arguments   |                                                                                         |
+| Optional arguments   |                                                                                         |
 | -------------------- | --------------------------------------------------------------------------------------- |
 | -h, --help           | Show this help message                                                                  |
 | --version            | Show the current version                                                                |
