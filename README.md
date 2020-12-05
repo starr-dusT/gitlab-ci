@@ -183,6 +183,21 @@ gitlabci-local currently supports these container engines:
 
 ---
 
+## Userspace available settings
+
+gitlabci-local creates a `settings.ini` configuration file in a userspace folder.
+
+For example, it allows to change the default engines priority (`[engines] > engine`),  
+or to disable the automated updates daily check (`[updates] > enabled`)
+
+The `settings.ini` file location and contents can be shown with the following command:
+
+```yml
+gitlabci-local --setings
+```
+
+---
+
 ## Supported .gitlab-ci.yml features
 
 ```yml
