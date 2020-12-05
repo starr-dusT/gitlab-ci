@@ -57,7 +57,7 @@ variables:
       help: Configure the 10th variable
       type: json
       path: ./data.json
-      key: 'lists[1][2]'
+      key: 'lists[1][12]'
     VARIABLE_11:
       help: Configure the 11th variable
       type: json

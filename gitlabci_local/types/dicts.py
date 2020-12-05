@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 # Standard libraries
-from regex import match
+from re import findall, match
 
 # Dicts class
 class Dicts:
@@ -18,10 +18,10 @@ class Dicts:
         for query in queries:
 
             # Parse query to key and index
-            parse = match(r'([^\[]*)(\[(\d)\])*', query)
-            if parse.group(1) and parse.captures(3):
-                key = parse.group(1)
-                indexes = [int(value) for value in parse.captures(3)]
+            matches = match(r'([^\[]*)(\[.*\])*', query).groups()
+            if matches[0] and matches[1]:
+                key = matches[0]
+                indexes = [int(value) for value in findall(r'\[(\d+)\]*', matches[1])]
             else:
                 key = query
                 indexes = []
