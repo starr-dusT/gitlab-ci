@@ -1,4 +1,39 @@
 
+<a name="2.1.1"></a>
+## [2.1.1](https://gitlab.com/AdrianDC/gitlabci-local/compare/2.1.0...2.1.1) (2020-12-05)
+
+### Chore
+
+* vscode: disable terminal app insights telemetry
+* vscode: ensure YAML use single quotes formatting
+* vscode: add recommended VSCode extensions list
+* vscode: always format files upon editor saves
+* vscode: configure VSCode telemetry and privacy settings
+
+### Docs
+
+* changelog: regenerate release tag changes history
+* prepare [#118](https://gitlab.com/AdrianDC/gitlabci-local/issues/118): add macOS references in README and TEST
+
+### Feat
+
+* implement [#128](https://gitlab.com/AdrianDC/gitlabci-local/issues/128): store and read default engines in settings
+* resolve [#122](https://gitlab.com/AdrianDC/gitlabci-local/issues/122): add CI_JOB_NAME and CI_PROJECT_DIR definitions
+* prepare [#122](https://gitlab.com/AdrianDC/gitlabci-local/issues/122): allow expanding CI_LOCAL in variables values
+* prepare [#118](https://gitlab.com/AdrianDC/gitlabci-local/issues/118): support macOS paths, userspace and real paths
+* prepare [#118](https://gitlab.com/AdrianDC/gitlabci-local/issues/118): add Platform.IS_MAC_OS platform detection
+* prepare [#118](https://gitlab.com/AdrianDC/gitlabci-local/issues/118): restrict Docker sockets mounts to Linux only
+
+### Fix
+
+* prepare [#121](https://gitlab.com/AdrianDC/gitlabci-local/issues/121): isolate print flushes and allow only on TTY out
+* resolve [#127](https://gitlab.com/AdrianDC/gitlabci-local/issues/127): evaluate host project directories correctly
+
+### Tests
+
+* validate [#122](https://gitlab.com/AdrianDC/gitlabci-local/issues/122): create specific test cases for CI projects
+
+
 <a name="2.1.0"></a>
 ## [2.1.0](https://gitlab.com/AdrianDC/gitlabci-local/compare/2.0.1...2.1.0) (2020-12-03)
 
