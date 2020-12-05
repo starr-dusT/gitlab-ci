@@ -13,9 +13,9 @@ The following engines are available :
 
 ## Test on macOS
 
-The following tools are required for macOS hosts tests :
+The following tools are required for macOS hosts tests (example: 10.14, 10.15, 11.0, ...):
 
-- **PyPI :** https://pip.pypa.io/en/stable/installing/
+- **Python :** Type `python3` in the Terminal app and install automatically
 
 The following engines are available :
 

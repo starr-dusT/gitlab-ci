@@ -165,10 +165,10 @@ gitlabci-local currently supports these container engines:
 
 ## Supported macOS systems
 
-| Engines        | macOS |
-|:--------------:|:-----:|
-| Native (shell) | **✓** |
-| Docker         | **?** |
+| Engines               | macOS (10.14, 10.15, 11.0, ...) |
+|:---------------------:|:-------------------------------:|
+| Native (shell)        | **✓**                           |
+| Docker (as&nbsp;user) | **?**                           |
 
 ---
 
