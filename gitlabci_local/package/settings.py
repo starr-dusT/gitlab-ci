@@ -6,6 +6,9 @@ from configparser import ConfigParser
 # Components
 from ..system.platform import Platform
 
+# Modules libraries
+from colored import attr, fg
+
 # Settings class
 class Settings:
 
@@ -72,3 +75,18 @@ class Settings:
 
         # Write updated settings
         self.__write()
+
+    # Show
+    def show(self):
+
+        # Settings file path
+        print(' ')
+        print(' %s===[ %sSettings: %s%s %s]===%s' %
+              (fg('green') + attr('bold'), fg('yellow') + attr('bold'), attr('reset') +
+               attr('bold'), self.__path, fg('green') + attr('bold'), attr('reset')))
+        print(' ')
+
+        # Settings file contents
+        with open(self.__path, 'r') as data:
+            print(data.read())
+        Platform.flush()

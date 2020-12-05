@@ -50,6 +50,8 @@ def main():
                         help='Show the current version')
     parser.add_argument('--update-check', dest='update_check', action='store_true',
                         help='Check for newer package updates')
+    parser.add_argument('--settings', dest='settings', action='store_true',
+                        help='Show the current settings path and contents')
 
     # Arguments optional definitions
     parser.add_argument('-q', '--quiet', dest='quiet', action='store_true',
@@ -139,6 +141,11 @@ def main():
 
     # Instantiate settings
     settings = Settings(NAME)
+
+    # Settings informations
+    if options.settings:
+        settings.show()
+        exit(0)
 
     # Instantiate updates
     updates = Updates(NAME, settings)

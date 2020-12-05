@@ -39,7 +39,7 @@ is the common and unique interface between GitLab CI and gitlabci-local.
 
 ## Usage
 
-```shell
+```yml
 usage: gitlabci-local [-h] [--version] [--update-check] [-q] [-c CONFIGURATION] [-B] [-A] [-m]
                       [-n NETWORK] [-p] [-e ENV] [-E ENGINE] [-H] [-R] [-t TAGS] [-r] [-S] [-v VOLUME]
                       [-w WORKDIR] [--all] [--defaults] [--bash | --debug] [-d | -s | -l | --pull]
@@ -57,6 +57,7 @@ gitlabci-local: Launch .gitlab-ci.yml jobs locally (aliases: gcil)
 | -h, --help           | Show this help message                                                                  |
 | --version            | Show the current version                                                                |
 | --update-check       | Check for newer package updates                                                         |
+| --settings           | Show the current settings path and contents                                             |
 | -q, --quiet          | Hide jobs execution context                                                             |
 | -c CONFIGURATION     | Path to the .gitlab-ci.yml configuration file or folder                                 |
 | -B, --no-before      | Disable before_script executions                                                        |
