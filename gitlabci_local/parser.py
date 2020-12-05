@@ -162,8 +162,9 @@ def parser(options, data, environment):
 
         # Parse local engine
         if 'engine' in local:
-            if not options.engine:
+            if options.engine_default:
                 options.engine = local['engine']
+                options.engine_default = False
 
         # Parse local env
         if 'env' in local:

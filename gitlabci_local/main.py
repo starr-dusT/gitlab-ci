@@ -75,6 +75,8 @@ def main():
         '-E', dest='engine',
         help='Force a specific engine (or define CI_LOCAL_ENGINE)\nDefault list: %s' %
         (','.join(engine_supported())))
+    parser.add_argument('--engine-default', dest='engine_default', action='store_true',
+                        help=SUPPRESS)
     parser.add_argument('-H', '--host', dest='host', action='store_true',
                         help='Run all jobs on the host rather than containers')
     parser.add_argument('-R', '--no-regex', dest='no_regex', action='store_true',
@@ -164,8 +166,16 @@ def main():
     # Prepare engine
     if not options.engine and 'CI_LOCAL_ENGINE' in environ:
         options.engine = environ['CI_LOCAL_ENGINE']
+        options.engine_default = True
     elif options.engine:
         environ['CI_LOCAL_ENGINE'] = options.engine
+        options.engine_default = False
+    else:
+        options.engine = settings.get('engines', 'engine')
+        options.engine_default = True
+        if not options.engine:
+            options.engine = ','.join(engine_supported())
+            settings.set('engines', 'engine', options.engine)
 
     # Prepare paths
     options.configuration = Path(options.configuration).resolve()
