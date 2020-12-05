@@ -165,33 +165,33 @@ def runner(options, job_data, last_result, jobs_status):
         Platform.flush()
 
     # Acquire project paths
-    path_project = Paths(options.path).resolve()
-    path_parent = Paths(Path(options.path).parent).resolve()
+    path_project = Paths.resolve(options.path)
+    path_parent = Paths.resolve(Path(options.path).parent)
 
     # Acquire project targets
     if host or real_paths:
         target_project = path_project
         target_parent = path_parent
     else:
-        target_project = Paths(Platform.BUILDS_DIR / Path(path_project).name).get()
-        target_parent = Paths(Platform.BUILDS_DIR).get()
+        target_project = Paths.get(Platform.BUILDS_DIR / Path(path_project).name)
+        target_parent = Paths.get(Platform.BUILDS_DIR)
 
     # Prepare working directory
     if options.workdir:
         if options.workdir.startswith('.local:'):
             workdir = options.workdir[len('.local:'):]
             if host or real_paths:
-                target_workdir = Paths((options.path / workdir).resolve()).get()
+                target_workdir = Paths.get((options.path / workdir).resolve())
             else:
-                target_workdir = Paths(PurePosixPath(target_project) / workdir).get()
+                target_workdir = Paths.get(PurePosixPath(target_project) / workdir)
         else:
             if host or real_paths:
-                target_workdir = Paths((Path('.') / options.workdir).resolve()).get()
+                target_workdir = Paths.get((Path('.') / options.workdir).resolve())
             else:
-                target_workdir = Paths(
-                    PurePosixPath(target_project) / options.workdir).get()
+                target_workdir = Paths.get(
+                    PurePosixPath(target_project) / options.workdir)
     elif host or real_paths:
-        target_workdir = Paths(options.path).get()
+        target_workdir = Paths.get(options.path)
     else:
         target_workdir = target_project
 
@@ -221,7 +221,7 @@ def runner(options, job_data, last_result, jobs_status):
     # Prepare temporary script
     script_file = NamedTemporaryFile(delete=False, dir=path_parent, mode='wt',
                                      newline='\n', prefix='.tmp.entrypoint.')
-    target_file = Paths(Path(target_parent) / Path(script_file.name).name).get()
+    target_file = Paths.get(Path(target_parent) / Path(script_file.name).name)
 
     # Prepare execution context
     script_file.write('#!/bin/sh')
@@ -365,20 +365,20 @@ def runner(options, job_data, last_result, jobs_status):
 
                 # Parse HOST:TARGET:MODE
                 if len(volume_nodes) == 3:
-                    volume_host = Paths(cwd / expandvars(volume_nodes[0])).resolve()
+                    volume_host = Paths.resolve(cwd / expandvars(volume_nodes[0]))
                     volume_target = expandvars(volume_nodes[1])
                     volume_mode = volume_nodes[2]
 
                 # Parse HOST:TARGET
                 elif len(volume_nodes) == 2:
-                    volume_host = Paths(cwd / expandvars(volume_nodes[0])).resolve()
+                    volume_host = Paths.resolve(cwd / expandvars(volume_nodes[0]))
                     volume_target = expandvars(volume_nodes[1])
                     volume_mode = 'rw'
 
                 # Parse VOLUME
                 else:
-                    volume_host = Paths(cwd / expandvars(volume)).resolve()
-                    volume_target = Paths(cwd / expandvars(volume)).resolve()
+                    volume_host = Paths.resolve(cwd / expandvars(volume))
+                    volume_target = Paths.resolve(cwd / expandvars(volume))
                     volume_mode = 'rw'
 
                 # Append volume mounts

@@ -9,27 +9,22 @@ from ..system.platform import Platform
 # Paths class
 class Paths:
 
-    # Members
-    __path = None
-
-    # Constructor
-    def __init__(self, data):
-        self.__path = data
-
     # Getter
-    def get(self):
+    @staticmethod
+    def get(data):
 
         # POSIX path
-        path = PurePosixPath(self.__path)
+        path = PurePosixPath(data)
 
         # Result
         return str(path)
 
     # Resolver
-    def resolve(self):
+    @staticmethod
+    def resolve(data):
 
         # Resolve path
-        path = Path(self.__path).resolve()
+        path = Path(data).resolve()
 
         # Linux, macOS or Windows path
         if Platform.IS_LINUX or Platform.IS_MAC_OS or Platform.IS_WINDOWS:
