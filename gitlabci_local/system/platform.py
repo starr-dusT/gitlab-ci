@@ -2,6 +2,7 @@
 
 # Standard libraries
 from os import environ, sep
+from os.path import expanduser
 from pathlib import Path, PurePosixPath
 from sys import platform, stdin, stdout
 
@@ -36,13 +37,24 @@ class Platform:
     @staticmethod
     def userspace(name):
 
+        # Variables
+        home = None
+
+        # Elevated home
+        if Platform.IS_USER_SUDO:
+            home = Path(expanduser('~%s' % (Platform.USER_SUDO)))
+
+        # Default home
+        if not home or not home.is_dir():
+            home = Path.home()
+
         # Windows userspace
         if Platform.IS_WINDOWS:
-            return Path.home() / 'AppData' / 'Local' / name
+            return home / 'AppData' / 'Local' / name
 
         # macOS userspace
         if Platform.IS_MAC_OS:
-            return Path.home() / 'Library' / 'Preferences' / name
+            return home / 'Library' / 'Preferences' / name
 
         # Linux userspace
-        return Path.home() / '.config' / name
+        return home / '.config' / name
