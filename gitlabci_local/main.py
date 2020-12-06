@@ -73,8 +73,8 @@ def main():
                         help='Define VARIABLE=value, pass VARIABLE or ENV file')
     parser.add_argument(
         '-E', dest='engine',
-        help='Force a specific engine (or define CI_LOCAL_ENGINE)\nDefault list: %s' %
-        (','.join(engine_supported())))
+        help='Force a specific engine (or define %s)\nDefault list: %s' %
+        (Bundle.ENV_ENGINE, ','.join(engine_supported())))
     parser.add_argument('--engine-default', dest='engine_default', action='store_true',
                         help=SUPPRESS)
     parser.add_argument('-H', '--host', dest='host', action='store_true',
@@ -166,11 +166,11 @@ def main():
         options.configuration = Path(options.configuration) / Bundle.CONFIGURATION
 
     # Prepare engine
-    if not options.engine and 'CI_LOCAL_ENGINE' in environ:
-        options.engine = environ['CI_LOCAL_ENGINE']
+    if not options.engine and Bundle.ENV_ENGINE in environ:
+        options.engine = environ[Bundle.ENV_ENGINE]
         options.engine_default = True
     elif options.engine:
-        environ['CI_LOCAL_ENGINE'] = options.engine
+        environ[Bundle.ENV_ENGINE] = options.engine
         options.engine_default = False
     else:
         options.engine = settings.get('engines', 'engine')
@@ -237,7 +237,7 @@ def main():
     else:
 
         # Windows WinPTY compatibility
-        if Platform.IS_WINDOWS and not 'CI_LOCAL_WINPTY' in environ:
+        if Platform.IS_WINDOWS and not Bundle.ENV_WINPTY in environ:
             hint = ' (on Windows, winpty is required)'
             try:
                 winpty = check_output(['where', 'winpty.exe'], stderr=DEVNULL).strip()
@@ -245,7 +245,7 @@ def main():
                 pass
             else:
                 _environ = dict(environ)
-                _environ['CI_LOCAL_WINPTY'] = 'true'
+                _environ[Bundle.ENV_WINPTY] = 'true'
                 process = Popen([winpty] + argv, env=_environ)
                 process.wait()
                 exit(process.returncode)

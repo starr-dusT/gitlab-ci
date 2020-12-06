@@ -14,3 +14,9 @@ class Bundle:
 
     # Sources
     REPOSITORY = 'https://gitlab.com/AdrianDC/gitlabci-local'
+
+    # Environment
+    ENV_ENGINE = 'CI_LOCAL_ENGINE'
+    ENV_UPDATES_DISABLE = 'CI_LOCAL_UPDATES_DISABLE'
+    ENV_UPDATES_OFFLINE = 'CI_LOCAL_UPDATES_OFFLINE'
+    ENV_WINPTY = 'CI_LOCAL_WINPTY'

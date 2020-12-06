@@ -36,13 +36,13 @@ class Updates:
             self.__settings.set('updates', 'enabled', enabled)
 
         # Check enabled
-        self.__enabled = int(enabled) == 1 and 'CI_LOCAL_UPDATES_DISABLE' not in environ
+        self.__enabled = int(enabled) == 1 and Bundle.ENV_UPDATES_DISABLE not in environ
 
     # Checker
     def check(self, older=False):
 
         # Check if not offline
-        if not 'CI_LOCAL_UPDATES_OFFLINE' in environ:
+        if not Bundle.ENV_UPDATES_OFFLINE in environ:
 
             # Check for updates
             check = UpdateChecker(bypass_cache=True).check(
