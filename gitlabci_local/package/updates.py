@@ -2,7 +2,7 @@
 
 # Standard libraries
 from os import environ
-from time import localtime, sleep, strftime, time
+from time import localtime, strftime, time
 from update_checker import pretty_date, UpdateChecker
 
 # Modules libraries
@@ -38,12 +38,12 @@ class Updates:
         # Check enabled
         self.__enabled = int(enabled) == 1 and 'CI_LOCAL_UPDATES_DISABLE' not in environ
 
-    # Internal checker
-    def __check(self, updates=True):
+    # Checker
+    def check(self, older=False):
 
         # Check for updates
         check = UpdateChecker(bypass_cache=True).check(
-            self.__name, self.__version if updates else '0.0.0')
+            self.__name, '0.0.0' if older else self.__version)
         if check:
 
             # Show newer updates
@@ -57,8 +57,8 @@ class Updates:
             Platform.flush()
             return True
 
-        # Failure upon check
-        if not updates:
+        # Older offline failure
+        if older:
 
             # Show current updates
             print(' ')
@@ -72,20 +72,6 @@ class Updates:
 
         # Result
         return False
-
-    # Checker
-    def check(self, internal=True):
-
-        # Check for updates
-        if self.__check():
-
-            # Delay user prompt
-            if internal:
-                sleep(3)
-
-        # Show current version
-        elif not internal:
-            self.__check(False)
 
     # Daily
     def daily(self):

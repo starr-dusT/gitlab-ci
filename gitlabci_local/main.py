@@ -159,12 +159,9 @@ def main():
 
     # Check for current updates
     if options.update_check:
-        updates.check(False)
+        if not updates.check():
+            updates.check(older=True)
         exit(0)
-
-    # Check for daily updates
-    if updates.enabled() and updates.daily():
-        updates.check(True)
 
     # Prepare configuration
     if Path(options.configuration).is_dir():
@@ -261,6 +258,10 @@ def main():
                attr('reset') + attr('bold'), hint, attr('reset')))
         print(' ')
         Platform.flush()
+
+    # Check for daily updates
+    if updates.enabled() and updates.daily():
+        updates.check()
 
     # Result
     if result:
