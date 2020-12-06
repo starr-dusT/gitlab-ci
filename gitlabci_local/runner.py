@@ -10,11 +10,9 @@ from sys import stdout
 from tempfile import NamedTemporaryFile
 from time import sleep, time
 
-# Modules libraries
-from colored import attr, fg
-
 # Components
 from .engines.engine import Engine
+from .prints.colors import Colors
 from .system.platform import Platform
 from .types.lists import Lists
 from .types.paths import Paths
@@ -90,9 +88,8 @@ def launcher(options, jobs):
 
             # Final footer
             print(' %s> Pipeline: %s in %s total%s' %
-                  (fg('yellow') + attr('bold'), attr('reset') + attr('bold') +
-                   'Success' if result else fg('red') + attr('bold') + 'Failure',
-                   time_total_string, attr('reset')))
+                  (Colors.YELLOW, Colors.BOLD + 'Success' if result else Colors.RED +
+                   'Failure', time_total_string, Colors.RESET))
             print(' ')
             print(' ')
             Platform.flush()
@@ -158,9 +155,9 @@ def runner(options, job_data, last_result, jobs_status):
         if jobs_status['jobs_count'] > 1:
             print(' ')
         print(' %s===[ %s%s: %s%s %s(%s, %s) %s]===%s' %
-              (fg('green') + attr('bold'), fg('yellow') + attr('bold'), job_data['stage'],
-               fg('yellow') + attr('bold'), job_data['name'], fg('cyan') + attr('bold'),
-               image, engine_type, fg('green') + attr('bold'), attr('reset')))
+              (Colors.GREEN, Colors.YELLOW, job_data['stage'], Colors.YELLOW,
+               job_data['name'], Colors.CYAN, image, engine_type, Colors.GREEN,
+               Colors.RESET))
         print(' ')
         Platform.flush()
 
@@ -404,8 +401,7 @@ def runner(options, job_data, last_result, jobs_status):
             print(' ')
             print(
                 ' %s> WARNING: %sUser interruption detected, stopping the container...%s'
-                % (fg('yellow') + attr('bold'), attr('reset') + attr('bold'),
-                   attr('reset')))
+                % (Colors.YELLOW, Colors.BOLD, Colors.RESET))
             print(' ')
             Platform.flush()
             __engine.stop(container, 0)
@@ -459,9 +455,8 @@ def runner(options, job_data, last_result, jobs_status):
             print(' ')
             print(
                 ' %s> INFORMATION: %sUse \'%s%s %s %s%s\' commands for debugging. Interrupt with Ctrl+C...%s'
-                % (fg('yellow') + attr('bold'), attr('reset') + attr('bold'), fg('cyan'),
-                   container_exec, container_name, shell, attr('reset') + attr('bold'),
-                   attr('reset')))
+                % (Colors.YELLOW, Colors.BOLD, Colors.CYAN, container_exec,
+                   container_name, shell, Colors.BOLD, Colors.RESET))
             print(' ')
             Platform.flush()
 
@@ -545,9 +540,8 @@ def runner(options, job_data, last_result, jobs_status):
     Platform.flush()
     if not quiet:
         print(' %s> Result: %s in %s%s%s' %
-              (fg('yellow') + attr('bold'), fg('green') + attr('bold') +
-               'Success' if result else fg('red') + attr('bold') + 'Failure', time_string,
-               fg('cyan') + attr('bold') + job_details, attr('reset')))
+              (Colors.YELLOW, Colors.GREEN + 'Success' if result else Colors.RED +
+               'Failure', time_string, Colors.CYAN + job_details, Colors.RESET))
         print(' ')
         Platform.flush()
 

@@ -10,12 +10,12 @@ from PyInquirer import style_from_dict as PyInquirer_style_from_dict
 from PyInquirer import Token as PyInquirer_Token
 
 # Modules libraries
-from colored import attr, fg
 from oyaml import safe_load as yaml_safe_load
 
 # Components
 from .package.names import NAME
 from .package.patcher import Patcher
+from .prints.colors import Colors
 from .runner import launcher
 from .system.platform import Platform
 from .types.dicts import Dicts
@@ -133,8 +133,7 @@ def selector(options, jobs):
         answers = PyInquirer_prompt(selection_prompt, style=__SelectorTheme)
     else:
         print(' %s%s: %sERROR: %sNo jobs found for selection%s' %
-              (fg('green') + attr('bold'), NAME, fg('red') + attr('bold'),
-               attr('reset') + attr('bold'), attr('reset')))
+              (Colors.GREEN, NAME, Colors.RED, Colors.BOLD, Colors.RESET))
         answers = None
 
     # Parse jobs selection
@@ -170,8 +169,7 @@ def configurator(options, configurations):
     # Header
     print(' ')
     print(' %s===[ %sConfigurations menu %s]===%s' %
-          (fg('green') + attr('bold'), fg('yellow') + attr('bold'),
-           fg('green') + attr('bold'), attr('reset')))
+          (Colors.GREEN, Colors.YELLOW, Colors.GREEN, Colors.RESET))
     print(' ')
     Platform.flush()
 
@@ -293,8 +291,8 @@ def configurator(options, configurations):
         else:
             print(' ')
             print(' %s%s: %sERROR: %sUnsupported configuration type "%s"...%s' %
-                  (fg('green') + attr('bold'), NAME, fg('red') + attr('bold'),
-                   attr('reset') + attr('bold'), variable_type, attr('reset')))
+                  (Colors.GREEN, NAME, Colors.RED, Colors.BOLD, variable_type,
+                   Colors.RESET))
             print(' ')
             Platform.flush()
 
@@ -306,9 +304,8 @@ def configurator(options, configurations):
         # Request configuration selection
         if not Platform.IS_TTY_STDIN or variable_set or options.defaults:
             result[variable] = str(variable_default)
-            print(' %s%s  %s%s%s' %
-                  (fg('yellow') + attr('bold'), configuration_prompt[0]['message'],
-                   fg('cyan') + attr('bold'), result[variable], attr('reset')))
+            print(' %s%s  %s%s%s' % (Colors.YELLOW, configuration_prompt[0]['message'],
+                                     Colors.CYAN, result[variable], Colors.RESET))
         else:
             answers = PyInquirer_prompt(configuration_prompt, style=__ConfigurationsTheme)
             if not answers:

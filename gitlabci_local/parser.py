@@ -8,7 +8,6 @@ from pathlib import Path
 from sys import exc_info
 
 # Modules libraries
-from colored import attr, fg
 from dotenv import dotenv_values
 from oyaml import safe_load as yaml_safe_load
 from oyaml import YAMLError
@@ -16,6 +15,7 @@ from oyaml import YAMLError
 # Components
 from .menu import configurator
 from .package.names import NAME
+from .prints.colors import Colors
 
 # Reader
 def reader(options):
@@ -74,16 +74,14 @@ def reader(options):
     except YAMLError as exc:
         print(' ')
         print(' %s%s: %sERROR: %s%s%s' %
-              (fg('green') + attr('bold'), NAME, fg('red') + attr('bold'),
-               attr('reset') + attr('bold'), exc, attr('reset')))
+              (Colors.GREEN, NAME, Colors.RED, Colors.BOLD, exc, Colors.RESET))
         print(' ')
     except KeyboardInterrupt:
         pass
     except:
         print(' ')
-        print(' %s%s: %sERROR: %s%s%s' %
-              (fg('green') + attr('bold'), NAME, fg('red') + attr('bold'),
-               attr('reset') + attr('bold'), str(exc_info()[1]), attr('reset')))
+        print(' %s%s: %sERROR: %s%s%s' % (Colors.GREEN, NAME, Colors.RED, Colors.BOLD,
+                                          str(exc_info()[1]), Colors.RESET))
         print(' ')
 
     # Failure

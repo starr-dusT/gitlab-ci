@@ -5,10 +5,8 @@ from os import environ
 from time import localtime, strftime, time
 from update_checker import pretty_date, UpdateChecker
 
-# Modules libraries
-from colored import attr, fg
-
 # Components
+from ..prints.colors import Colors
 from ..system.platform import Platform
 from .version import Version
 
@@ -49,10 +47,9 @@ class Updates:
             # Show newer updates
             print(' ')
             print(' %sINFO: %s%s %s was released%s %s(current version is %s)%s' %
-                  (fg('yellow') + attr('bold'), fg('green') + attr('bold'), self.__name,
-                   check.available_version,
+                  (Colors.YELLOW, Colors.GREEN, self.__name, check.available_version,
                    ' ' + pretty_date(check.release_date) if check.release_date else '',
-                   attr('reset') + attr('bold'), self.__version, attr('reset')))
+                   Colors.BOLD, self.__version, Colors.RESET))
             print(' ')
             Platform.flush()
             return True
@@ -64,8 +61,8 @@ class Updates:
             print(' ')
             print(
                 ' %sWARNING: %s%s was not found, network might be down %s(current version is %s)%s'
-                % (fg('yellow') + attr('bold'), fg('red') + attr('bold'), self.__name,
-                   attr('reset') + attr('bold'), self.__version, attr('reset')))
+                % (Colors.YELLOW, Colors.RED, self.__name, Colors.BOLD, self.__version,
+                   Colors.RESET))
             print(' ')
             Platform.flush()
             return True

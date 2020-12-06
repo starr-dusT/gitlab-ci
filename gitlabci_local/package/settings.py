@@ -3,10 +3,8 @@
 # Standard libraries
 from configparser import ConfigParser
 
-# Modules libraries
-from colored import attr, fg
-
 # Components
+from ..prints.colors import Colors
 from ..system.platform import Platform
 
 # Settings class
@@ -82,8 +80,8 @@ class Settings:
         # Settings file path
         print(' ')
         print(' %s===[ %sSettings: %s%s %s]===%s' %
-              (fg('green') + attr('bold'), fg('yellow') + attr('bold'), attr('reset') +
-               attr('bold'), self.__path, fg('green') + attr('bold'), attr('reset')))
+              (Colors.GREEN, Colors.YELLOW, Colors.BOLD, self.__path, Colors.GREEN,
+               Colors.RESET))
         print(' ')
 
         # Settings file contents

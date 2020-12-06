@@ -7,9 +7,6 @@ from pathlib import Path
 from subprocess import check_output, DEVNULL, Popen
 from sys import argv, exit
 
-# Modules libraries
-from colored import attr, fg
-
 # Components
 from .dumper import dumper
 from .menu import selector
@@ -19,6 +16,7 @@ from .package.settings import Settings
 from .package.updates import Updates
 from .package.version import Version
 from .parser import reader
+from .prints.colors import Colors
 from .puller import puller
 from .runner import launcher
 from .system.platform import Platform
@@ -254,8 +252,7 @@ def main():
 
         # Unsupported interactive terminal
         print(' %s%s: %sERROR: %sUnsupported non-interactive context%s...%s' %
-              (fg('green') + attr('bold'), NAME, fg('red') + attr('bold'),
-               attr('reset') + attr('bold'), hint, attr('reset')))
+              (Colors.GREEN, NAME, Colors.RED, Colors.BOLD, hint, Colors.RESET))
         print(' ')
         Platform.flush()
 
