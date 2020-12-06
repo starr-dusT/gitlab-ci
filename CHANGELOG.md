@@ -1,4 +1,32 @@
 
+<a name="2.2.0"></a>
+## [2.2.0](https://gitlab.com/AdrianDC/gitlabci-local/compare/2.1.2...2.2.0) (2020-12-07)
+
+### Chore
+
+* gitlab-ci: implement 'gitlab-release' to fill tags releases
+* changelog: create a CHANGELOG version description extractor
+* resolve [#134](https://gitlab.com/AdrianDC/gitlabci-local/issues/134): isolate environment variables inside 'Bundle'
+* resolve [#134](https://gitlab.com/AdrianDC/gitlabci-local/issues/134): isolate package names to a 'Bundle' class
+* prepare [#131](https://gitlab.com/AdrianDC/gitlabci-local/issues/131): add 'REPOSITORY' GitLab URL link constant
+* implement [#133](https://gitlab.com/AdrianDC/gitlabci-local/issues/133): isolate all colors attributes into a class
+* readme: add 'native' local jobs as supported engine
+
+### Docs
+
+* changelog: regenerate release tag changes history
+* prepare [#118](https://gitlab.com/AdrianDC/gitlabci-local/issues/118): add supported macOS versions and update TEST
+
+### Feat
+
+* implement [#131](https://gitlab.com/AdrianDC/gitlabci-local/issues/131): refactor the updates message with hints
+* prepare [#131](https://gitlab.com/AdrianDC/gitlabci-local/issues/131): create 'Boxes' class to create boxed messages
+* implement [#133](https://gitlab.com/AdrianDC/gitlabci-local/issues/133): add 'center' and 'strip' string manipulators
+* implement [#131](https://gitlab.com/AdrianDC/gitlabci-local/issues/131): check for updates without delay upon exit
+* implement [#132](https://gitlab.com/AdrianDC/gitlabci-local/issues/132): use the original userspace if using sudo
+* prepare [#132](https://gitlab.com/AdrianDC/gitlabci-local/issues/132): provide IS_USER_SUDO and USER_SUDO constants
+
+
 <a name="2.1.2"></a>
 ## [2.1.2](https://gitlab.com/AdrianDC/gitlabci-local/compare/2.1.1...2.1.2) (2020-12-05)
 
