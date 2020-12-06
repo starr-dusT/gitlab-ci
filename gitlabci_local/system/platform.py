@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 # Standard libraries
-from os import sep
+from os import environ, sep
 from pathlib import Path, PurePosixPath
 from sys import platform, stdin, stdout
 
@@ -22,6 +22,10 @@ class Platform:
     # TTYs
     IS_TTY_STDIN = stdin.isatty() and stdin.encoding != 'cp1252'
     IS_TTY_STDOUT = stdout.isatty()
+
+    # Users
+    IS_USER_SUDO = 'SUDO_USER' in environ
+    USER_SUDO = environ['SUDO_USER'] if IS_USER_SUDO else ''
 
     # Flush
     @staticmethod

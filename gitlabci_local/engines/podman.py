@@ -51,7 +51,7 @@ class Podman:
 
         # Exec command
         if command == 'exec':
-            if 'SUDO_USER' in environ:
+            if Platform.IS_USER_SUDO:
                 return 'sudo podman exec -it'
             return 'podman exec -it'
 
