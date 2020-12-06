@@ -6,6 +6,8 @@ from time import localtime, strftime, time
 from update_checker import pretty_date, UpdateChecker
 
 # Components
+from ..package.names import REPOSITORY
+from ..prints.boxes import Boxes
 from ..prints.colors import Colors
 from ..system.platform import Platform
 from .version import Version
@@ -39,32 +41,24 @@ class Updates:
     # Checker
     def check(self, older=False):
 
-        # Check for updates
-        check = UpdateChecker(bypass_cache=True).check(
-            self.__name, '0.0.0' if older else self.__version)
-        if check:
+        # Check if not offline
+        if not 'CI_LOCAL_UPDATES_OFFLINE' in environ:
 
-            # Show newer updates
-            print(' ')
-            print(' %sINFO: %s%s %s was released%s %s(current version is %s)%s' %
-                  (Colors.YELLOW, Colors.GREEN, self.__name, check.available_version,
-                   ' ' + pretty_date(check.release_date) if check.release_date else '',
-                   Colors.BOLD, self.__version, Colors.RESET))
-            print(' ')
-            Platform.flush()
-            return True
+            # Check for updates
+            check = UpdateChecker(bypass_cache=True).check(
+                self.__name, '0.0.0' if older else self.__version)
+            if check:
+
+                # Show updates message
+                self.message(older=older, available=check.available_version,
+                             date=check.release_date)
+                return True
 
         # Older offline failure
         if older:
 
-            # Show current updates
-            print(' ')
-            print(
-                ' %sWARNING: %s%s was not found, network might be down %s(current version is %s)%s'
-                % (Colors.YELLOW, Colors.RED, self.__name, Colors.BOLD, self.__version,
-                   Colors.RESET))
-            print(' ')
-            Platform.flush()
+            # Show offline message
+            self.message(offline=True)
             return True
 
         # Result
@@ -89,3 +83,49 @@ class Updates:
     # Enabled
     def enabled(self):
         return self.__enabled
+
+    # Message
+    def message(self, offline=False, older=False, available=None, date=None):
+
+        # Create message box
+        box = Boxes()
+
+        # Version message prefix
+        version_prefix = '%sVersion: %s%s %s%s' % (
+            Colors.YELLOW_LIGHT, Colors.BOLD, self.__name, Colors.RED
+            if not offline and available and not older else Colors.GREEN, self.__version)
+
+        # Offline version message
+        if offline:
+            box.add('%s %snot found, network might be down' % ( #
+                version_prefix, Colors.BOLD))
+
+        # Updated version message
+        elif available == self.__version:
+            box.add('%s %swas released %s%s!' % ( #
+                version_prefix, Colors.BOLD, pretty_date(date), Colors.BOLD))
+
+        # Older version message
+        elif older:
+            box.add('%s %snewer than %s%s %sfrom %s%s!' % ( #
+                version_prefix, Colors.BOLD, Colors.RED, available, Colors.BOLD,
+                pretty_date(date), Colors.BOLD))
+
+        # Newer version message
+        else:
+            box.add('%s %supdated %s to %s%s%s!' % ( #
+                version_prefix, Colors.BOLD, pretty_date(date), Colors.GREEN, available,
+                Colors.BOLD))
+
+        # Changelog message
+        box.add('%sChangelog: %s%s/-/tags' % ( #
+            Colors.YELLOW_LIGHT, Colors.CYAN, REPOSITORY))
+
+        # Update message
+        if available:
+            box.add('%sUpdate: %sRun %s%spip3 install -U %s' % ( #
+                Colors.YELLOW_LIGHT, Colors.BOLD, Colors.GREEN,
+                'sudo ' if Platform.IS_USER_SUDO else '', self.__name))
+
+        # Print message box
+        box.print()
