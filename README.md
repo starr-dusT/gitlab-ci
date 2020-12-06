@@ -298,8 +298,10 @@ JOB_NAME:
 
 - [.gitlab-ci.yml](https://docs.gitlab.com/ee/ci/yaml/): GitLab CI/CD Pipeline Configuration Reference
 - [git-chglog](https://github.com/git-chglog/git-chglog): CHANGELOG generator
+- [gitlab-release](https://pypi.org/project/gitlab-release/): Utility for publishing on GitLab
 - [OCI](https://opencontainers.org): Open Container Initiative
 - [peek](https://github.com/phw/peek): Simple GIF screen recorder
 - [pexpect](https://pypi.org/project/pexpect/): Interactive console applications controller
 - [PyPI](https://pypi.org/): The Python Package Index
+- [twine](https://pypi.org/project/twine/): Utility for publishing on PyPI
 - [winpty](https://github.com/rprichard/winpty): Windows PTY interface wrapper

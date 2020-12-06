@@ -339,7 +339,11 @@ stages:
     - if [ ! "${CI_COMMIT_REF_PROTECTED}" = 'true' ]; then echo '[ERROR] Please protect this tag...'; exit 1; fi
     - pip3 install -q -r requirements-deploy.txt --upgrade
   script:
-    - twine upload -u '__token__' -p "${TWINE_PASSWORD}" dist/*
+    - tag=${CI_COMMIT_REF_NAME:-$(git describe --always --abbrev=0)}
+    - description=$(sh ./changelog.sh "${tag}" | sed -z 's/"/\\"/g')
+    - description="${description}"$'\n\n''### Download'$'\n'
+    - gitlab-release --description "${description}" --link-prefix '* ' ./dist/*
+    - twine upload -u '__token__' -p "${TWINE_PASSWORD}" ./dist/*
   only:
     - tags
 
@@ -353,7 +357,7 @@ stages:
   before_script:
     - pip3 install -q -r requirements-deploy.txt --upgrade
   script:
-    - twine upload -u '__token__' -p "${TWINE_PASSWORD_TEST}" --repository testpypi dist/*
+    - twine upload -u '__token__' -p "${TWINE_PASSWORD_TEST}" --repository testpypi ./dist/*
   only:
     - local
   tags:
