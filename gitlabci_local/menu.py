@@ -13,7 +13,7 @@ from PyInquirer import Token as PyInquirer_Token
 from oyaml import safe_load as yaml_safe_load
 
 # Components
-from .package.names import NAME
+from .package.bundle import Bundle
 from .package.patcher import Patcher
 from .prints.colors import Colors
 from .runner import launcher
@@ -133,7 +133,7 @@ def selector(options, jobs):
         answers = PyInquirer_prompt(selection_prompt, style=__SelectorTheme)
     else:
         print(' %s%s: %sERROR: %sNo jobs found for selection%s' %
-              (Colors.GREEN, NAME, Colors.RED, Colors.BOLD, Colors.RESET))
+              (Colors.GREEN, Bundle.NAME, Colors.RED, Colors.BOLD, Colors.RESET))
         answers = None
 
     # Parse jobs selection
@@ -291,7 +291,7 @@ def configurator(options, configurations):
         else:
             print(' ')
             print(' %s%s: %sERROR: %sUnsupported configuration type "%s"...%s' %
-                  (Colors.GREEN, NAME, Colors.RED, Colors.BOLD, variable_type,
+                  (Colors.GREEN, Bundle.NAME, Colors.RED, Colors.BOLD, variable_type,
                    Colors.RESET))
             print(' ')
             Platform.flush()

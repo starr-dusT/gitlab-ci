@@ -6,7 +6,7 @@ from time import localtime, strftime, time
 from update_checker import pretty_date, UpdateChecker
 
 # Components
-from ..package.names import REPOSITORY
+from ..package.bundle import Bundle
 from ..prints.boxes import Boxes
 from ..prints.colors import Colors
 from ..system.platform import Platform
@@ -119,7 +119,7 @@ class Updates:
 
         # Changelog message
         box.add('%sChangelog: %s%s/-/tags' % ( #
-            Colors.YELLOW_LIGHT, Colors.CYAN, REPOSITORY))
+            Colors.YELLOW_LIGHT, Colors.CYAN, Bundle.REPOSITORY))
 
         # Update message
         if available:

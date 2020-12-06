@@ -11,7 +11,7 @@ from sys import argv, exit
 from .dumper import dumper
 from .menu import selector
 from .engines.engine import supported as engine_supported
-from .package.names import ALIAS, CONFIGURATION, NAME
+from .package.bundle import Bundle
 from .package.settings import Settings
 from .package.updates import Updates
 from .package.version import Version
@@ -31,8 +31,8 @@ def main():
 
     # Arguments creation
     parser = ArgumentParser(
-        prog=NAME, description='%s: Launch %s jobs locally (aliases: %s)' %
-        (NAME, CONFIGURATION, ALIAS), add_help=False,
+        prog=Bundle.NAME, description='%s: Launch %s jobs locally (aliases: %s)' %
+        (Bundle.NAME, Bundle.CONFIGURATION, Bundle.ALIAS), add_help=False,
         formatter_class=RawTextHelpFormatter)
 
     # Arguments default definitions
@@ -55,8 +55,8 @@ def main():
     parser.add_argument('-q', '--quiet', dest='quiet', action='store_true',
                         help='Hide jobs execution context')
     parser.add_argument(
-        '-c', dest='configuration', default=CONFIGURATION,
-        help='Path to the %s configuration file or folder' % CONFIGURATION)
+        '-c', dest='configuration', default=Bundle.CONFIGURATION,
+        help='Path to the %s configuration file or folder' % Bundle.CONFIGURATION)
     parser.add_argument('-B', '--no-before', dest='before', action='store_false',
                         help='Disable before_script executions')
     parser.add_argument('-A', '--no-after', dest='after', action='store_false',
@@ -112,7 +112,7 @@ def main():
     # Arguments exclusive definitions
     group = parser.add_mutually_exclusive_group()
     group.add_argument('-d', '--dump', dest='dump', action='store_true',
-                       help='Dump parsed %s configuration' % CONFIGURATION)
+                       help='Dump parsed %s configuration' % Bundle.CONFIGURATION)
     group.add_argument('-s', '--select', dest='select', action='store_true',
                        help='Force jobs selection from enumerated names')
     group.add_argument('-l', '--list', dest='list', action='store_true',
@@ -138,7 +138,7 @@ def main():
         exit(0)
 
     # Instantiate settings
-    settings = Settings(NAME)
+    settings = Settings(Bundle.NAME)
 
     # Settings informations
     if options.settings:
@@ -146,12 +146,12 @@ def main():
         exit(0)
 
     # Instantiate updates
-    updates = Updates(NAME, settings)
+    updates = Updates(Bundle.NAME, settings)
 
     # Version informations
     if options.version:
         print('%s %s from %s (python %s)' %
-              (NAME, Version.get(), Version.path(), Version.python()))
+              (Bundle.NAME, Version.get(), Version.path(), Version.python()))
         Platform.flush()
         exit(0)
 
@@ -163,7 +163,7 @@ def main():
 
     # Prepare configuration
     if Path(options.configuration).is_dir():
-        options.configuration = Path(options.configuration) / CONFIGURATION
+        options.configuration = Path(options.configuration) / Bundle.CONFIGURATION
 
     # Prepare engine
     if not options.engine and 'CI_LOCAL_ENGINE' in environ:
@@ -252,7 +252,7 @@ def main():
 
         # Unsupported interactive terminal
         print(' %s%s: %sERROR: %sUnsupported non-interactive context%s...%s' %
-              (Colors.GREEN, NAME, Colors.RED, Colors.BOLD, hint, Colors.RESET))
+              (Colors.GREEN, Bundle.NAME, Colors.RED, Colors.BOLD, hint, Colors.RESET))
         print(' ')
         Platform.flush()
 

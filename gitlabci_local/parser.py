@@ -14,7 +14,7 @@ from oyaml import YAMLError
 
 # Components
 from .menu import configurator
-from .package.names import NAME
+from .package.bundle import Bundle
 from .prints.colors import Colors
 
 # Reader
@@ -74,14 +74,14 @@ def reader(options):
     except YAMLError as exc:
         print(' ')
         print(' %s%s: %sERROR: %s%s%s' %
-              (Colors.GREEN, NAME, Colors.RED, Colors.BOLD, exc, Colors.RESET))
+              (Colors.GREEN, Bundle.NAME, Colors.RED, Colors.BOLD, exc, Colors.RESET))
         print(' ')
     except KeyboardInterrupt:
         pass
     except:
         print(' ')
-        print(' %s%s: %sERROR: %s%s%s' % (Colors.GREEN, NAME, Colors.RED, Colors.BOLD,
-                                          str(exc_info()[1]), Colors.RESET))
+        print(' %s%s: %sERROR: %s%s%s' % (Colors.GREEN, Bundle.NAME, Colors.RED,
+                                          Colors.BOLD, str(exc_info()[1]), Colors.RESET))
         print(' ')
 
     # Failure
