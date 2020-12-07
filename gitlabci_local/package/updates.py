@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 # Standard libraries
-from os import environ
+from os import access, environ, W_OK
 from time import localtime, strftime, time
 from update_checker import pretty_date, UpdateChecker
 
@@ -123,9 +123,10 @@ class Updates:
 
         # Update message
         if available:
+            writable = access(__file__, W_OK)
             box.add('%sUpdate: %sRun %s%spip3 install -U %s' % ( #
                 Colors.YELLOW_LIGHT, Colors.BOLD, Colors.GREEN,
-                'sudo ' if Platform.IS_USER_SUDO else '', self.__name))
+                'sudo ' if Platform.IS_USER_SUDO or not writable else '', self.__name))
 
         # Print message box
         box.print()
