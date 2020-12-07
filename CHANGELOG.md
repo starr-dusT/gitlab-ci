@@ -1,4 +1,24 @@
 
+<a name="2.2.1"></a>
+## [2.2.1](https://gitlab.com/AdrianDC/gitlabci-local/compare/2.2.0...2.2.1) (2020-12-08)
+
+### Chore
+
+* prepare [#135](https://gitlab.com/AdrianDC/gitlabci-local/issues/135): isolate string manipulators to 'Strings' type
+
+### Docs
+
+* changelog: regenerate release tag changes history
+
+### Feat
+
+* resolve [#136](https://gitlab.com/AdrianDC/gitlabci-local/issues/136): adapt update hint to sudo-installed packages
+
+### Fix
+
+* resolve [#135](https://gitlab.com/AdrianDC/gitlabci-local/issues/135): wrap colored strings and adapt boxes dimensions
+
+
 <a name="2.2.0"></a>
 ## [2.2.0](https://gitlab.com/AdrianDC/gitlabci-local/compare/2.1.2...2.2.0) (2020-12-07)
 
