@@ -2,6 +2,7 @@
 
 # Components
 from ..system.platform import Platform
+from ..types.strings import Strings
 from .colors import Colors
 
 # Boxes class
@@ -37,7 +38,7 @@ class Boxes:
         length = 0
 
         # Evaluate lines length
-        length = max(len(Colors.strip(line)) for line in self.__lines)
+        length = max(len(Strings.strip(line)) for line in self.__lines)
 
         # Add lines padding
         length += 2 * Boxes.__PADDING_LINE
@@ -53,7 +54,7 @@ class Boxes:
         for line in self.__lines:
             print('%s%s%s%s%s%s' %
                   (Boxes.__OFFSET_LINE, Colors.YELLOW, Boxes.__MIDDLE_LEFT,
-                   Colors.center(line, length), Colors.YELLOW, Boxes.__MIDDLE_RIGHT))
+                   Strings.center(line, length), Colors.YELLOW, Boxes.__MIDDLE_RIGHT))
 
         # Print bottom line
         print('%s%s%s%s%s' % (Boxes.__OFFSET_LINE, Colors.YELLOW, Boxes.__BOTTOM_LEFT,
