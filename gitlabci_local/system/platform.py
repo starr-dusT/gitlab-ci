@@ -10,6 +10,7 @@ from sys import platform, stdin, stdout
 class Platform:
 
     # Constants
+    IS_ANDROID = ('ANDROID_ROOT' in environ)
     IS_LINUX = (platform in ['linux', 'linux2'])
     IS_MAC_OS = (platform in ['darwin'])
     IS_WINDOWS = (platform in ['win32', 'win64'])
@@ -25,7 +26,7 @@ class Platform:
     IS_TTY_STDOUT = stdout.isatty()
 
     # Users
-    IS_USER_SUDO = 'SUDO_USER' in environ
+    IS_USER_SUDO = ('SUDO_USER' in environ)
     USER_SUDO = environ['SUDO_USER'] if IS_USER_SUDO else ''
 
     # Flush
