@@ -6,14 +6,14 @@ from os.path import expandvars
 from pathlib import Path, PurePosixPath
 from signal import getsignal, SIGINT, signal, SIGTERM
 from stat import S_IRGRP, S_IROTH, S_IXGRP, S_IXOTH, S_IXUSR
-from sys import stdout
-from tempfile import NamedTemporaryFile
+from sys import exc_info, stdout
 from time import sleep, time
 
 # Components
 from .engines.engine import Engine
 from .prints.colors import Colors
 from .system.platform import Platform
+from .types.files import Files
 from .types.lists import Lists
 from .types.paths import Paths
 from .types.volumes import Volumes
@@ -109,10 +109,12 @@ def runner(options, job_data, last_result, jobs_status):
     global __engine # pylint: disable=global-statement,invalid-name
 
     # Variables
+    error = None
     host = False
     quiet = options.quiet
     real_paths = options.real_paths and (Platform.IS_LINUX or Platform.IS_MAC_OS)
     result = False
+    script_file = None
     time_start = time()
 
     # Filter when
@@ -215,10 +217,24 @@ def runner(options, job_data, last_result, jobs_status):
     if options.after:
         scripts_after += job_data['after_script']
 
-    # Prepare temporary script
-    script_file = NamedTemporaryFile(delete=False, dir=path_parent, mode='wt',
-                                     newline='\n', prefix='.tmp.entrypoint.')
-    target_file = Paths.get(Path(target_parent) / Path(script_file.name).name)
+    # Prepare temporary script (parent)
+    try:
+        script_file = Files.temp(path=path_parent, prefix='.tmp.entrypoint.')
+        target_file = Paths.get(Path(target_parent) / Path(script_file.name).name)
+    except:
+        error = str(exc_info()[1])
+
+    # Prepare temporary script (project)
+    if not script_file:
+        try:
+            script_file = Files.temp(path=path_project, prefix='.tmp.entrypoint.')
+            target_file = Paths.get(Path(target_project) / Path(script_file.name).name)
+        except:
+            error = str(exc_info()[1])
+
+    # Failed temporary script
+    if not script_file:
+        raise PermissionError(error)
 
     # Prepare execution context
     script_file.write('#!/bin/sh')
