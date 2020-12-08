@@ -43,3 +43,15 @@ The following hypervisors are available :
 The following engines are available :
 
 - **Docker :** https://docs.docker.com/docker-for-windows/install/ (Docker Desktop)
+
+---
+
+## Test on Android
+
+The following tools are required for Android hosts tests (example: 10, ...):
+
+- **Termux :** Install the `Termux` application (https://termux.com)
+- **OpenSSL :** Type `pkg install openssl` in the Termux app
+- **Python :** Type `pkg install python` in the Termux app
+- **pip :** Type `python3 -m pip install -U pip` in the Termux app
+- **gitlabci-local :** `pip3 install -U gitlabci-local`
