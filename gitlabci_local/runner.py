@@ -522,9 +522,6 @@ def runner(options, job_data, last_result, jobs_status):
         environ.clear()
         environ.update(_environ)
 
-    # Close temporary script
-    Path(script_file.name).unlink()
-
     # Initial job details
     job_details = ''
     job_details_list = []
