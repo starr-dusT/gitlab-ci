@@ -68,9 +68,10 @@ class Boxes:
                        ' ' * Boxes.__PADDING_LINE, Colors.YELLOW, Boxes.__MIDDLE_RIGHT))
 
         # Print bottom line
-        print('%s%s%s%s%s' % (' ' * Boxes.__OFFSET_LINE, Colors.YELLOW,
-                              Boxes.__BOTTOM_LEFT, Boxes.__BOTTOM_LINE *
-                              (length + 2 * Boxes.__PADDING_LINE), Boxes.__BOTTOM_RIGHT))
+        print('%s%s%s%s%s%s' %
+              (' ' * Boxes.__OFFSET_LINE, Colors.YELLOW, Boxes.__BOTTOM_LEFT,
+               Boxes.__BOTTOM_LINE *
+               (length + 2 * Boxes.__PADDING_LINE), Boxes.__BOTTOM_RIGHT, Colors.RESET))
 
         # Footer
         print(' ')
