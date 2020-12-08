@@ -182,6 +182,14 @@ gitlabci-local currently supports these container engines:
 
 ---
 
+## Supported Android systems
+
+| Engines                | Android (7.0, 7.1, 8.0, 8.1, 9.0, 10, ...) |
+|:----------------------:|:------------------------------------------:|
+| Native (Termux)        | **✓**                                      |
+
+---
+
 ## Userspace available settings
 
 gitlabci-local creates a `settings.ini` configuration file in a userspace folder.
@@ -303,5 +311,6 @@ JOB_NAME:
 - [peek](https://github.com/phw/peek): Simple GIF screen recorder
 - [pexpect](https://pypi.org/project/pexpect/): Interactive console applications controller
 - [PyPI](https://pypi.org/): The Python Package Index
+- [Termux](https://termux.com): Linux terminal emulator on Android
 - [twine](https://pypi.org/project/twine/): Utility for publishing on PyPI
 - [winpty](https://github.com/rprichard/winpty): Windows PTY interface wrapper
