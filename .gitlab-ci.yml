@@ -161,6 +161,7 @@ stages:
     - mkdir -p ./.tmp/
     - pip install dist/*.whl
     - pip install --force-reinstall --no-deps --upgrade dist/*.whl
+  allow_failure: true
 
 .unit-tests-template:
   stage: test
