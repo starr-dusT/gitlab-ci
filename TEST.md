@@ -5,17 +5,21 @@
 The following tools are required for Linux hosts tests (example: Linux Mint, Ubuntu, CentOS, ...) :
 
 - **PyPI :** https://pip.pypa.io/en/stable/installing/
+- **gitlabci-local :** `pip3 install -U gitlabci-local`
 
 The following engines are available :
 
 - **Docker :** https://docs.docker.com/engine/install/
 - **Podman :** https://podman.io/getting-started/installation#linux-distributions
 
+---
+
 ## Test on macOS
 
 The following tools are required for macOS hosts tests (example: 10.14, 10.15, 11.0, ...):
 
 - **Python :** Type `python3` in the Terminal app and install automatically
+- **gitlabci-local :** `pip3 install -U gitlabci-local`
 
 The following engines are available :
 
@@ -29,6 +33,7 @@ The following tools are required for Windows 10 hosts tests (example: 1909, 2004
 
 - **Git for Windows :** https://gitforwindows.org (Git, 64-bit.exe)
 - **Python :** https://www.python.org/downloads/windows/ (Python 3, x86-64 executable, all users, add to PATH, path length limit disabled)
+- **gitlabci-local :** `pip3 install -U gitlabci-local`
 
 The following hypervisors are available :
 
