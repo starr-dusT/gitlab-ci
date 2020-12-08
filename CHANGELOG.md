@@ -1,4 +1,26 @@
 
+<a name="2.2.2"></a>
+## [2.2.2](https://gitlab.com/AdrianDC/gitlabci-local/compare/2.2.1...2.2.2) (2020-12-09)
+
+### Chore
+
+* gitlab-ci: ignore Podman issues until podman-2.2.1 is fixed
+* resolve [#140](https://gitlab.com/AdrianDC/gitlabci-local/issues/140): add 'Platform.IS_ANDROID' unused constant
+
+### Docs
+
+* changelog: regenerate release tag changes history
+* resolve [#140](https://gitlab.com/AdrianDC/gitlabci-local/issues/140): add Android test environment explanations
+* resolve [#140](https://gitlab.com/AdrianDC/gitlabci-local/issues/140): mention Android native engine with Termux
+* prepare [#140](https://gitlab.com/AdrianDC/gitlabci-local/issues/140): add installation steps for all test platforms
+
+### Fix
+
+* resolve [#137](https://gitlab.com/AdrianDC/gitlabci-local/issues/137): ensure temporary scripts are always deleted
+* resolve [#139](https://gitlab.com/AdrianDC/gitlabci-local/issues/139): support readonly parent folders for entrypoints
+* resolve [#138](https://gitlab.com/AdrianDC/gitlabci-local/issues/138): reset colors once the boxes are printed
+
+
 <a name="2.2.1"></a>
 ## [2.2.1](https://gitlab.com/AdrianDC/gitlabci-local/compare/2.2.0...2.2.1) (2020-12-08)
 
