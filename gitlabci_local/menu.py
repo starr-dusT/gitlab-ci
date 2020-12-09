@@ -51,7 +51,6 @@ def selector(options, jobs):
     default_check = options.all
     jobs_available = False
     jobs_choices = []
-    jobs_index = 0
     result = True
     stage = ''
 
@@ -109,9 +108,7 @@ def selector(options, jobs):
             job_details = ' (' + ', '.join(job_details_list) + ')'
 
         # Job choices
-        jobs_index += 1
         jobs_choices += [{
-            # 'key': str(jobs_index),
             'name': '%s%s%s' % (jobs[job]['name'], tags, job_details),
             'value': job,
             'checked': default_check,

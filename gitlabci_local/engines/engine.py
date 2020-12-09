@@ -65,7 +65,6 @@ def supported():
 class Engine:
 
     # Members
-    __backend = Backend.UNKNOWN
     __engine = None
     __name = None
 
@@ -82,7 +81,6 @@ class Engine:
             if name == Names.PODMAN:
                 try:
                     self.__engine = podman.Podman()
-                    self.__backend = Backend.PODMAN
                     self.__name = Names.PODMAN
                     break
                 except:
@@ -92,7 +90,6 @@ class Engine:
             elif name == Names.DOCKER:
                 try:
                     self.__engine = docker.Docker()
-                    self.__backend = Backend.DOCKER
                     self.__name = Names.DOCKER
                     break
                 except:
