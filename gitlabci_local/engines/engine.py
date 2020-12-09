@@ -154,5 +154,5 @@ class Engine:
         return self.__engine.supports(container, binary)
 
     # Wait
-    def wait(self, container, result):
-        return self.__engine.wait(container, result)
+    def wait(self, container):
+        return self.__engine.wait(container)

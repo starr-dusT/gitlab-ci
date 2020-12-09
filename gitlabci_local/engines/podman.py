@@ -193,7 +193,7 @@ class Podman:
         return result.returncode == 0
 
     # Wait
-    def wait(self, container, result):
+    def wait(self, container):
 
         # Wait container
         result = self.__exec(['wait', container])

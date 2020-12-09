@@ -429,7 +429,6 @@ def runner(options, job_data, last_result, jobs_status):
         signal(SIGTERM, interrupt_handler)
 
         # Execution wrapper
-        script_result = 1
         success = False
 
         # Show container logs
@@ -440,7 +439,6 @@ def runner(options, job_data, last_result, jobs_status):
                     if __MARKER_DEBUG in line_decoded:
                         break
                     if __MARKER_RESULT in line_decoded:
-                        script_result = int(line_decoded.split(':')[-1])
                         break
                     stdout.buffer.write(line)
                     stdout.buffer.flush()
@@ -448,7 +446,6 @@ def runner(options, job_data, last_result, jobs_status):
                     if __MARKER_DEBUG in line:
                         break
                     if __MARKER_RESULT in line:
-                        script_result = int(line.split(':')[-1])
                         break
                     stdout.write(line)
                     stdout.flush()
@@ -477,7 +474,7 @@ def runner(options, job_data, last_result, jobs_status):
             Platform.flush()
 
         # Check container status
-        success = __engine.wait(container, script_result)
+        success = __engine.wait(container)
 
         # Stop container
         __engine.stop(container, 0)
