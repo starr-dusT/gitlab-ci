@@ -123,6 +123,31 @@ stages:
       when: on_success
   allow_failure: true
 
+'SonarCloud':
+  stage: prepare
+  image:
+    name: sonarsource/sonar-scanner-cli:latest
+    entrypoint: ['']
+  variables:
+    GIT_DEPTH: 0
+    SONAR_USER_HOME: ${CI_PROJECT_DIR}/.sonar
+  cache:
+    key: '${CI_JOB_NAME}'
+    paths:
+      - .sonar/cache
+  script:
+    - sonar-scanner -Dsonar.projectVersion=$(git describe --always) -Dsonar.branch.name=${CI_COMMIT_REF_NAME}
+  rules:
+    - if: $CI_COMMIT_REF_NAME == "develop"
+      changes:
+        - 'docs/**/*'
+        - 'gitlabci_local/**/*'
+        - 'setup.py'
+    - if: $CI_COMMIT_REF_NAME == "master"
+      when: on_success
+    - when: never
+  allow_failure: true
+
 'Build':
   stage: build
   variables:

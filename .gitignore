@@ -10,6 +10,10 @@ __pycache__/
 *.egg-info/
 dist/
 
+# SonarQube files
+.scannerwork/
+.sonar/
+
 # Temporary files
 .tmp/
 .tmp.*
