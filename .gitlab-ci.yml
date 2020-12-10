@@ -202,15 +202,17 @@ stages:
   before_script:
     - echo 'deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/Debian_10/ /' >/etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list
     - curl -L https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/Debian_10/Release.key | apt-key add -
+    - wget -P /tmp/ http://ftp.br.debian.org/debian/pool/main/libs/libseccomp/libseccomp2_2.5.0-3+b1_amd64.deb
     - apt update
-    - apt -y install podman
+    - apt install -y /tmp/libseccomp2_2.5.0-3+b1_amd64.deb
+    - rm -f /tmp/libseccomp2_2.5.0-3+b1_amd64.deb
+    - apt install -y podman
     - sed -i 's#.*cgroup_manager = ".*"#cgroup_manager = "cgroupfs"#g' /etc/containers/containers.conf
     - sed -i 's#.*events_logger = ".*"#events_logger = "file"#g' /etc/containers/containers.conf
     - sed -i 's#driver = ""#driver = "vfs"#g' /etc/containers/storage.conf
     - mkdir -p ./.tmp/
     - pip install dist/*.whl
     - pip install --force-reinstall --no-deps --upgrade dist/*.whl
-  allow_failure: true
 
 .unit-tests-rules:
   rules:
