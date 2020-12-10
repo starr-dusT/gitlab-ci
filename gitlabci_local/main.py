@@ -16,6 +16,7 @@ from .package.settings import Settings
 from .package.updates import Updates
 from .package.version import Version
 from .parser import reader
+from .parsers.gitlab import GitLab
 from .prints.colors import Colors
 from .puller import puller
 from .runner import launcher
@@ -96,8 +97,9 @@ def main():
                         help='Override the container\'s working path')
     parser.add_argument('--all', dest='all', action='store_true',
                         help='Enable all jobs by default in selections')
-    parser.add_argument('--defaults', dest='defaults', action='store_true',
-                        help='Use default variables for .local:configurations')
+    parser.add_argument(
+        '--defaults', dest='defaults', action='store_true',
+        help='Use default variables for %s:configurations' % (GitLab.LOCAL_NODE))
 
     # Arguments debugging definitions
     group = parser.add_mutually_exclusive_group()

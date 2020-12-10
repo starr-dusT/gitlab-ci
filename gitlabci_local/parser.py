@@ -13,8 +13,10 @@ from oyaml import safe_load as yaml_safe_load
 from oyaml import YAMLError
 
 # Components
+from .containers.images import Images
 from .menu import configurator
 from .package.bundle import Bundle
+from .parsers.gitlab import GitLab
 from .prints.colors import Colors
 
 # Reader
@@ -124,9 +126,9 @@ def parser(options, data, environment):
     if environment['parameters']:
         global_values['variables'].update(environment['parameters'])
 
-    # Filter .local node
-    if '.local' in data and data['.local']:
-        local = data['.local']
+    # Filter local node
+    if GitLab.LOCAL_NODE in data and data[GitLab.LOCAL_NODE]:
+        local = data[GitLab.LOCAL_NODE]
 
         # Parse local after
         if 'after' in local:
@@ -268,12 +270,11 @@ def parser(options, data, environment):
     # Prepare default variables
     if environment['default']:
         for variable in environment['default']:
-            if variable in global_values['variables']:
-                pass
-            elif variable in environ:
-                global_values['variables'][variable] = environ[variable]
-            else:
-                global_values['variables'][variable] = environment['default'][variable]
+            if variable not in global_values['variables']:
+                if variable in environ:
+                    global_values['variables'][variable] = environ[variable]
+                else:
+                    global_values['variables'][variable] = environment['default'][variable]
             if variable not in environ:
                 environ[variable] = global_values['variables'][variable]
 
@@ -574,9 +575,7 @@ def stager(options, job_name, data, global_values):
     # Extract job trigger
     if 'trigger' in job_data and job_data['trigger']:
         job['options']['disabled'] = 'trigger only'
-        if isinstance(job_data['trigger'], dict):
-            job['trigger'] = job_data['trigger']
-        elif isinstance(job_data['trigger'], str):
+        if isinstance(job_data['trigger'], (dict, str)):
             job['trigger'] = job_data['trigger']
 
     # Finalize global values
@@ -588,12 +587,9 @@ def stager(options, job_name, data, global_values):
 
     # Detect host jobs
     if job['image']:
-        if job['image'] in ['local', 'local:quiet', 'local:silent']:
-            job['options']['host'] = True
-        if job['image'] in ['local:quiet', 'local:silent']:
-            job['options']['quiet'] = True
-        if job['image'] in ['local:silent']:
-            job['options']['silent'] = True
+        job['options']['host'] = Images.host(job['image'])
+        job['options']['quiet'] = Images.quiet(job['image'])
+        job['options']['silent'] = Images.silent(job['image'])
 
     # Result
     return job
