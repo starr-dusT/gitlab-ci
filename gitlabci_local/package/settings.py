@@ -33,7 +33,7 @@ class Settings:
         try:
             if self.get('package', 'name') != name:
                 raise ValueError('Missing settings files')
-        except:
+        except ValueError:
             self.__folder.mkdir(parents=True, exist_ok=True)
             self.__reset(name)
 

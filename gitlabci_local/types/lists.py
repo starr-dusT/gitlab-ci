@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 # Standard libraries
-from re import escape, search
+from re import error, escape, search
 
 # Lists class
 class Lists:
@@ -26,7 +26,7 @@ class Lists:
                 try:
                     if search(item, escape(name)):
                         return True
-                except:
+                except error:
                     pass
 
         # Result

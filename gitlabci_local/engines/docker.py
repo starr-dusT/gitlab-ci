@@ -2,7 +2,7 @@
 
 # Standard libraries
 from docker import from_env
-from docker.errors import ImageNotFound
+from docker.errors import DockerException, ImageNotFound
 
 # Components
 from ..system.platform import Platform
@@ -17,8 +17,11 @@ class Docker:
     def __init__(self):
 
         # Engine client
-        self.__client = from_env()
-        self.__client.ping()
+        try:
+            self.__client = from_env()
+            self.__client.ping()
+        except DockerException:
+            raise ModuleNotFoundError() from None
 
     # Exec
     def exec(self, container, command):

@@ -6,7 +6,7 @@ from os import chdir, environ
 from time import sleep
 
 # Modules libraries
-from pexpect import spawn
+from pexpect import EOF, spawn, TIMEOUT
 
 # Executor
 class Executor:
@@ -52,7 +52,7 @@ class Executor:
         while True:
             try:
                 output = self.child.read_nonblocking(size=1024, timeout=1)
-            except:
+            except (EOF, TIMEOUT):
                 output = None
             if not output:
                 break

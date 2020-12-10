@@ -83,7 +83,7 @@ class Engine:
                     self.__engine = podman.Podman()
                     self.__name = Names.PODMAN
                     break
-                except:
+                except (KeyboardInterrupt, ModuleNotFoundError):
                     self.__engine = None
 
             # Docker engine detection
@@ -92,7 +92,7 @@ class Engine:
                     self.__engine = docker.Docker()
                     self.__name = Names.DOCKER
                     break
-                except:
+                except (KeyboardInterrupt, ModuleNotFoundError):
                     self.__engine = None
 
         # Unknown engine fallback

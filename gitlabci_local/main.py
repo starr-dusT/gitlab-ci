@@ -243,7 +243,7 @@ def main():
             hint = ' (on Windows, winpty is required)'
             try:
                 winpty = check_output(['where', 'winpty.exe'], stderr=DEVNULL).strip()
-            except:
+            except FileNotFoundError:
                 pass
             else:
                 _environ = dict(environ)

@@ -78,9 +78,7 @@ def reader(options):
         print(' %s%s: %sERROR: %s%s%s' %
               (Colors.GREEN, Bundle.NAME, Colors.RED, Colors.BOLD, exc, Colors.RESET))
         print(' ')
-    except KeyboardInterrupt:
-        pass
-    except:
+    except PermissionError:
         print(' ')
         print(' %s%s: %sERROR: %s%s%s' % (Colors.GREEN, Bundle.NAME, Colors.RED,
                                           Colors.BOLD, str(exc_info()[1]), Colors.RESET))

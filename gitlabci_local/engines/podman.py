@@ -21,9 +21,12 @@ class Podman:
             self.__binary = environ['PODMAN_BINARY_PATH']
 
         # Check engine support
-        result = self.__exec(['system', 'info'], True)
-        if result.returncode != 0:
-            raise NotImplementedError('Unsupported Podman engine...')
+        try:
+            result = self.__exec(['system', 'info'], True)
+            if result.returncode != 0:
+                raise ModuleNotFoundError()
+        except FileNotFoundError:
+            raise ModuleNotFoundError() from None
 
     # Internal execution
     def __exec(self, arguments, quiet=False):

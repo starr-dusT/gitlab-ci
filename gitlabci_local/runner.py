@@ -221,7 +221,7 @@ def runner(options, job_data, last_result, jobs_status):
     try:
         script_file = Files.temp(path=path_parent, prefix='.tmp.entrypoint.')
         target_file = Paths.get(Path(target_parent) / Path(script_file.name).name)
-    except:
+    except PermissionError:
         error = str(exc_info()[1])
 
     # Prepare temporary script (project)
@@ -229,7 +229,7 @@ def runner(options, job_data, last_result, jobs_status):
         try:
             script_file = Files.temp(path=path_project, prefix='.tmp.entrypoint.')
             target_file = Paths.get(Path(target_project) / Path(script_file.name).name)
-        except:
+        except PermissionError:
             error = str(exc_info()[1])
 
     # Failed temporary script
