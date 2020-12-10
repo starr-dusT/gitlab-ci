@@ -1,4 +1,22 @@
 
+<a name="2.2.3"></a>
+## [2.2.3](https://gitlab.com/AdrianDC/gitlabci-local/compare/2.2.2...2.2.3) (2020-12-10)
+
+### Chore
+
+* gitlab-ci: resolve Podman 2.2.1 issues in Debian 10.6
+* gitlab-ci: prevent Podman unit tests to use Docker host
+* readme: add pipeline and SonarCloud badges
+* resolve [#141](https://gitlab.com/AdrianDC/gitlabci-local/issues/141): minor codestyle cleanups raised by SonarCloud
+* resolve [#141](https://gitlab.com/AdrianDC/gitlabci-local/issues/141): resolve SonarQube issue in engines.wait
+* gitlab-ci.yml: add support for SonarCloud analysis
+* gitlab-ci: run build and tests jobs only if needed
+
+### Docs
+
+* changelog: regenerate release tag changes history
+
+
 <a name="2.2.2"></a>
 ## [2.2.2](https://gitlab.com/AdrianDC/gitlabci-local/compare/2.2.1...2.2.2) (2020-12-09)
 
