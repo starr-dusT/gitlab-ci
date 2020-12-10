@@ -197,6 +197,8 @@ stages:
     - pip install --force-reinstall --no-deps --upgrade dist/*.whl
 
 .unit-tests-podman:
+  variables:
+    DOCKER_HOST: tcp://127.0.0.1:9999
   before_script:
     - echo 'deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/Debian_10/ /' >/etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list
     - curl -L https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/Debian_10/Release.key | apt-key add -
