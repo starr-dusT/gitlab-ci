@@ -22,6 +22,6 @@ stages:
 
 'Job 4':
   stage: containers
-  image: alpine:3
+  image: debian:testing-slim
   script:
     - echo 'Job 4'
