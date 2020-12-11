@@ -283,6 +283,9 @@ stages:
     - gitlabci-local -c ./tests/environment/.gitlab-ci.yml -v ./:/opt 'Job 2'
     - gitlabci-local -c ./tests/environment/.gitlab-ci.yml -v ./:/opt -w /opt/ 'Job 2'
     - gitlabci-local -c ./tests/entrypoints/.gitlab-ci.yml --pull
+    - gitlabci-local -c ./tests/entrypoints/.gitlab-ci.yml --pull
+    - gitlabci-local -c ./tests/entrypoints/.gitlab-ci.yml --rmi
+    - gitlabci-local -c ./tests/entrypoints/.gitlab-ci.yml --rmi
     - gitlabci-local -c ./tests/entrypoints/.gitlab-ci.yml -d
     - gitlabci-local -c ./tests/entrypoints/.gitlab-ci.yml -p
     - gitlabci-local -c ./tests/variables/.gitlab-ci.yml -p && exit 1 || true

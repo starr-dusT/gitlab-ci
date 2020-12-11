@@ -117,6 +117,15 @@ class Podman:
         # Remove container
         self.__exec(['rm', '--force', container])
 
+    # Remove image
+    def rmi(self, image):
+
+        # Remove image
+        result = self.__exec(['inspect', '--type', 'image', '--format', 'exists', image],
+                             True)
+        if result.returncode == 0:
+            self.__exec(['rmi', image])
+
     # Run
     def run(self, image, command, entrypoint, variables, network, volumes, directory):
 

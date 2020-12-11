@@ -19,6 +19,7 @@ from .parser import reader
 from .parsers.gitlab import GitLab
 from .prints.colors import Colors
 from .puller import puller
+from .remover import remover
 from .runner import launcher
 from .system.platform import Platform
 
@@ -121,6 +122,8 @@ def main():
                        help='Select one job to run (implies --manual)')
     group.add_argument('--pull', dest='pull', action='store_true',
                        help='Pull container images from all jobs')
+    group.add_argument('--rmi', dest='rmi', action='store_true',
+                       help='Delete container images from all jobs')
 
     # Arguments positional definitions
     parser.add_argument(
@@ -208,6 +211,10 @@ def main():
     # Pull jobs images
     elif options.pull:
         result = puller(options, jobs)
+
+    # Remove jobs images
+    elif options.rmi:
+        result = remover(options, jobs)
 
     # Select job
     elif options.list and interactive:

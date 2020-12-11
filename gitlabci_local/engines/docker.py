@@ -102,6 +102,15 @@ class Docker:
         # Remove container
         container.remove(force=True)
 
+    # Remove image
+    def rmi(self, image):
+
+        # Remove image
+        try:
+            self.__client.api.remove_image(image)
+        except ImageNotFound:
+            pass
+
     # Run
     def run(self, image, command, entrypoint, variables, network, volumes, directory):
 

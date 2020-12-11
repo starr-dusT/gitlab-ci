@@ -84,6 +84,7 @@ is the common and unique interface between GitLab CI and gitlabci-local.
 | -s, --select       | Force jobs selection from enumerated names                                              |
 | -l, --list         | Select one job to run (implies --manual)                                                |
 | --pull             | Pull container images from all jobs                                                     |
+| --rmi              | Delete container images from all jobs                                                   |
 
 ---
 

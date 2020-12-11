@@ -133,6 +133,10 @@ class Engine:
     def remove(self, container):
         self.__engine.remove(container)
 
+    # Remove image
+    def rmi(self, image):
+        self.__engine.rmi(image)
+
     # Run
     def run(self, image, command, entrypoint, variables, network, volumes, directory):
         return self.__engine.run(image, command, entrypoint, variables, network, volumes,
