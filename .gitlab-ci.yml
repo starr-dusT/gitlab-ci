@@ -192,30 +192,30 @@ stages:
 .unit-tests-docker:
   services:
     - docker:19.03.13-dind
+  dependencies:
+    - Build
   variables:
     DOCKER_DRIVER: overlay2
-  before_script:
-    - mkdir -p ./.tmp/
-    - pip install dist/*.whl
-    - pip install --force-reinstall --no-deps --upgrade dist/*.whl
+  before_script: &unit-tests-docker-before |-
+    mount
 
 .unit-tests-podman:
+  dependencies:
+    - Build
   variables:
     DOCKER_HOST: tcp://127.0.0.1:9999
-  before_script:
-    - echo 'deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/Debian_10/ /' >/etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list
-    - curl -L https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/Debian_10/Release.key | apt-key add -
-    - wget -P /tmp/ http://ftp.br.debian.org/debian/pool/main/libs/libseccomp/libseccomp2_2.5.0-3+b1_amd64.deb
-    - apt update
-    - apt install -y /tmp/libseccomp2_2.5.0-3+b1_amd64.deb
-    - rm -f /tmp/libseccomp2_2.5.0-3+b1_amd64.deb
-    - apt install -y podman
-    - sed -i 's#.*cgroup_manager = ".*"#cgroup_manager = "cgroupfs"#g' /etc/containers/containers.conf
-    - sed -i 's#.*events_logger = ".*"#events_logger = "file"#g' /etc/containers/containers.conf
-    - sed -i 's#driver = ""#driver = "vfs"#g' /etc/containers/storage.conf
-    - mkdir -p ./.tmp/
-    - pip install dist/*.whl
-    - pip install --force-reinstall --no-deps --upgrade dist/*.whl
+  before_script: &unit-tests-podman-before |-
+    mount
+    echo 'deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/Debian_10/ /' >/etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list
+    curl -L https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/Debian_10/Release.key | apt-key add -
+    wget -P /tmp/ http://ftp.br.debian.org/debian/pool/main/libs/libseccomp/libseccomp2_2.5.0-3+b1_amd64.deb
+    apt update
+    apt install -y /tmp/libseccomp2_2.5.0-3+b1_amd64.deb
+    rm -f /tmp/libseccomp2_2.5.0-3+b1_amd64.deb
+    apt install -y podman
+    sed -i 's#.*cgroup_manager = ".*"#cgroup_manager = "cgroupfs"#g' /etc/containers/containers.conf
+    sed -i 's#.*events_logger = ".*"#events_logger = "file"#g' /etc/containers/containers.conf
+    sed -i 's#driver = ""#driver = "vfs"#g' /etc/containers/storage.conf
 
 .unit-tests-rules:
   rules:
@@ -227,13 +227,16 @@ stages:
 
 .unit-tests-template:
   stage: test
-  dependencies:
-    - Build
   timeout: 10m
   variables:
     FORCE_STYLING: 'true'
     TEMP: .tmp
     TERM: ansi
+  before_script: &unit-tests-template-before |-
+    mkdir -p ./.tmp/
+    pip install dist/*.whl
+    pip install --force-reinstall --no-deps --upgrade dist/*.whl
+    pip show gitlabci-local
   script:
     - pwd
     - mount
@@ -342,6 +345,9 @@ stages:
     - .unit-tests-docker
     - .unit-tests-rules
   image: python:3.6
+  before_script:
+    - *unit-tests-docker-before
+    - *unit-tests-template-before
 
 'Py3.7 Docker':
   extends:
@@ -349,6 +355,9 @@ stages:
     - .unit-tests-docker
     - .unit-tests-rules
   image: python:3.7
+  before_script:
+    - *unit-tests-docker-before
+    - *unit-tests-template-before
 
 'Py3.8 Docker':
   extends:
@@ -356,6 +365,9 @@ stages:
     - .unit-tests-docker
     - .unit-tests-rules
   image: python:3.8
+  before_script:
+    - *unit-tests-docker-before
+    - *unit-tests-template-before
 
 'Py3.9 Docker':
   extends:
@@ -363,6 +375,9 @@ stages:
     - .unit-tests-docker
     - .unit-tests-rules
   image: python:3.9
+  before_script:
+    - *unit-tests-docker-before
+    - *unit-tests-template-before
 
 'Py3.6 Podman':
   extends:
@@ -370,6 +385,9 @@ stages:
     - .unit-tests-podman
     - .unit-tests-rules
   image: python:3.6
+  before_script:
+    - *unit-tests-podman-before
+    - *unit-tests-template-before
 
 'Py3.7 Podman':
   extends:
@@ -377,6 +395,9 @@ stages:
     - .unit-tests-podman
     - .unit-tests-rules
   image: python:3.7
+  before_script:
+    - *unit-tests-podman-before
+    - *unit-tests-template-before
 
 'Py3.8 Podman':
   extends:
@@ -384,6 +405,9 @@ stages:
     - .unit-tests-podman
     - .unit-tests-rules
   image: python:3.8
+  before_script:
+    - *unit-tests-podman-before
+    - *unit-tests-template-before
 
 'Py3.9 Podman':
   extends:
@@ -391,11 +415,16 @@ stages:
     - .unit-tests-podman
     - .unit-tests-rules
   image: python:3.9
+  before_script:
+    - *unit-tests-podman-before
+    - *unit-tests-template-before
 
 'Python Local':
   extends:
     - .unit-tests-template
   image: local:quiet
+  before_script:
+    - *unit-tests-template-before
   only:
     - local
 
