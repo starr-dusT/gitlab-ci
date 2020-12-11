@@ -19,7 +19,9 @@ class Files:
 
         # Delete all temps
         for temp in Files.temps:
-            Path(temp.name).unlink()
+            temp_file = Path(temp.name)
+            if temp_file.exists():
+                temp_file.unlink()
 
         # Reset temps
         Files.temps = []
