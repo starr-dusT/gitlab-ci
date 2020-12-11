@@ -32,7 +32,7 @@ is the common and unique interface between GitLab CI and gitlabci-local.
 ## Examples
 
 | Commands                       | Purpose                                            |
-|:-------------------------------|:---------------------------------------------------|
+| :----------------------------- | :------------------------------------------------- |
 | gitlabci-local                 | Launch the jobs choices interactive menu           |
 | gitlabci-local -p              | Launch the jobs pipeline automatically             |
 | gitlabci-local -l              | Launch the job selection interactive menu          |
@@ -54,36 +54,36 @@ is the common and unique interface between GitLab CI and gitlabci-local.
 | -------------------- | --------------------------------------------------------------------------------------------------------- |
 | names                | Names of specific jobs (or stages with --pipeline)<br>Regex names are supported unless --no-regex is used |
 
-| Optional arguments   |                                                                                         |
-| -------------------- | --------------------------------------------------------------------------------------- |
-| -h, --help           | Show this help message                                                                  |
-| --version            | Show the current version                                                                |
-| --update-check       | Check for newer package updates                                                         |
-| --settings           | Show the current settings path and contents                                             |
-| -q, --quiet          | Hide jobs execution context                                                             |
-| -c CONFIGURATION     | Path to the .gitlab-ci.yml configuration file or folder                                 |
-| -B, --no-before      | Disable before_script executions                                                        |
-| -A, --no-after       | Disable after_script executions                                                         |
-| -m, --manual         | Allow manual jobs to be used                                                            |
-| -n NETWORK           | Configure the network mode used<br>Choices: bridge, host, none. Default: bridge         |
-| -p, --pipeline       | Automatically run pipeline stages rather than jobs                                      |
-| -e ENV               | Define VARIABLE=value, pass VARIABLE or ENV file                                        |
-| -E ENGINE            | Force a specific engine (or define CI_LOCAL_ENGINE)<br>Default list: auto,podman,docker |
-| -H, --host           | Run all jobs on the host rather than containers                                         |
-| -R, --no-regex       | Disable regex search of names                                                           |
-| -t TAGS              | Handle listed tags as manual jobs<br>Default list: deploy,local,publish                 |
-| -r, --real-paths     | Mount real folder paths in the container (Linux only)                                   |
-| -S, --sockets        | Mount engine sockets for nested containers                                              |
-| -v VOLUME            | Mount VOLUME or HOST:TARGET in containers                                               |
-| -w WORKDIR           | Override the container's working path                                                   |
-| --all                | Enable all jobs by default in selections                                                |
-| --defaults           | Use default variables for .local:configurations                                         |
-| --bash               | Prepare runners for manual bash purposes                                                |
-| --debug              | Keep runners active for debugging purposes                                              |
-| -d, --dump           | Dump parsed .gitlab-ci.yml configuration                                                |
-| -s, --select         | Force jobs selection from enumerated names                                              |
-| -l, --list           | Select one job to run (implies --manual)                                                |
-| --pull               | Pull container images from all jobs                                                     |
+| Optional arguments |                                                                                         |
+| ------------------ | --------------------------------------------------------------------------------------- |
+| -h, --help         | Show this help message                                                                  |
+| --version          | Show the current version                                                                |
+| --update-check     | Check for newer package updates                                                         |
+| --settings         | Show the current settings path and contents                                             |
+| -q, --quiet        | Hide jobs execution context                                                             |
+| -c CONFIGURATION   | Path to the .gitlab-ci.yml configuration file or folder                                 |
+| -B, --no-before    | Disable before_script executions                                                        |
+| -A, --no-after     | Disable after_script executions                                                         |
+| -m, --manual       | Allow manual jobs to be used                                                            |
+| -n NETWORK         | Configure the network mode used<br>Choices: bridge, host, none. Default: bridge         |
+| -p, --pipeline     | Automatically run pipeline stages rather than jobs                                      |
+| -e ENV             | Define VARIABLE=value, pass VARIABLE or ENV file                                        |
+| -E ENGINE          | Force a specific engine (or define CI_LOCAL_ENGINE)<br>Default list: auto,podman,docker |
+| -H, --host         | Run all jobs on the host rather than containers                                         |
+| -R, --no-regex     | Disable regex search of names                                                           |
+| -t TAGS            | Handle listed tags as manual jobs<br>Default list: deploy,local,publish                 |
+| -r, --real-paths   | Mount real folder paths in the container (Linux only)                                   |
+| -S, --sockets      | Mount engine sockets for nested containers                                              |
+| -v VOLUME          | Mount VOLUME or HOST:TARGET in containers                                               |
+| -w WORKDIR         | Override the container's working path                                                   |
+| --all              | Enable all jobs by default in selections                                                |
+| --defaults         | Use default variables for .local:configurations                                         |
+| --bash             | Prepare runners for manual bash purposes                                                |
+| --debug            | Keep runners active for debugging purposes                                              |
+| -d, --dump         | Dump parsed .gitlab-ci.yml configuration                                                |
+| -s, --select       | Force jobs selection from enumerated names                                              |
+| -l, --list         | Select one job to run (implies --manual)                                                |
+| --pull             | Pull container images from all jobs                                                     |
 
 ---
 
@@ -159,40 +159,40 @@ gitlabci-local currently supports these container engines:
 
 ## Supported Linux systems
 
-| Engines               | Linux Mint,  Ubuntu | CentOS | Others |
-|:---------------------:|:-------------------:|:------:|:------:|
-| Native (shell)        | **✓**               | **✓**  | **?**  |
-| Docker (as&nbsp;user) | **✓**               | **✓**  | **?**  |
-| Docker (as&nbsp;root) | **✓**               | **✓**  | **?**  |
-| Podman (as&nbsp;user) | **~**               | **~**  | **?**  |
-| Podman (as&nbsp;root) | **✓**               | **✓**  | **?**  |
+|        Engines        | Linux Mint,  Ubuntu | CentOS | Others |
+| :-------------------: | :-----------------: | :----: | :----: |
+|    Native (shell)     |        **✓**        | **✓**  | **?**  |
+| Docker (as&nbsp;user) |        **✓**        | **✓**  | **?**  |
+| Docker (as&nbsp;root) |        **✓**        | **✓**  | **?**  |
+| Podman (as&nbsp;user) |        **~**        | **~**  | **?**  |
+| Podman (as&nbsp;root) |        **✓**        | **✓**  | **?**  |
 
 ---
 
 ## Supported macOS systems
 
-| Engines               | macOS (10.14, 10.15, 11.0, ...) |
-|:---------------------:|:-------------------------------:|
-| Native (shell)        | **✓**                           |
-| Docker (as&nbsp;user) | **?**                           |
+|        Engines        | macOS (10.14, 10.15, 11.0, ...) |
+| :-------------------: | :-----------------------------: |
+|    Native (shell)     |              **✓**              |
+| Docker (as&nbsp;user) |              **?**              |
 
 ---
 
 ## Supported Windows systems
 
-| Engines                | Windows 10 (1909, 2004, 20H2) | Others |
-|:----------------------:|:-----------------------------:|:------:|
-| Native (shell)         | **✓**                         | **?**  |
-| Docker (Hyper&#8209;V) | **✓**                         | **?**  |
-| Docker (WSL&nbsp;2)    | **✓**                         | **?**  |
+|        Engines         | Windows 10 (1909, 2004, 20H2) | Others |
+| :--------------------: | :---------------------------: | :----: |
+|     Native (shell)     |             **✓**             | **?**  |
+| Docker (Hyper&#8209;V) |             **✓**             | **?**  |
+|  Docker (WSL&nbsp;2)   |             **✓**             | **?**  |
 
 ---
 
 ## Supported Android systems
 
-| Engines                | Android (7.0, 7.1, 8.0, 8.1, 9.0, 10, ...) |
-|:----------------------:|:------------------------------------------:|
-| Native (Termux)        | **✓**                                      |
+|     Engines     | Android (7.0, 7.1, 8.0, 8.1, 9.0, 10, ...) |
+| :-------------: | :----------------------------------------: |
+| Native (Termux) |                   **✓**                    |
 
 ---
 
