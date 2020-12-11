@@ -175,10 +175,10 @@ def main():
         options.configuration = Path(options.configuration) / Bundle.CONFIGURATION
 
     # Prepare engine
-    if not options.engine and Bundle.ENV_ENGINE in environ:
+    if options.engine is None and Bundle.ENV_ENGINE in environ:
         options.engine = environ[Bundle.ENV_ENGINE]
         options.engine_default = True
-    elif options.engine:
+    elif options.engine is not None:
         environ[Bundle.ENV_ENGINE] = options.engine
         options.engine_default = False
     else:
