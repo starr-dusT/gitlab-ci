@@ -62,12 +62,14 @@ def selector(options, jobs):
 
             # Filter jobs list
             if not options.pipeline and not Lists.match(options.names, job,
-                                                        options.no_regex):
+                                                        ignore_case=options.ignore_case,
+                                                        no_regex=options.no_regex):
                 continue
 
             # Filter stages list
             if options.pipeline and not Lists.match(options.names, jobs[job]['stage'],
-                                                    options.no_regex):
+                                                    ignore_case=options.ignore_case,
+                                                    no_regex=options.no_regex):
                 continue
 
         # Stages separator

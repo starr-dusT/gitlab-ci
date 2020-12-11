@@ -36,18 +36,22 @@ def launcher(options, jobs):
     for job in jobs:
 
         # Filter jobs list
-        if not options.pipeline and not Lists.match(options.names, job, options.no_regex):
+        if not options.pipeline and not Lists.match(options.names, job,
+                                                    ignore_case=options.ignore_case,
+                                                    no_regex=options.no_regex):
             continue
 
         # Filter stages list
         if options.pipeline and options.names and not Lists.match(
-                options.names, jobs[job]['stage'], options.no_regex):
+                options.names, jobs[job]['stage'], ignore_case=options.ignore_case,
+                no_regex=options.no_regex):
             continue
 
         # Filter manual jobs
         job_manual = (jobs[job]['when'] == 'manual')
         if job_manual and not options.manual and not Lists.match(
-                options.names, job, options.no_regex):
+                options.names, job, ignore_case=options.ignore_case,
+                no_regex=options.no_regex):
             continue
 
         # Filter disabled jobs

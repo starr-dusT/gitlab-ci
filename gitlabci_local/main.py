@@ -83,6 +83,8 @@ def main():
                         help='Force the action (use with --pull)')
     parser.add_argument('-H', '--host', dest='host', action='store_true',
                         help='Run all jobs on the host rather than containers')
+    parser.add_argument('-i', '--ignore-case', dest='ignore_case', action='store_true',
+                        help='Ignore case when searching for names')
     parser.add_argument('-R', '--no-regex', dest='no_regex', action='store_true',
                         help='Disable regex search of names')
     parser.add_argument(

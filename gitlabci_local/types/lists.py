@@ -8,7 +8,7 @@ class Lists:
 
     # Match
     @staticmethod
-    def match(items, name, no_regex):
+    def match(items, name, ignore_case, no_regex):
 
         # Search without regex
         if name in items:
@@ -22,9 +22,15 @@ class Lists:
                 if item in name:
                     return True
 
+                # Search with string case insensitive inclusion
+                if ignore_case and item.lower() in name.lower():
+                    return True
+
                 # Search with real regex
                 try:
                     if search(item, escape(name)):
+                        return True
+                    if search(item.lower(), escape(name.lower())):
                         return True
                 except error:
                     pass

@@ -18,7 +18,8 @@ def dumper(options, jobs):
     # Prepare configuration results
     if options.names:
         for job in jobs:
-            if Lists.match(options.names, job, options.no_regex):
+            if Lists.match(options.names, job, ignore_case=options.ignore_case,
+                           no_regex=options.no_regex):
                 configuration[job] = deepcopy(jobs[job])
                 del configuration[job]['options']
                 result = True

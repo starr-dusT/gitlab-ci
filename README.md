@@ -71,6 +71,7 @@ is the common and unique interface between GitLab CI and gitlabci-local.
 | -E ENGINE          | Force a specific engine (or define CI_LOCAL_ENGINE)<br>Default list: auto,podman,docker |
 | -f, --force        | Force the action (use with --pull)                                                      |
 | -H, --host         | Run all jobs on the host rather than containers                                         |
+| -i, --ignore-case  | Ignore case when searching for names                                                    |
 | -R, --no-regex     | Disable regex search of names                                                           |
 | -t TAGS            | Handle listed tags as manual jobs<br>Default list: deploy,local,publish                 |
 | -r, --real-paths   | Mount real folder paths in the container (Linux only)                                   |
