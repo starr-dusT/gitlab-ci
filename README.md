@@ -318,7 +318,7 @@ JOB_NAME:
 - [gitlab-release](https://pypi.org/project/gitlab-release/): Utility for publishing on GitLab
 - [OCI](https://opencontainers.org): Open Container Initiative
 - [peek](https://github.com/phw/peek): Simple GIF screen recorder
-- [pexpect](https://pypi.org/project/pexpect/): Interactive console applications controller
+- [pexpect-executor](https://pypi.org/project/pexpect-executor/): Automate interactive CLI tools actions
 - [PyPI](https://pypi.org/): The Python Package Index
 - [Termux](https://termux.com): Linux terminal emulator on Android
 - [twine](https://pypi.org/project/twine/): Utility for publishing on PyPI
