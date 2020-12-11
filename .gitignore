@@ -5,6 +5,9 @@ build/
 *.pyc
 __pycache__/
 
+# Coverage files
+coverage-reports/
+
 # Distribution files
 .eggs/
 *.egg-info/

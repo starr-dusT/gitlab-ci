@@ -1,4 +1,5 @@
 {
+    "coverage-gutters.xmlname": "coverage-reports/coverage-*.xml",
     "editor.formatOnSave": true,
     "python.formatting.provider": "yapf",
     "telemetry.enableCrashReporter": false,

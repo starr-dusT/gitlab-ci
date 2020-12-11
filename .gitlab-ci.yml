@@ -5,6 +5,7 @@ stages:
   - prepare
   - build
   - test
+  - quality
   - deploy
 
 .local:
@@ -43,6 +44,7 @@ stages:
   script:
     - sudo pip3 install -r requirements/runtime.txt --upgrade
     - sudo pip3 install -r requirements/build.txt --upgrade
+    - sudo pip3 install -r requirements/coverage.txt --upgrade
     - sudo pip3 install -r requirements/deploy.txt --upgrade
     - sudo pip3 install -r requirements/docs.txt --upgrade
     - sudo pip3 install -r requirements/quality.txt --upgrade
@@ -126,31 +128,6 @@ stages:
       when: on_success
   allow_failure: true
 
-'SonarCloud':
-  stage: prepare
-  image:
-    name: sonarsource/sonar-scanner-cli:latest
-    entrypoint: ['']
-  variables:
-    GIT_DEPTH: 0
-    SONAR_USER_HOME: ${CI_PROJECT_DIR}/.sonar
-  cache:
-    key: '${CI_JOB_NAME}'
-    paths:
-      - .sonar/cache
-  script:
-    - sonar-scanner -Dsonar.projectVersion=$(git describe --always) -Dsonar.branch.name=${CI_COMMIT_REF_NAME}
-  rules:
-    - if: $CI_COMMIT_REF_NAME == "develop"
-      changes:
-        - 'docs/**/*'
-        - 'gitlabci_local/**/*'
-        - 'setup.py'
-    - if: $CI_COMMIT_REF_NAME == "master"
-      when: on_success
-    - when: never
-  allow_failure: true
-
 'Build':
   stage: build
   variables:
@@ -221,6 +198,49 @@ stages:
     pip show gitlabci-local
   script:
     - for path in ./tests/*; do (cd "${path}" && sh ./test.sh); done
+
+.coverage-template:
+  extends:
+    - .unit-tests-template
+    - .unit-tests-rules
+  variables:
+    COVERAGE_FOLDER: ${CI_PROJECT_DIR}/coverage-reports
+    COVERAGE_FILE: ${CI_PROJECT_DIR}/coverage-reports/.coverage
+    PYTHONPATH: ${CI_PROJECT_DIR}
+  before_script: &coverage-template-before |-
+    mkdir -p "${COVERAGE_FOLDER}/"
+    pip3 install -r requirements/runtime.txt --upgrade
+    pip3 install -r requirements/coverage.txt --upgrade
+    coverage erase
+    echo 'coverage run --append --module --source=gitlabci_local gitlabci_local "${@}"' | tee /usr/local/bin/gitlabci-local /usr/local/bin/gcil
+    chmod a+x /usr/local/bin/gitlabci-local /usr/local/bin/gcil
+  artifacts:
+    paths:
+      - coverage-reports/
+
+'Coverage Docker':
+  extends:
+    - .coverage-template
+    - .unit-tests-docker
+  image: python:3.9
+  before_script:
+    - *unit-tests-docker-before
+    - *coverage-template-before
+  after_script:
+    - coverage report --show-missing --skip-empty
+    - coverage xml -o "${COVERAGE_FOLDER}/coverage-docker.xml"
+
+'Coverage Podman':
+  extends:
+    - .coverage-template
+    - .unit-tests-podman
+  image: python:3.9
+  before_script:
+    - *unit-tests-podman-before
+    - *coverage-template-before
+  after_script:
+    - coverage report --show-missing --skip-empty
+    - coverage xml -o "${COVERAGE_FOLDER}/coverage-podman.xml"
 
 'Py3.6 Docker':
   extends:
@@ -323,6 +343,33 @@ stages:
     - *unit-tests-template-before
   only:
     - local
+
+'SonarCloud':
+  stage: quality
+  image:
+    name: sonarsource/sonar-scanner-cli:latest
+    entrypoint: ['']
+  dependencies:
+    - 'Coverage Docker'
+    - 'Coverage Podman'
+  variables:
+    GIT_DEPTH: 0
+    SONAR_USER_HOME: ${CI_PROJECT_DIR}/.sonar
+  cache:
+    key: '${CI_JOB_NAME}'
+    paths:
+      - .sonar/cache
+  script:
+    - sonar-scanner -Dsonar.projectVersion=$(git describe --always) -Dsonar.branch.name=${CI_COMMIT_REF_NAME}
+  rules:
+    - if: $CI_COMMIT_REF_NAME == "develop"
+      changes:
+        - 'docs/**/*'
+        - 'setup.py'
+    - if: $CI_COMMIT_REF_NAME == "master"
+      when: on_success
+    - when: never
+  allow_failure: true
 
 'Deploy Release':
   stage: deploy

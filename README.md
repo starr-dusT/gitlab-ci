@@ -3,6 +3,7 @@
 [![Build](https://gitlab.com/AdrianDC/gitlabci-local/badges/master/pipeline.svg)](https://gitlab.com/AdrianDC/gitlabci-local/-/commits/master/)
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=AdrianDC_gitlabci-local&metric=bugs)](https://sonarcloud.io/dashboard?id=AdrianDC_gitlabci-local)
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=AdrianDC_gitlabci-local&metric=code_smells)](https://sonarcloud.io/dashboard?id=AdrianDC_gitlabci-local)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=AdrianDC_gitlabci-local&metric=coverage)](https://sonarcloud.io/dashboard?id=AdrianDC_gitlabci-local)
 [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=AdrianDC_gitlabci-local&metric=ncloc)](https://sonarcloud.io/dashboard?id=AdrianDC_gitlabci-local)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=AdrianDC_gitlabci-local&metric=alert_status)](https://sonarcloud.io/dashboard?id=AdrianDC_gitlabci-local)
 
