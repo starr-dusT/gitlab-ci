@@ -63,7 +63,10 @@ stages:
   stage: development
   image: local:silent
   script:
+    - for i in $(seq 1 100); do echo ' '; done
+    - sleep 3
     - python3 ./docs/preview.py
+    - sleep 10
   only:
     - local
 

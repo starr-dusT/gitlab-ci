@@ -75,13 +75,6 @@ class Executor:
 # Engine
 environ['CI_LOCAL_ENGINE'] = 'docker,auto'
 
-# Header
-for i in range(1, 100):
-    print(' ', flush=True)
-
-# Delay
-sleep(3)
-
 # Jobs selector
 Executor('gitlabci-local', './examples/').\
     read().\
@@ -195,6 +188,3 @@ Executor('gitlabci-local -e VARIABLE_8=\'value8\' -e VARIABLE_11=value11 -p', '.
 # Prompt
 Executor('').\
     finish()
-
-# Delay
-sleep(10)
