@@ -79,6 +79,8 @@ def main():
         (Bundle.ENV_ENGINE, ','.join(engine_supported())))
     parser.add_argument('--engine-default', dest='engine_default', action='store_true',
                         help=SUPPRESS)
+    parser.add_argument('-f', '--force', dest='force', action='store_true',
+                        help='Force the action (use with --pull)')
     parser.add_argument('-H', '--host', dest='host', action='store_true',
                         help='Run all jobs on the host rather than containers')
     parser.add_argument('-R', '--no-regex', dest='no_regex', action='store_true',

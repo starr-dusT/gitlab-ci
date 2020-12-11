@@ -87,11 +87,15 @@ class Podman:
         return result.stdout.strip().decode('utf-8') if result.returncode == 0 else ''
 
     # Pull
-    def pull(self, image):
+    def pull(self, image, force=False):
 
         # Header
         print('Pulling from %s' % (image))
         Platform.flush()
+
+        # Force image removal
+        if force:
+            self.rmi(image)
 
         # Pull image with logs stream
         result = self.__exec(['pull', image])

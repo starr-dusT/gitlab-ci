@@ -63,7 +63,11 @@ class Docker:
         return container.name
 
     # Pull
-    def pull(self, image):
+    def pull(self, image, force=False):
+
+        # Force image removal
+        if force:
+            self.rmi(image)
 
         # Pull image with logs stream
         for data in self.__client.api.pull(image, stream=True, decode=True):

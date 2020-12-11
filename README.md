@@ -69,6 +69,7 @@ is the common and unique interface between GitLab CI and gitlabci-local.
 | -p, --pipeline     | Automatically run pipeline stages rather than jobs                                      |
 | -e ENV             | Define VARIABLE=value, pass VARIABLE or ENV file                                        |
 | -E ENGINE          | Force a specific engine (or define CI_LOCAL_ENGINE)<br>Default list: auto,podman,docker |
+| -f, --force        | Force the action (use with --pull)                                                      |
 | -H, --host         | Run all jobs on the host rather than containers                                         |
 | -R, --no-regex     | Disable regex search of names                                                           |
 | -t TAGS            | Handle listed tags as manual jobs<br>Default list: deploy,local,publish                 |

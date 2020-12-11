@@ -24,7 +24,7 @@ def puller(options, jobs):
     if images:
         images.sort()
         for image in images:
-            engine.pull(image)
+            engine.pull(image, options.force)
 
     # Result
     return result

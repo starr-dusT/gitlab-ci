@@ -126,8 +126,8 @@ class Engine:
         return self.__name
 
     # Pull
-    def pull(self, image):
-        self.__engine.pull(image)
+    def pull(self, image, force=False):
+        self.__engine.pull(image, force=force)
 
     # Remove
     def remove(self, container):
