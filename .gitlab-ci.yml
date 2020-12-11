@@ -41,11 +41,11 @@ stages:
   stage: development
   image: local:quiet
   script:
-    - sudo pip3 install -r requirements.txt --upgrade
-    - sudo pip3 install -r requirements-build.txt --upgrade
-    - sudo pip3 install -r requirements-deploy.txt --upgrade
-    - sudo pip3 install -r requirements-docs.txt --upgrade
-    - sudo pip3 install -r requirements-quality.txt --upgrade
+    - sudo pip3 install -r requirements/runtime.txt --upgrade
+    - sudo pip3 install -r requirements/build.txt --upgrade
+    - sudo pip3 install -r requirements/deploy.txt --upgrade
+    - sudo pip3 install -r requirements/docs.txt --upgrade
+    - sudo pip3 install -r requirements/quality.txt --upgrade
   only:
     - local
 
@@ -72,7 +72,7 @@ stages:
   variables:
     PIP_DISABLE_PIP_VERSION_CHECK: 1
   before_script:
-    - pip3 install -q -r requirements-quality.txt --upgrade
+    - pip3 install -q -r requirements/quality.txt --upgrade
   script:
     - yapf -i ./docs/*.py ./gitlabci_local/*.py ./gitlabci_local/*/*.py ./setup.py
     - unify -i --quote "'" ./docs/*.py ./gitlabci_local/*.py ./gitlabci_local/*/*.py ./setup.py
@@ -94,9 +94,9 @@ stages:
   variables:
     PIP_DISABLE_PIP_VERSION_CHECK: 1
   before_script:
-    - pip3 install -q -r requirements.txt --upgrade
-    - pip3 install -q -r requirements-docs.txt --upgrade
-    - pip3 install -q -r requirements-quality.txt --upgrade
+    - pip3 install -q -r requirements/runtime.txt --upgrade
+    - pip3 install -q -r requirements/docs.txt --upgrade
+    - pip3 install -q -r requirements/quality.txt --upgrade
   script:
     - pylint --errors-only ./docs/ ./gitlabci_local/ ./setup.py
     - |
@@ -153,8 +153,8 @@ stages:
   variables:
     PIP_DISABLE_PIP_VERSION_CHECK: 1
   before_script:
-    - pip3 install -r requirements.txt --upgrade
-    - pip3 install -r requirements-build.txt --upgrade
+    - pip3 install -r requirements/runtime.txt --upgrade
+    - pip3 install -r requirements/build.txt --upgrade
   script:
     - rm -rf build dist *.egg-info .eggs
     - python3 setup.py bdist_wheel
@@ -405,7 +405,7 @@ stages:
     TWINE_PASSWORD: ${TWINE_PASSWORD}
   before_script:
     - if [ ! "${CI_COMMIT_REF_PROTECTED}" = 'true' ]; then echo '[ERROR] Please protect this tag...'; exit 1; fi
-    - pip3 install -q -r requirements-deploy.txt --upgrade
+    - pip3 install -q -r requirements/deploy.txt --upgrade
   script:
     - tag=${CI_COMMIT_REF_NAME:-$(git describe --always --abbrev=0)}
     - description=$(sh ./changelog.sh "${tag}" | sed -z 's/"/\\"/g')
@@ -423,7 +423,7 @@ stages:
     PIP_DISABLE_PIP_VERSION_CHECK: 1
     TWINE_PASSWORD_TEST: ${TWINE_PASSWORD_TEST}
   before_script:
-    - pip3 install -q -r requirements-deploy.txt --upgrade
+    - pip3 install -q -r requirements/deploy.txt --upgrade
   script:
     - twine upload -u '__token__' -p "${TWINE_PASSWORD_TEST}" --repository testpypi ./dist/*
   only:

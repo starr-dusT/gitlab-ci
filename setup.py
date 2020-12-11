@@ -3,7 +3,7 @@ from setuptools import find_packages, setup
 
 # Requirements
 requirements = []
-with open('requirements.txt') as f:
+with open('requirements/runtime.txt') as f:
     requirements = [line for line in f.read().splitlines() if not line.startswith('#')]
 
 # Long description
