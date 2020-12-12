@@ -263,6 +263,7 @@ def configurator(options, configurations):
                         }]
                     configuration_prompt[0]['type'] = 'list'
                     configuration_prompt[0]['choices'] = variable_values
+                    variable_default = variable_values[0]
 
         # Parse configuration types: yaml
         elif variable_type == 'yaml':
@@ -285,6 +286,7 @@ def configurator(options, configurations):
                         }]
                     configuration_prompt[0]['type'] = 'list'
                     configuration_prompt[0]['choices'] = variable_values
+                    variable_default = variable_values[0]
 
         # Parse configuration types: unknown
         else:
