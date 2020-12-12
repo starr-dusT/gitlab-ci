@@ -197,7 +197,7 @@ stages:
     pip install --force-reinstall --no-deps --upgrade dist/*.whl
     pip show gitlabci-local
   script:
-    - for path in ./tests/*; do (cd "${path}" && sh ./test.sh); done
+    - for path in ./tests/*; do (cd "${path}/" && sh ./test.sh); done
 
 .coverage-template:
   extends:
@@ -205,15 +205,23 @@ stages:
     - .unit-tests-rules
   variables:
     COVERAGE_FOLDER: ${CI_PROJECT_DIR}/coverage-reports
-    COVERAGE_FILE: ${CI_PROJECT_DIR}/coverage-reports/.coverage
     PYTHONPATH: ${CI_PROJECT_DIR}
   before_script: &coverage-template-before |-
     mkdir -p "${COVERAGE_FOLDER}/"
-    pip3 install -r requirements/runtime.txt --upgrade
-    pip3 install -r requirements/coverage.txt --upgrade
-    coverage erase
+    pip3 install -q -r requirements/runtime.txt --upgrade
+    pip3 install -q -r requirements/coverage.txt --upgrade
+    if [ -z "${SUITE}" ]; then
+      coverage erase
+    fi
     echo 'coverage run --append --module --source=gitlabci_local gitlabci_local "${@}"' | tee /usr/local/bin/gitlabci-local /usr/local/bin/gcil
     chmod a+x /usr/local/bin/gitlabci-local /usr/local/bin/gcil
+  script:
+    - |
+      if [ ! -z "${SUITE}" ]; then
+        (cd "./tests/${SUITE}/" && sh ./test.sh)
+      else
+        for path in ./tests/*; do (cd "${path}/" && sh ./test.sh); done
+      fi
   artifacts:
     paths:
       - coverage-reports/
@@ -223,6 +231,8 @@ stages:
     - .coverage-template
     - .unit-tests-docker
   image: python:3.9
+  variables:
+    COVERAGE_FILE: ${CI_PROJECT_DIR}/coverage-reports/.coverage-docker
   before_script:
     - *unit-tests-docker-before
     - *coverage-template-before
@@ -235,6 +245,8 @@ stages:
     - .coverage-template
     - .unit-tests-podman
   image: python:3.9
+  variables:
+    COVERAGE_FILE: ${CI_PROJECT_DIR}/coverage-reports/.coverage-podman
   before_script:
     - *unit-tests-podman-before
     - *coverage-template-before
