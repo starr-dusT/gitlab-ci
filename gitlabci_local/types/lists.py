@@ -30,7 +30,7 @@ class Lists:
                 try:
                     if search(item, escape(name)):
                         return True
-                    if search(item.lower(), escape(name.lower())):
+                    if ignore_case and search(item.lower(), escape(name.lower())):
                         return True
                 except error:
                     pass
