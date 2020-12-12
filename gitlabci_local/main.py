@@ -11,6 +11,7 @@ from sys import argv, exit
 from .dumper import dumper
 from .menu import selector
 from .engines.engine import supported as engine_supported
+from .features.images import ImagesFeature
 from .package.bundle import Bundle
 from .package.settings import Settings
 from .package.updates import Updates
@@ -18,8 +19,6 @@ from .package.version import Version
 from .parser import reader
 from .parsers.gitlab import GitLab
 from .prints.colors import Colors
-from .puller import puller
-from .remover import remover
 from .runner import launcher
 from .system.platform import Platform
 
@@ -214,11 +213,11 @@ def main():
 
     # Pull jobs images
     elif options.pull:
-        result = puller(options, jobs)
+        result = ImagesFeature(jobs, options).pull(force=options.force)
 
     # Remove jobs images
     elif options.rmi:
-        result = remover(options, jobs)
+        result = ImagesFeature(jobs, options).rmi()
 
     # Select job
     elif options.list and interactive:
