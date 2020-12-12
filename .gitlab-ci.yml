@@ -302,6 +302,19 @@ stages:
     - *unit-tests-podman-before
     - *unit-tests-template-before
 
+'Py3.9 Preview':
+  extends:
+    - .unit-tests-template
+    - .unit-tests-docker
+    - .unit-tests-rules
+  image: python:3.9
+  before_script:
+    - *unit-tests-docker-before
+    - *unit-tests-template-before
+    - pip3 install -q -r requirements/docs.txt --upgrade
+  script:
+    - python3 ./docs/preview.py
+
 'Python Local':
   extends:
     - .unit-tests-template
