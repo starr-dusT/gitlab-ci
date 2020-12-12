@@ -46,7 +46,7 @@ class Boxes:
         # Limit line length
         limit = columns - Boxes.__OFFSET_LINE - len(
             Boxes.__MIDDLE_LEFT) - 2 * Boxes.__PADDING_LINE - len(Boxes.__MIDDLE_RIGHT)
-        if limit < 1:
+        if limit < 1: # pragma: no cover
             limit = 1
         if length > limit:
             length = limit

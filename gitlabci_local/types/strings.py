@@ -44,7 +44,7 @@ class Strings:
         word = ''
 
         # Length limitations
-        if length < 1:
+        if length < 1: # pragma: no cover
             length = 1
 
         # Append line

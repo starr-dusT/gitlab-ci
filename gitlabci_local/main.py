@@ -279,5 +279,5 @@ def main():
         exit(1)
 
 # Entrypoint
-if __name__ == '__main__':
+if __name__ == '__main__': # pragma: no cover
     main()

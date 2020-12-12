@@ -406,7 +406,7 @@ def runner(options, job_data, last_result, jobs_status):
             __engine.sockets(volumes)
 
         # Image validation
-        if not image:
+        if not image: # pragma: no cover
             raise ValueError(
                 'Missing image for "%s / %s"' % (job_data['stage'], job_data['name']))
         __engine.get(image)
