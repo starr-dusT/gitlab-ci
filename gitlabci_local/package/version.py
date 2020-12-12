@@ -4,7 +4,7 @@
 from sys import version_info
 
 # Modules libraries
-from pkg_resources import require
+from pkg_resources import DistributionNotFound, require
 
 # Components
 from ..system.platform import Platform
@@ -17,11 +17,13 @@ class Version:
     def get():
 
         # Acquire version
-        name = __name__.split('.')[0]
-        version = require(name)[0].version
+        try:
+            name = __name__.split('.')[0]
+            return require(name)[0].version
 
-        # Result
-        return version
+        # Default fallback
+        except DistributionNotFound:
+            return '0.0.0'
 
     # Path
     @staticmethod
