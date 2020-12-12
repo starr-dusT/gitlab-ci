@@ -364,8 +364,7 @@ stages:
   rules:
     - if: $CI_COMMIT_REF_NAME == "develop"
       changes:
-        - 'docs/**/*'
-        - 'setup.py'
+        - 'gitlabci_local/**/*'
     - if: $CI_COMMIT_REF_NAME == "master"
       when: on_success
     - when: never
