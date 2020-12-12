@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 # Standard libraries
+from datetime import datetime
 from os import access, environ, W_OK
 from time import localtime, strftime, time
 from update_checker import pretty_date, UpdateChecker
@@ -41,12 +42,24 @@ class Updates:
     # Checker
     def check(self, older=False):
 
+        # Reference version
+        version = '0.0.0' if older else self.__version
+
+        # Fake test updates
+        if Bundle.ENV_UPDATES_FAKE in environ:
+            available = environ[Bundle.ENV_UPDATES_FAKE]
+            if available >= version:
+
+                # Show updates message
+                release_date = datetime.utcfromtimestamp(Bundle.RELEASE_FIRST_TIMESTAMP)
+                self.message(older=older, available=available, date=release_date)
+                return True
+
         # Check if not offline
         if not Bundle.ENV_UPDATES_OFFLINE in environ:
 
             # Check for updates
-            check = UpdateChecker(bypass_cache=True).check(
-                self.__name, '0.0.0' if older else self.__version)
+            check = UpdateChecker(bypass_cache=True).check(self.__name, version)
             if check:
 
                 # Show updates message
@@ -90,10 +103,13 @@ class Updates:
         # Create message box
         box = Boxes()
 
+        # Evaluate same version
+        same = available == self.__version
+
         # Version message prefix
         version_prefix = '%sVersion: %s%s %s%s' % (
-            Colors.YELLOW_LIGHT, Colors.BOLD, self.__name, Colors.RED
-            if not offline and available and not older else Colors.GREEN, self.__version)
+            Colors.YELLOW_LIGHT, Colors.BOLD, self.__name, Colors.RED if not offline
+            and available and not older and not same else Colors.GREEN, self.__version)
 
         # Offline version message
         if offline:
@@ -101,7 +117,7 @@ class Updates:
                 version_prefix, Colors.BOLD))
 
         # Updated version message
-        elif available == self.__version:
+        elif same:
             box.add('%s %swas released %s%s!' % ( #
                 version_prefix, Colors.BOLD, pretty_date(date), Colors.BOLD))
 

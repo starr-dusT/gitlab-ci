@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 # Standard libraries
+from os import environ
 from sys import version_info
 
 # Modules libraries
@@ -8,6 +9,7 @@ from pkg_resources import DistributionNotFound, require
 
 # Components
 from ..system.platform import Platform
+from .bundle import Bundle
 
 # Version class
 class Version:
@@ -15,6 +17,10 @@ class Version:
     # Getter
     @staticmethod
     def get():
+
+        # Fake test version
+        if Bundle.ENV_VERSION_FAKE in environ:
+            return environ[Bundle.ENV_VERSION_FAKE]
 
         # Acquire version
         try:
