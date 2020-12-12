@@ -10,7 +10,6 @@ set -ex
 
 # Run tests
 gitlabci-local -h
-gitlabci-local --settings
 gitlabci-local -c unknown/.gitlab-ci.yml && exit 1 || true
 gitlabci-local -c ../../examples/ -d
 gitlabci-local -c ../../examples/.gitlab-ci.yml -d

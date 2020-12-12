@@ -206,12 +206,14 @@ stages:
     PYTHONPATH: ${CI_PROJECT_DIR}
   before_script: &coverage-template-before |-
     mkdir -p "${COVERAGE_FOLDER}/"
+    apt-get update -qq
+    apt-get install -qq -y sudo 2>&1 | grep 'Setting up sudo'
     pip3 install -q -r requirements/runtime.txt --upgrade
     pip3 install -q -r requirements/coverage.txt --upgrade
     if [ -z "${SUITE}" ]; then
       coverage erase
     fi
-    echo 'coverage run --append --module --source=gitlabci_local gitlabci_local "${@}"' | tee /usr/local/bin/gitlabci-local /usr/local/bin/gcil
+    echo 'coverage run --append --module --source=gitlabci_local gitlabci_local "${@}"' | tee /usr/local/bin/gitlabci-local /usr/local/bin/gcil >/dev/null
     chmod a+x /usr/local/bin/gitlabci-local /usr/local/bin/gcil
   script:
     - |
