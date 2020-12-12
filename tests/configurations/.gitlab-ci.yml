@@ -62,7 +62,12 @@ variables:
       help: Configure the 11th variable
       type: json
       path: ./data.json
-      key: 'unknown.node'
+      key: 'devices.ip[3]'
+    VARIABLE_12:
+      help: Configure the 12th variable
+      type: json
+      path: ./data.json
+      key: 'devices.ip[-3]'
 
 'Job':
   stage: configurations
@@ -79,3 +84,4 @@ variables:
     - echo "VARIABLE_9 = ${VARIABLE_9}"
     - echo "VARIABLE_10 = ${VARIABLE_10}"
     - echo "VARIABLE_11 = ${VARIABLE_11}"
+    - echo "VARIABLE_12 = ${VARIABLE_12}"

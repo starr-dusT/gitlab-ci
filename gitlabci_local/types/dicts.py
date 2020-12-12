@@ -21,7 +21,7 @@ class Dicts:
             matches = match(r'([^\[]*)(\[.*\])*', query).groups()
             if matches[0] and matches[1]:
                 key = matches[0]
-                indexes = [int(value) for value in findall(r'\[(\d+)\]*', matches[1])]
+                indexes = [int(value) for value in findall(r'\[(-?\d+)\]*', matches[1])]
             else:
                 key = query
                 indexes = []
@@ -41,7 +41,7 @@ class Dicts:
 
             # Extract index
             for index in indexes:
-                if result and result[index]:
+                if result and -len(result) <= index < len(result):
                     result = result[index]
                 else:
                     result = None
