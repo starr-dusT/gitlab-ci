@@ -180,10 +180,6 @@ def parser(options, data, environment):
                 # Parse ENVIRONMENT_FILE
                 elif (Path(options.path) / env).is_file():
                     environment_file = Path(options.path) / env
-                    if not environment_file.is_file():
-                        continue
-
-                    # Parse environment files
                     environment_file_values = dotenv_values(dotenv_path=environment_file)
                     for variable in environment_file_values:
 
