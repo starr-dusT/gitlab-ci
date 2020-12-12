@@ -2,6 +2,7 @@
 	// List of extensions which should be recommended for users of this workspace.
 	"recommendations": [
 		"albymor.increment-selection",
+		"brainfit.vscode-coverage-highlighter",
 		"codezombiech.gitignore",
 		"coenraads.bracket-pair-colorizer-2",
 		"dakara.transformer",
@@ -14,7 +15,6 @@
 		"mikestead.dotenv",
 		"ms-python.python",
 		"redhat.vscode-yaml",
-		"ryanluker.vscode-coverage-gutters",
 		"yzhang.markdown-all-in-one"
 	],
 	// List of extensions recommended by VS Code that should not be recommended for users of this workspace.
