@@ -16,3 +16,5 @@ gitlabci-local 'Test'
 gitlabci-local 'C*'
 gitlabci-local 'C.*'
 gitlabci-local 'est .*'
+gitlabci-local 'test *' && exit 1 || true
+gitlabci-local -i 'test *'
