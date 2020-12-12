@@ -296,6 +296,8 @@ def configurator(options, configurations):
                    Colors.RESET))
             print(' ')
             Platform.flush()
+            raise NotImplementedError(
+                'Unsupported configuration type "%s"' % (variable_type))
 
         # Extract environment variable
         if variable in environ:

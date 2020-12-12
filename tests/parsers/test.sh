@@ -10,4 +10,5 @@ set -ex
 
 # Run tests
 gitlabci-local -c ./.gitlab-ci.corrupt.yml -p && exit 1 || true
+gitlabci-local -c ./.gitlab-ci.configurations.yml -p && exit 1 || true
 gitlabci-local -c /sys/bus/gpio/uevent -p && exit 1 || true
