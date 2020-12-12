@@ -222,6 +222,15 @@ stages:
       else
         for path in ./tests/*; do (cd "${path}/" && sh ./test.sh); done
       fi
+  after_script:
+    - coverage xml -o "${COVERAGE_XML}"
+    - |
+      set +x
+      common=$(mktemp -d)
+      cp "${COVERAGE_FOLDER}/.coverage-"* "${common}/"
+      COVERAGE_FILE="${common}/.coverage" coverage combine "${common}/.coverage-"*
+      COVERAGE_FILE="${common}/.coverage" coverage report --show-missing --skip-covered
+      rm -rf "${common}"
   rules:
     - if: $CI_COMMIT_REF_NAME == "develop"
       changes:
@@ -240,12 +249,10 @@ stages:
   image: python:3.9
   variables:
     COVERAGE_FILE: ${CI_PROJECT_DIR}/coverage-reports/.coverage-docker
+    COVERAGE_XML: ${CI_PROJECT_DIR}/coverage-reports/coverage-docker.xml
   before_script:
     - *unit-tests-docker-before
     - *coverage-template-before
-  after_script:
-    - coverage report --show-missing --skip-empty
-    - coverage xml -o "${COVERAGE_FOLDER}/coverage-docker.xml"
 
 'Coverage Podman':
   extends:
@@ -254,12 +261,10 @@ stages:
   image: python:3.9
   variables:
     COVERAGE_FILE: ${CI_PROJECT_DIR}/coverage-reports/.coverage-podman
+    COVERAGE_XML: ${CI_PROJECT_DIR}/coverage-reports/coverage-podman.xml
   before_script:
     - *unit-tests-podman-before
     - *coverage-template-before
-  after_script:
-    - coverage report --show-missing --skip-empty
-    - coverage xml -o "${COVERAGE_FOLDER}/coverage-podman.xml"
 
 'Py3.6 Docker':
   extends:
