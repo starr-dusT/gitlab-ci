@@ -1,0 +1,8 @@
+.template_4:
+  extends: .template_3
+  variables:
+    CONSTANT_1: constant_1
+    CONSTANT_2: constant_2
+  before_script:
+    - echo "CONSTANT_1=${CONSTANT_1}"
+    - echo "CONSTANT_2=${CONSTANT_2}"

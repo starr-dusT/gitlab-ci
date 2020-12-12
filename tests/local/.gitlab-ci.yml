@@ -35,7 +35,8 @@ stages:
   defaults: true
   engine: auto
   env:
-    - LOGNAME
+    - HOSTNAME
+    - MISSING
     - VARIABLE_CI=SECOND_VALUE_EXPECTED
     - VARIABLE_SET=1
     - folder/environment.env
@@ -143,6 +144,7 @@ variables:
   image: alpine:3
   script:
     - echo "HOSTNAME=${HOSTNAME}"
+    - echo "MISSING=${MISSING}"
     - echo "VARIABLE_CI=${VARIABLE_CI}"
     - echo "VARIABLE_ENV_FILE=${VARIABLE_ENV_FILE}"
     - echo "VARIABLE_GLOBAL=${VARIABLE_GLOBAL}"

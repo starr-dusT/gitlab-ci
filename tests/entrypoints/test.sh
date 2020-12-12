@@ -12,3 +12,6 @@ set -ex
 gitlabci-local --pull
 gitlabci-local -d
 gitlabci-local -p
+gitlabci-local -c ./.gitlab-ci.local.yml -p
+gitlabci-local -c ./.gitlab-ci.name.yml -p
+gitlabci-local -c ./.gitlab-ci.simple.yml -p

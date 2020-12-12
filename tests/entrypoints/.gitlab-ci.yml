@@ -107,3 +107,10 @@ stages:
     entrypoint: ['linux32', '/bin/sh', '-c']
   script:
     - uname -m | grep 'i686'
+
+'Job 15':
+  stage: entrypoints
+  image:
+    name: alpine:3
+  script:
+    - uname -m | grep 'x86_64'

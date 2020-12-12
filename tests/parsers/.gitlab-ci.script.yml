@@ -1,0 +1,7 @@
+image: alpine:3
+
+stages:
+  - build
+
+'Job 1':
+  stage: build

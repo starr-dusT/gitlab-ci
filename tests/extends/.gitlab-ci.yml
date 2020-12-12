@@ -5,6 +5,7 @@ include:
   - local: '/template_1.yml'
   - local: '/template_2.yml'
   - local: '/template_3.yml'
+  - local: '/template_4.yml'
   - local: '/templates.yml'
 
 stages:
@@ -35,6 +36,22 @@ stages:
   image: alpine:3
   script:
     - echo 'Template 3'
+
+'Template 4 - 1':
+  stage: extends
+  extends: .template_4
+  image: alpine:3
+  script:
+    - echo 'Template 4 - 1'
+
+'Template 4 - 2':
+  stage: extends
+  extends: .template_4
+  image: alpine:3
+  variables:
+    CONSTANT_1: override_1
+  script:
+    - echo 'Template 4 - 2'
 
 'Templates 1':
   stage: extends
