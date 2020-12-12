@@ -156,7 +156,6 @@ stages:
   variables:
     DOCKER_DRIVER: overlay2
   before_script: &unit-tests-docker-before |-
-    mount
 
 .unit-tests-podman:
   dependencies:
@@ -164,7 +163,6 @@ stages:
   variables:
     DOCKER_HOST: tcp://127.0.0.1:9999
   before_script: &unit-tests-podman-before |-
-    mount
     echo 'deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/Debian_10/ /' >/etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list
     curl -L https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/Debian_10/Release.key | apt-key add -
     wget -P /tmp/ http://ftp.br.debian.org/debian/pool/main/libs/libseccomp/libseccomp2_2.5.0-3+b1_amd64.deb
