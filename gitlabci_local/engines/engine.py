@@ -100,8 +100,8 @@ class Engine:
             raise NotImplementedError('Unknown or unsupported container engine...')
 
     # Exec
-    def exec(self, container, command):
-        return self.__engine.exec(container, command)
+    # def exec(self, container, command):
+    #     return self.__engine.exec(container, command)
 
     # Help
     def help(self, command):
