@@ -1,0 +1,11 @@
+stages:
+  - engine
+
+services:
+  - docker:19.03.13-dind
+
+'Job 1':
+  stage: engine
+  image: alpine:3
+  script:
+    - echo 'Job 1'

@@ -342,6 +342,11 @@ stages:
     - gitlabci-local -c ./tests/regex/.gitlab-ci.yml 'C*'
     - gitlabci-local -c ./tests/regex/.gitlab-ci.yml 'C.*'
     - gitlabci-local -c ./tests/regex/.gitlab-ci.yml 'est .*'
+    - gitlabci-local -c ./tests/engines/.gitlab-ci.yml -p
+    - DOCKER_HOST=tcp://0.0.0.0:9999 gitlabci-local -c ./tests/engines/.gitlab-ci.yml -E d -p && exit 1 || true
+    - gitlabci-local -c ./tests/engines/.gitlab-ci.yml -E auto -p
+    - CI_LOCAL_ENGINE=docker,podman,auto gitlabci-local -c ./tests/engines/.gitlab-ci.yml -p
+    - gitlabci-local -c ./tests/engines/.gitlab-ci.yml -E '' -p
     - timeout 5 gitlabci-local -c ./tests/simple/.gitlab-ci.yml 'Job 1' --bash && exit 1 || true
     - timeout 5 gitlabci-local -c ./tests/simple/.gitlab-ci.yml 'Job 1' --debug && exit 1 || true
     - gcil -c ./tests/simple/.gitlab-ci.yml Job
