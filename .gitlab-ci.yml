@@ -164,12 +164,12 @@ stages:
     DOCKER_HOST: tcp://127.0.0.1:9999
   before_script: &unit-tests-podman-before |-
     echo 'deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/Debian_10/ /' >/etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list
-    curl -L https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/Debian_10/Release.key | apt-key add -
-    wget -P /tmp/ http://ftp.br.debian.org/debian/pool/main/libs/libseccomp/libseccomp2_2.5.0-3+b1_amd64.deb
-    apt update
-    apt install -y /tmp/libseccomp2_2.5.0-3+b1_amd64.deb
+    curl -L -sS https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/Debian_10/Release.key | apt-key add - >/dev/null 2>&1
+    wget -P /tmp/ -q http://ftp.br.debian.org/debian/pool/main/libs/libseccomp/libseccomp2_2.5.0-3+b1_amd64.deb
+    apt-get update -qq
+    apt-get install -qq -y /tmp/libseccomp2_2.5.0-3+b1_amd64.deb 2>&1 | grep 'Setting up libseccomp2'
     rm -f /tmp/libseccomp2_2.5.0-3+b1_amd64.deb
-    apt install -y podman
+    apt-get install -qq -y podman 2>&1 | grep 'Setting up podman'
     sed -i 's#.*cgroup_manager = ".*"#cgroup_manager = "cgroupfs"#g' /etc/containers/containers.conf
     sed -i 's#.*events_logger = ".*"#events_logger = "file"#g' /etc/containers/containers.conf
     sed -i 's#driver = ""#driver = "vfs"#g' /etc/containers/storage.conf
