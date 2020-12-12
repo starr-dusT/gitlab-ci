@@ -28,7 +28,7 @@ class Version:
             return require(name)[0].version
 
         # Default fallback
-        except DistributionNotFound:
+        except DistributionNotFound: # pragma: no cover
             return '0.0.0'
 
     # Path
