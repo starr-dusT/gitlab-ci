@@ -266,7 +266,8 @@ def runner(options, job_data, last_result, jobs_status):
         script_file.write('\n')
         script_file.write('\n'.join(scripts_before))
         script_file.write('\n')
-        script_file.write('} && ')
+        script_file.write('}')
+        script_file.write('\n')
         script_file.flush()
 
     # Prepare script commands
