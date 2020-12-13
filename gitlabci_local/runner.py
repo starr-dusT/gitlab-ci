@@ -437,25 +437,15 @@ def runner(options, job_data, last_result, jobs_status):
         success = False
 
         # Show container logs
-        try:
-            for line in __engine.logs(container):
-                if isinstance(line, bytes):
-                    line_decoded = line.decode()
-                    if __MARKER_DEBUG in line_decoded:
-                        break
-                    if __MARKER_RESULT in line_decoded:
-                        break
-                    stdout.buffer.write(line)
-                    stdout.buffer.flush()
-                else:
-                    if __MARKER_DEBUG in line:
-                        break
-                    if __MARKER_RESULT in line:
-                        break
-                    stdout.write(line)
-                    stdout.flush()
-        except:
-            pass
+        for line in __engine.logs(container):
+            if isinstance(line, bytes):
+                line_decoded = line.decode()
+                if __MARKER_DEBUG in line_decoded:
+                    break
+                if __MARKER_RESULT in line_decoded:
+                    break
+                stdout.buffer.write(line)
+                stdout.buffer.flush()
 
         # Runner bash or debug mode
         if options.bash or options.debug:
