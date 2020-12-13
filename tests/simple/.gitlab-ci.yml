@@ -13,7 +13,7 @@ after_script:
 
 'Job 1':
   stage: simple_stage
-  image: alpine:3.11
+  image: ubuntu:20.04
   script:
     - echo 'Job 1'
 
