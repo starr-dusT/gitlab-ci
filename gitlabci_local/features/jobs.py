@@ -2,8 +2,10 @@
 
 # Standard libraries
 from copy import deepcopy
-from oyaml import dump as yaml_dump
 from sys import maxsize
+
+# Modules libraries
+from oyaml import dump as yaml_dump
 
 # Components
 from ..system.platform import Platform

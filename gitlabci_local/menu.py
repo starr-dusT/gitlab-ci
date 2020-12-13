@@ -4,13 +4,13 @@
 from json import load as json_load
 from os import environ
 from pathlib import Path
+
+# Modules libraries
+from oyaml import safe_load as yaml_safe_load
 from PyInquirer import prompt as PyInquirer_prompt
 from PyInquirer import Separator as PyInquirer_Separator
 from PyInquirer import style_from_dict as PyInquirer_style_from_dict
 from PyInquirer import Token as PyInquirer_Token
-
-# Modules libraries
-from oyaml import safe_load as yaml_safe_load
 
 # Components
 from .package.bundle import Bundle

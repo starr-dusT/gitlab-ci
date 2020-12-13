@@ -3,7 +3,7 @@
 # Standard libraries
 from os import environ
 
-# Components
+# Modules libraries
 from pexpect_executor import Executor
 
 # Engine

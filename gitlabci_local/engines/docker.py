@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Standard libraries
+# Modules libraries
 from docker import from_env
 from docker.errors import DockerException, ImageNotFound
 

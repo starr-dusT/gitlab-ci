@@ -1,4 +1,4 @@
-# Standard libraries
+# Modules libraries
 from setuptools import find_packages, setup
 
 # Requirements

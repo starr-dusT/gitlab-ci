@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Standard libraries
+# Modules libraries
 from PyInquirer import Separator
 from PyInquirer.prompts import list as PyInquirer_prompts_list
 from PyInquirer.prompts.common import if_mousedown

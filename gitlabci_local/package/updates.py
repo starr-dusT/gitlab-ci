@@ -4,6 +4,8 @@
 from datetime import datetime
 from os import access, environ, W_OK
 from time import localtime, strftime, time
+
+# Modules libraries
 from update_checker import pretty_date, UpdateChecker
 
 # Components
