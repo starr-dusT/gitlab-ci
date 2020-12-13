@@ -46,8 +46,8 @@ stages:
     - sudo pip3 install -r requirements/build.txt --upgrade
     - sudo pip3 install -r requirements/coverage.txt --upgrade
     - sudo pip3 install -r requirements/deploy.txt --upgrade
-    - sudo pip3 install -r requirements/docs.txt --upgrade
     - sudo pip3 install -r requirements/quality.txt --upgrade
+    - sudo pip3 install -r requirements/tests.txt --upgrade
   only:
     - local
 
@@ -100,8 +100,8 @@ stages:
     PIP_DISABLE_PIP_VERSION_CHECK: 1
   before_script:
     - pip3 install -q -r requirements/runtime.txt --upgrade
-    - pip3 install -q -r requirements/docs.txt --upgrade
     - pip3 install -q -r requirements/quality.txt --upgrade
+    - pip3 install -q -r requirements/tests.txt --upgrade
   script:
     - pylint --errors-only ./docs/ ./gitlabci_local/ ./setup.py
     - |
@@ -194,6 +194,7 @@ stages:
     pip install dist/*.whl
     pip install --force-reinstall --no-deps --upgrade dist/*.whl
     pip show gitlabci-local
+    pip3 install -q -r requirements/tests.txt --upgrade
   script:
     - for path in ./tests/*; do (cd "${path}/" && sh ./test.sh); done
 
@@ -210,6 +211,7 @@ stages:
     apt-get install -qq -y sudo 2>&1 | grep 'Setting up sudo'
     pip3 install -q -r requirements/runtime.txt --upgrade
     pip3 install -q -r requirements/coverage.txt --upgrade
+    pip3 install -q -r requirements/tests.txt --upgrade
     if [ -z "${SUITE}" ]; then
       coverage erase
     fi
@@ -355,7 +357,7 @@ stages:
   before_script:
     - *unit-tests-docker-before
     - *unit-tests-template-before
-    - pip3 install -q -r requirements/docs.txt --upgrade
+    - pip3 install -q -r requirements/tests.txt --upgrade
   script:
     - python3 ./docs/preview.py
 

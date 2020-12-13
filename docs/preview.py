@@ -58,15 +58,15 @@ Executor('gitlabci-local \'Job 1 - 3\'').\
     finish()
 
 # Pipeline runner
-Executor('gitlabci-local -p', '../tests/failures/').\
+Executor('gitlabci-local -p', workdir='../tests/failures/').\
     finish()
 
 # Stage runner
-Executor('gitlabci-local -p one two', '../stages/').\
+Executor('gitlabci-local -p one two', workdir='../stages/').\
     finish()
 
 # Configurations runner
-Executor('gitlabci-local -e VARIABLE_8=\'value8\' -e VARIABLE_11=value11 -p', '../configurations/').\
+Executor('gitlabci-local -e VARIABLE_8=\'value8\' -e VARIABLE_11=value11 -p', workdir='../configurations/').\
     read().\
     wait(1).\
     press(Executor.KEY_ENTER).\
