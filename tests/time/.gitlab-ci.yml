@@ -1,0 +1,28 @@
+image: alpine:3
+
+stages:
+  - time
+
+before_script:
+  - date
+
+after_script:
+  - date
+
+'Job 1':
+  stage: time
+  script:
+    - echo 'Job 1'
+    - sleep 0
+
+'Job 2':
+  stage: time
+  script:
+    - echo 'Job 2'
+    - sleep 10
+
+'Job 3':
+  stage: time
+  script:
+    - echo 'Job 3'
+    - sleep 62
