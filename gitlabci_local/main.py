@@ -8,10 +8,10 @@ from subprocess import check_output, DEVNULL, Popen
 from sys import argv, exit
 
 # Components
-from .dumper import dumper
 from .menu import selector
 from .engines.engine import supported as engine_supported
 from .features.images import ImagesFeature
+from .features.jobs import JobsFeature
 from .package.bundle import Bundle
 from .package.settings import Settings
 from .package.updates import Updates
@@ -209,7 +209,7 @@ def main():
 
     # Dump configuration
     if options.dump:
-        result = dumper(options, jobs)
+        result = JobsFeature(jobs, options).dump()
 
     # Pull jobs images
     elif options.pull:
