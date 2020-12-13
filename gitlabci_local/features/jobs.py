@@ -3,6 +3,7 @@
 # Standard libraries
 from copy import deepcopy
 from oyaml import dump as yaml_dump
+from sys import maxsize
 
 # Components
 from ..system.platform import Platform
@@ -34,7 +35,7 @@ class JobsFeature:
     def dump(self):
 
         # Dump configuration results
-        print(yaml_dump(self.__configuration, indent=2))
+        print(yaml_dump(self.__configuration, indent=2, width=maxsize))
         print(' ')
         Platform.flush()
 
