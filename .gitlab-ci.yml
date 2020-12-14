@@ -184,7 +184,7 @@ stages:
 
 .unit-tests-template:
   stage: test
-  timeout: 10m
+  timeout: 15m
   variables:
     FORCE_STYLING: 'true'
     TEMP: .tmp
