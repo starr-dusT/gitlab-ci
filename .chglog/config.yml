@@ -5,18 +5,25 @@ info:
   repository_url: https://gitlab.com/AdrianDC/gitlabci-local
 options:
   commits:
-    # filters:
-    #   Type:
-    #     - feat
-    #     - fix
-    #     - perf
-    #     - refactor
+    filters:
+      # Type:
+      #   - chore
+      #   - docs
+      #   - feat
+      #   - fix
+      #   - perf
+      #   - refactor
+      #   - test
   commit_groups:
-    # title_maps:
-    #   feat: Features
-    #   fix: Bug Fixes
-    #   perf: Performance Improvements
-    #   refactor: Code Refactoring
+    title_maps:
+      chore: Cleanups
+      docs: Documentation
+      feat: Features
+      fix: Bug Fixes
+      perf: Performance Improvements
+      refactor: Code Refactoring
+      test: Test
+      tests: Test
   header:
     pattern: "^(\\w*)(?:\\(([\\w\\$\\.\\-\\*\\s]*)\\))?\\:\\s(.*)$"
     pattern_maps:
