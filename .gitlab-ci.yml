@@ -8,6 +8,10 @@ stages:
   - quality
   - deploy
 
+variables:
+  EXECUTOR_HOST: preview
+  EXECUTOR_TOOL: gitlabci-local
+
 .local:
   engine: docker,auto
   real_paths: true
