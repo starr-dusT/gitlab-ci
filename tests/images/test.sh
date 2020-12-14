@@ -12,6 +12,7 @@ set -ex
 gitlabci-local --pull
 gitlabci-local --pull
 gitlabci-local --pull --force
+pexpect-executor -- gitlabci-local --pull --force
 gitlabci-local --rmi
 gitlabci-local --rmi
 gitlabci-local -p
