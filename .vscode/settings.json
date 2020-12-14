@@ -15,6 +15,7 @@
     "telemetry.enableCrashReporter": false,
     "telemetry.enableTelemetry": false,
     "terminal.enableAppInsights": false,
+    "terminal.integrated.allowChords": false,
     "vscode-coverage-highlighter.coveredColor": "rgba(20, 250, 20, 0.05)",
     "vscode-coverage-highlighter.files": [
         "coverage/coverage-final.json",
