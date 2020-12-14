@@ -50,10 +50,6 @@
 * resolve [#141](https://gitlab.com/AdrianDC/gitlabci-local/issues/141): refactor and fix SonarQube issues for except:
 * resolve [#141](https://gitlab.com/AdrianDC/gitlabci-local/issues/141): refactor and fix SonarQube issues in parser
 
-### Docs
-
-* changelog: regenerate release tag changes history
-
 ### Feat
 
 * updates: improve updates colors and embed new test flags
@@ -84,10 +80,6 @@
 * gitlab-ci.yml: add support for SonarCloud analysis
 * gitlab-ci: run build and tests jobs only if needed
 
-### Docs
-
-* changelog: regenerate release tag changes history
-
 
 <a name="2.2.2"></a>
 ## [2.2.2](https://gitlab.com/AdrianDC/gitlabci-local/compare/2.2.1...2.2.2) (2020-12-09)
@@ -99,7 +91,6 @@
 
 ### Docs
 
-* changelog: regenerate release tag changes history
 * resolve [#140](https://gitlab.com/AdrianDC/gitlabci-local/issues/140): add Android test environment explanations
 * resolve [#140](https://gitlab.com/AdrianDC/gitlabci-local/issues/140): mention Android native engine with Termux
 * prepare [#140](https://gitlab.com/AdrianDC/gitlabci-local/issues/140): add installation steps for all test platforms
@@ -117,10 +108,6 @@
 ### Chore
 
 * prepare [#135](https://gitlab.com/AdrianDC/gitlabci-local/issues/135): isolate string manipulators to 'Strings' type
-
-### Docs
-
-* changelog: regenerate release tag changes history
 
 ### Feat
 
@@ -146,7 +133,6 @@
 
 ### Docs
 
-* changelog: regenerate release tag changes history
 * prepare [#118](https://gitlab.com/AdrianDC/gitlabci-local/issues/118): add supported macOS versions and update TEST
 
 ### Feat
@@ -172,7 +158,6 @@
 
 ### Docs
 
-* changelog: regenerate release tag changes history
 * resolve [#129](https://gitlab.com/AdrianDC/gitlabci-local/issues/129): document the settings configurations and goals
 
 ### Feat
@@ -198,7 +183,6 @@
 
 ### Docs
 
-* changelog: regenerate release tag changes history
 * prepare [#118](https://gitlab.com/AdrianDC/gitlabci-local/issues/118): add macOS references in README and TEST
 
 ### Feat
@@ -237,10 +221,6 @@
 * gitlab-ci: isolate requirements and use built packages
 * gitlab-ci: add '--force-reinstall' to pip reinstallations
 
-### Docs
-
-* changelog: regenerate release tag changes history
-
 ### Feat
 
 * implement [#124](https://gitlab.com/AdrianDC/gitlabci-local/issues/124): add daily PyPI updates notifications
@@ -265,12 +245,10 @@
 
 ### Docs
 
-* changelog: regenerate release tag changes history
 * resolve [#117](https://gitlab.com/AdrianDC/gitlabci-local/issues/117): add usual examples of parameters
 * resolve [#120](https://gitlab.com/AdrianDC/gitlabci-local/issues/120): refactor the supported .gitlab-ci.yml nodes
 * readme: add Windows 10 1909 as being a supported system
 * test: add tools and engines references for Linux and Windows
-* changelog: regenerate release tag changes history
 
 ### Feat
 
@@ -313,7 +291,6 @@
 
 ### Docs
 
-* changelog: regenerate release tag changes history
 * readme: center operating systems and engines names tables
 * gitlab-ci: use 'docs: changelog:' for changelog commits
 * readme: improve readability of supported engines and systems
@@ -417,10 +394,6 @@
 <a name="1.3.1"></a>
 ## [1.3.1](https://gitlab.com/AdrianDC/gitlabci-local/compare/1.3.0...1.3.1) (2020-10-23)
 
-### CHANGELOG
-
-* regenerate release tag changes history
-
 ### Feat
 
 * resolve [#79](https://gitlab.com/AdrianDC/gitlabci-local/issues/79): add 'Bug Reports' and 'Source' links for PyPI
@@ -429,10 +402,6 @@
 
 <a name="1.3.0"></a>
 ## [1.3.0](https://gitlab.com/AdrianDC/gitlabci-local/compare/1.2.1...1.3.0) (2020-10-21)
-
-### CHANGELOG
-
-* regenerate release tag changes history
 
 ### Chore
 
@@ -454,10 +423,6 @@
 
 <a name="1.2.1"></a>
 ## [1.2.1](https://gitlab.com/AdrianDC/gitlabci-local/compare/1.2.0...1.2.1) (2020-08-04)
-
-### CHANGELOG
-
-* regenerate release tag changes history
 
 ### Chore
 
@@ -485,10 +450,6 @@
 <a name="1.2.0"></a>
 ## [1.2.0](https://gitlab.com/AdrianDC/gitlabci-local/compare/1.1.6...1.2.0) (2020-06-13)
 
-### CHANGELOG
-
-* regenerate release tag changes history
-
 ### Feat
 
 * implement [#66](https://gitlab.com/AdrianDC/gitlabci-local/issues/66): add support for 'extends' jobs in parser
@@ -508,10 +469,6 @@
 <a name="1.1.6"></a>
 ## [1.1.6](https://gitlab.com/AdrianDC/gitlabci-local/compare/1.1.5...1.1.6) (2020-04-02)
 
-### CHANGELOG
-
-* regenerate release tag changes history
-
 ### Chore
 
 * validate [#64](https://gitlab.com/AdrianDC/gitlabci-local/issues/64): ensure first failure drops the script
@@ -529,10 +486,6 @@
 <a name="1.1.5"></a>
 ## [1.1.5](https://gitlab.com/AdrianDC/gitlabci-local/compare/1.1.4...1.1.5) (2020-03-15)
 
-### CHANGELOG
-
-* regenerate release tag changes history
-
 ### Chore
 
 * deprecate 'Deploy Test' and enforce automatic tags release
@@ -545,10 +498,6 @@
 <a name="1.1.4"></a>
 ## [1.1.4](https://gitlab.com/AdrianDC/gitlabci-local/compare/1.1.3...1.1.4) (2020-03-15)
 
-### CHANGELOG
-
-* regenerate release tag changes history
-
 ### Fix
 
 * fix [#61](https://gitlab.com/AdrianDC/gitlabci-local/issues/61): handle before_script and script together like CI
@@ -556,10 +505,6 @@
 
 <a name="1.1.3"></a>
 ## [1.1.3](https://gitlab.com/AdrianDC/gitlabci-local/compare/1.1.2...1.1.3) (2020-03-10)
-
-### CHANGELOG
-
-* regenerate release tag changes history
 
 ### Chore
 
@@ -579,10 +524,6 @@
 <a name="1.1.2"></a>
 ## [1.1.2](https://gitlab.com/AdrianDC/gitlabci-local/compare/1.1.1...1.1.2) (2020-03-07)
 
-### CHANGELOG
-
-* regenerate release tag changes history
-
 ### Fix
 
 * tests: minor local test output syntax cleanup
@@ -592,10 +533,6 @@
 <a name="1.1.1"></a>
 ## [1.1.1](https://gitlab.com/AdrianDC/gitlabci-local/compare/1.1.0...1.1.1) (2020-03-03)
 
-### CHANGELOG
-
-* regenerate release tag changes history
-
 ### Feat
 
 * implement [#57](https://gitlab.com/AdrianDC/gitlabci-local/issues/57): add --debug support to keep runner execution
@@ -604,11 +541,6 @@
 
 <a name="1.1.0"></a>
 ## [1.1.0](https://gitlab.com/AdrianDC/gitlabci-local/compare/1.0.5...1.1.0) (2020-02-23)
-
-### CHANGELOG
-
-* regenerate release tag changes history
-* regenerate release tag changes history
 
 ### Chore
 
@@ -652,10 +584,6 @@
 <a name="1.0.5"></a>
 ## [1.0.5](https://gitlab.com/AdrianDC/gitlabci-local/compare/1.0.4...1.0.5) (2020-01-28)
 
-### CHANGELOG
-
-* regenerate release tag changes history
-
 ### Chore
 
 * changelog: add current commit hint with git describe
@@ -684,10 +612,6 @@
 
 <a name="1.0.4"></a>
 ## [1.0.4](https://gitlab.com/AdrianDC/gitlabci-local/compare/1.0.3...1.0.4) (2020-01-26)
-
-### CHANGELOG
-
-* regenerate release tag changes history
 
 ### Chore
 
@@ -726,7 +650,6 @@
 
 ### CHANGELOG
 
-* regenerate release tag changes history
 * implement [#20](https://gitlab.com/AdrianDC/gitlabci-local/issues/20): automate tag and log regeneration
 
 ### Chore

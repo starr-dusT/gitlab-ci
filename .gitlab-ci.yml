@@ -32,6 +32,7 @@ stages:
     - 'git commit -m "docs: changelog: regenerate release tag changes history"'
     - git tag -f -m '' "${tag}"
     - ./.tmp/git-chglog -o ./CHANGELOG.md
+    - sh ./changelog.sh --clean
     - git add -v ./CHANGELOG.md
     - git commit --amend --no-edit
     - git tag -f -m '' "${tag}"
