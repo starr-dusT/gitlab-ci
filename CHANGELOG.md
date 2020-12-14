@@ -1,4 +1,76 @@
 
+<a name="2.3.0"></a>
+## [2.3.0](https://gitlab.com/AdrianDC/gitlabci-local/compare/2.2.3...2.3.0) (2020-12-14)
+
+### Chore
+
+* gitlab-ci: raise interactive tests timeout to 15 minutes
+* coverage: ignore unused PyInquirer patcher lines coverage
+* tests: add interactive unit tests with pexpect-executor
+* docs: resolve configurations test's 12th value support
+* lint: isolate and identify 'Modules libraries' imports
+* features: prevent YAML dump outputs lines from wrapping
+* tests: migrate to pexpect-executor 1.0.1 with tests support
+* features: isolate 'dumper' into a 'Jobs' feature
+* runner: remove unused engine logs reader and try except
+* tests: use 'ubuntu:20.04' for --bash/--debug for bash tests
+* tests: add time tests for 60+ seconds pipelines coverage
+* tests: add multiple unit tests to improve sources coverage
+* parser: handle 'FileNotFoundError' upon file parser
+* tests: add unknown configurations test and raise error
+* gitlab-ci: unify coverage reports, unify and common scripts
+* version: exclude version '0.0.0' fallback from coverage
+* gitlab-ci: run coverage and SonarCloud upon tests/ changes
+* gitlab-ci: silent and hide all installation irrelevant logs
+* tests: add '--settings' specific tests and install 'sudo'
+* tests: add missing or incompatible Podman engine tests
+* tests: add 'gitlabci-local -i' with regex name tests
+* gitlab-ci: remove 'mount' command execution in all tests
+* tests: add 'gitlabci-local -c ./folder/' arguments test
+* engine: disable the engine.exec command until required
+* gitlab-ci: isolate coverage databses and allow suite tests
+* gitlab-ci: resolve 'SonarCloud' changes rules on develop
+* vscode: exclude intermediate files from the project view
+* vscode: migrate to 'brainfit.vscode-coverage-highlighter'
+* coverage: ignore coverage of unreachable input securities
+* gitlab-ci: implement Python coverage reports for SonarCloud
+* gitlab-ci: add 'Py3.9 Preview' test of ./docs/preview.py
+* docs: migrate to the isolated 'pexpect-executor' package
+* parser: cleanup duplicated environment file checks
+* tests: refactor and isolate all unit tests
+* version: support non-packaged sources version fallback
+* finish [#142](https://gitlab.com/AdrianDC/gitlabci-local/issues/142): isolate pull and rmi into a feature class
+* engine: add support for -E '' as being default engines
+* tests: add 'engines' tests from arguments and environment
+* gitlab-ci: add --settings and wrapped --update-check tests
+* gitlab-ci: create YAML anchors to reuse templates scripts
+* readme: format the markdown sources automatically
+* gitlab-ci: wrap preview.py delay out of the preview script
+* requirements: isolate all requirements to a folder
+* resolve [#141](https://gitlab.com/AdrianDC/gitlabci-local/issues/141): refactor and fix SonarQube issues for except:
+* resolve [#141](https://gitlab.com/AdrianDC/gitlabci-local/issues/141): refactor and fix SonarQube issues in parser
+
+### Docs
+
+* changelog: regenerate release tag changes history
+
+### Feat
+
+* updates: improve updates colors and embed new test flags
+* finish [#144](https://gitlab.com/AdrianDC/gitlabci-local/issues/144): add missing regex check for -i case option
+* implement [#144](https://gitlab.com/AdrianDC/gitlabci-local/issues/144): add -i to ignore jobs name case distinctions
+* implement [#143](https://gitlab.com/AdrianDC/gitlabci-local/issues/143): add --force to force pull container images
+* implement [#142](https://gitlab.com/AdrianDC/gitlabci-local/issues/142): add --rmi to remove container images
+
+### Fix
+
+* resolve [#148](https://gitlab.com/AdrianDC/gitlabci-local/issues/148): handle JSON or YAML string as unique choice
+* resolve [#146](https://gitlab.com/AdrianDC/gitlabci-local/issues/146): ensure before_script really checks for issues
+* resolve [#147](https://gitlab.com/AdrianDC/gitlabci-local/issues/147): default YAML or JSON value if non-interactive
+* resolve [#145](https://gitlab.com/AdrianDC/gitlabci-local/issues/145): Handle configurations Dicts index out of range
+* finish [#137](https://gitlab.com/AdrianDC/gitlabci-local/issues/137): delete temporary files only if they still exist
+
+
 <a name="2.2.3"></a>
 ## [2.2.3](https://gitlab.com/AdrianDC/gitlabci-local/compare/2.2.2...2.2.3) (2020-12-10)
 
