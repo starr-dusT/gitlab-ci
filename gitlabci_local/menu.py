@@ -254,6 +254,8 @@ def configurator(options, configurations):
                         raise ValueError(
                             'Unknown "%s" key in %s for "%s"' %
                             (configuration_key, configuration_path, variable))
+                    if isinstance(variable_values, str):
+                        variable_values = [variable_values]
                     for choice in variable_values:
                         variable_index += 1
                         variable_choices += [{
@@ -277,6 +279,8 @@ def configurator(options, configurations):
                         raise ValueError(
                             'Unknown "%s" key in %s for "%s"' %
                             (configuration_key, configuration_path, variable))
+                    if isinstance(variable_values, str):
+                        variable_values = [variable_values]
                     for choice in variable_values:
                         variable_index += 1
                         variable_choices += [{
