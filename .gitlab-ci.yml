@@ -155,7 +155,7 @@ variables:
 
 .unit-tests-docker:
   services:
-    - docker:19.03.13-dind
+    - docker:19-dind
   dependencies:
     - Build
   variables:

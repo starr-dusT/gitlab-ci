@@ -2,7 +2,7 @@ stages:
   - engine
 
 services:
-  - docker:19.03.13-dind
+  - docker:19-dind
 
 'Job 1':
   stage: engine
