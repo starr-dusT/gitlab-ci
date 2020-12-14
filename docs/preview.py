@@ -120,6 +120,8 @@ Executor('gitlabci-local -e VARIABLE_8=\'value8\' -e VARIABLE_11=value11 -p', wo
     read().\
     press(Executor.KEY_ENTER).\
     read().\
+    press(Executor.KEY_ENTER).\
+    read().\
     finish()
 
 # Prompt
