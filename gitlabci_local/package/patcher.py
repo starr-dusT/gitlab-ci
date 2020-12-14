@@ -50,7 +50,7 @@ class InquirerControl(TokenListControl):
             selected = (index == self.selected_option_index)
 
             @if_mousedown
-            def select_item(cli, mouse_event):
+            def select_item(cli, mouse_event): # pragma: no cover
                 # bind option with this index to mouse event
                 self.selected_option_index = index
                 self.answered = True
@@ -70,7 +70,7 @@ class InquirerControl(TokenListControl):
                     try:
                         tokens.append(
                             (T.Selected if selected else T, str(choice[0]), select_item))
-                    except:
+                    except: # pragma: no cover
                         tokens.append(
                             (T.Selected if selected else T, choice[0], select_item))
                 tokens.append((T, '\n'))
