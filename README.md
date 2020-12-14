@@ -163,13 +163,13 @@ gitlabci-local currently supports these container engines:
 
 ## Supported Linux systems
 
-|        Engines        | Linux Mint,  Ubuntu | CentOS | Others |
-| :-------------------: | :-----------------: | :----: | :----: |
-|    Native (shell)     |        **✓**        | **✓**  | **?**  |
-| Docker (as&nbsp;user) |        **✓**        | **✓**  | **?**  |
-| Docker (as&nbsp;root) |        **✓**        | **✓**  | **?**  |
-| Podman (as&nbsp;user) |        **~**        | **~**  | **?**  |
-| Podman (as&nbsp;root) |        **✓**        | **✓**  | **?**  |
+|        Engines        | Linux Mint, Ubuntu | CentOS | Others |
+| :-------------------: | :----------------: | :----: | :----: |
+|    Native (shell)     |       **✓**        | **✓**  | **?**  |
+| Docker (as&nbsp;user) |       **✓**        | **✓**  | **?**  |
+| Docker (as&nbsp;root) |       **✓**        | **✓**  | **?**  |
+| Podman (as&nbsp;user) |       **~**        | **~**  | **?**  |
+| Podman (as&nbsp;root) |       **✓**        | **✓**  | **?**  |
 
 ---
 
