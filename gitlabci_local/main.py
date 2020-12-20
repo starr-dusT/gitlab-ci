@@ -250,19 +250,28 @@ def main():
 
         # Windows WinPTY compatibility
         if Platform.IS_WINDOWS and not Bundle.ENV_WINPTY in environ:
+
+            # Prepare WinPTY variables
             hint = ' (on Windows, winpty is required)'
+            winpty_binary = 'winpty.exe'
+            if 'WINPTY_BINARY_PATH' in environ:
+                winpty_binary = environ['WINPTY_BINARY_PATH']
+
+            # Acquire WinPTY path
             try:
-                winpty = check_output(['where', 'winpty.exe'], stderr=DEVNULL).strip()
-            except FileNotFoundError:
+                winpty = check_output(['where', winpty_binary], stderr=DEVNULL).strip()
+            except FileNotFoundError: # pragma: no cover
                 pass
             else:
+
+                # Nested WinPTY launch
                 _environ = dict(environ)
                 _environ[Bundle.ENV_WINPTY] = 'true'
                 try:
                     process = Popen([winpty] + argv, env=_environ)
                     process.wait()
                     exit(process.returncode)
-                except OSError:
+                except OSError: # pragma: no-cover
                     pass
 
         # Unsupported interactive terminal

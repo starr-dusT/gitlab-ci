@@ -28,3 +28,4 @@ set -ex
 # Run tests
 gitlabci-local --settings
 gitlabci-local -c ../simple/ </dev/null && exit 1 || true
+WINPTY_BINARY_PATH='winpty.exe.missing' gitlabci-local -c ../simple/ </dev/null && exit 1 || true
