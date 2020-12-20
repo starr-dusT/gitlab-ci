@@ -2,6 +2,7 @@
 
 # Standard libraries
 from configparser import ConfigParser
+from sys import stdout
 
 # Components
 from ..prints.colors import Colors
@@ -34,8 +35,15 @@ class Settings:
             if self.get('package', 'name') != name:
                 raise ValueError('Missing settings files')
         except ValueError:
-            self.__folder.mkdir(parents=True, exist_ok=True)
+            self.__prepare()
             self.__reset(name)
+
+    # Prepare
+    def __prepare(self):
+
+        # Prepare folder path
+        if not Platform.IS_SIMULATED:
+            self.__folder.mkdir(parents=True, exist_ok=True)
 
     # Reset
     def __reset(self, name):
@@ -48,8 +56,9 @@ class Settings:
     def __write(self):
 
         # Write initial settings
-        with open(self.__path, 'w') as output:
-            self.__settings.write(output)
+        if not Platform.IS_SIMULATED:
+            with open(self.__path, 'w') as output:
+                self.__settings.write(output)
 
     # Get
     def get(self, group, key):
@@ -84,7 +93,12 @@ class Settings:
                Colors.RESET))
         print(' ')
 
+        # Settings simulated contents
+        if Platform.IS_SIMULATED:
+            self.__settings.write(stdout)
+
         # Settings file contents
-        with open(self.__path, 'r') as data:
-            print(data.read())
-        Platform.flush()
+        else:
+            with open(self.__path, 'r') as data:
+                print(data.read())
+            Platform.flush()
