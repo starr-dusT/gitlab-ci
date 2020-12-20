@@ -208,6 +208,7 @@ variables:
     - .unit-tests-template
     - .unit-tests-rules
   variables:
+    COVERAGE_COMMON: ${CI_PROJECT_DIR}/coverage-reports/coverage-common.xml
     COVERAGE_FOLDER: ${CI_PROJECT_DIR}/coverage-reports
     COVERAGE_RCFILE: ${CI_PROJECT_DIR}/.coveragerc
     PYTHONPATH: ${CI_PROJECT_DIR}
@@ -235,11 +236,15 @@ variables:
     - sed -i 's#\(<source>\).*\(</source>\)#\1.\2#g' "${COVERAGE_XML}"
     - |
       set +x
-      common=$(mktemp -d)
-      cp "${COVERAGE_FOLDER}/.coverage-"* "${common}/"
-      COVERAGE_FILE="${common}/.coverage" coverage combine "${common}/.coverage-"*
-      COVERAGE_FILE="${common}/.coverage" coverage report --ignore-errors --show-missing --skip-covered
-      rm -rf "${common}"
+      if [ ! -z "${CI_LOCAL}" ]; then
+        common=$(mktemp -d)
+        cp "${COVERAGE_FOLDER}/.coverage-"* "${common}/"
+        COVERAGE_FILE="${common}/.coverage" coverage combine "${common}/.coverage-"*
+        COVERAGE_FILE="${common}/.coverage" coverage report --ignore-errors --show-missing --skip-covered
+        COVERAGE_FILE="${common}/.coverage" coverage xml -o "${COVERAGE_COMMON}"
+        sed -i 's#\(<source>\).*\(</source>\)#\1.\2#g' "${COVERAGE_COMMON}"
+        rm -rf "${common}"
+      fi
   rules:
     - if: $CI_COMMIT_REF_NAME == "develop"
       changes:
