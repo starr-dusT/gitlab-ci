@@ -1,0 +1,8 @@
+stages:
+  - permissions
+
+'Job':
+  stage: permissions
+  image: local
+  script:
+    - echo 'Job'

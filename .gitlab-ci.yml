@@ -195,6 +195,8 @@ variables:
     TEMP: .tmp
     TERM: ansi
   before_script: &unit-tests-template-before |-
+    apt-get update -qq
+    apt-get install -qq -y sudo 2>&1 | grep 'Setting up sudo'
     mkdir -p ./.tmp/
     pip install dist/*.whl
     pip install --force-reinstall --no-deps --upgrade dist/*.whl
@@ -214,6 +216,7 @@ variables:
     PYTHONPATH: ${CI_PROJECT_DIR}
   before_script: &coverage-template-before |-
     mkdir -p "${COVERAGE_FOLDER}/"
+    chmod 777 "${COVERAGE_FOLDER}"
     apt-get update -qq
     apt-get install -qq -y sudo 2>&1 | grep 'Setting up sudo'
     pip3 install -q -r requirements/runtime.txt --upgrade 2>/dev/null
@@ -222,6 +225,8 @@ variables:
     if [ -z "${SUITE}" ]; then
       coverage erase
     fi
+    coverage run --append --module --source=gitlabci_local gitlabci_local --version >/dev/null
+    chmod 666 "${COVERAGE_FILE}"
     echo 'coverage run --append --module --source=gitlabci_local gitlabci_local "${@}"' | tee /usr/local/bin/gitlabci-local /usr/local/bin/gcil >/dev/null
     chmod a+x /usr/local/bin/gitlabci-local /usr/local/bin/gcil
   script:
@@ -295,12 +300,15 @@ variables:
     - tar --strip-components=2 -C /opt/wineprefix/drive_c/windows/ -xf /tmp/winpty-0.4.3-msys2-2.7.0-x64.tar.gz winpty-0.4.3-msys2-2.7.0-x64/lib/
     - rm -f /tmp/winpty-0.4.3-msys2-2.7.0-x64.tar.gz
     - mkdir -p "${COVERAGE_FOLDER}/"
+    - chmod 777 "${COVERAGE_FOLDER}"
     - wine pip3 install -q -r requirements/runtime.txt --upgrade 2>/dev/null
     - wine pip3 install -q -r requirements/coverage.txt --upgrade 2>/dev/null
     - wine pip3 install -q -r requirements/tests.txt --upgrade 2>/dev/null
     - echo 'wine coverage "${@}"' | tee /usr/local/bin/coverage >/dev/null
     - chmod a+x /usr/local/bin/coverage
     - coverage erase
+    - coverage run --append --module --source=gitlabci_local gitlabci_local --version >/dev/null
+    - chmod 666 "${COVERAGE_FILE}"
     - echo 'coverage run --append --module --source=gitlabci_local gitlabci_local "${@}"' | tee /usr/local/bin/gitlabci-local /usr/local/bin/gcil >/dev/null
     - chmod a+x /usr/local/bin/gitlabci-local /usr/local/bin/gcil
   script:
