@@ -6,6 +6,7 @@
         ".tmp": true,
         "*.egg-info": true,
         "**/__pycache__": true,
+        "**/.tmp.entrypoint.*": true,
         "**/*.pyc": true,
         "build": true,
         "coverage-reports": true,
