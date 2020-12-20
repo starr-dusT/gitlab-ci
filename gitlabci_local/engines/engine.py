@@ -104,8 +104,8 @@ class Engine:
         return self.__engine.cmd_exec()
 
     # Exec
-    # def exec(self, container, command):
-    #     return self.__engine.exec(container, command)
+    def exec(self, container, command): # pragma: no cover
+        return self.__engine.exec(container, command)
 
     # Get
     def get(self, image):
