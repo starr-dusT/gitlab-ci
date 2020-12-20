@@ -50,21 +50,26 @@ variables:
       key: 'unknown.node'
     VARIABLE_9:
       help: Configure the 9th variable
-      type: json
-      path: ./data.json
-      key: 'nodes[0].names'
+      type: yaml
+      path: ./ip.yml
+      key: 'values[2]'
     VARIABLE_10:
       help: Configure the 10th variable
       type: json
       path: ./data.json
-      key: 'lists[1][12]'
+      key: 'nodes[0].names'
     VARIABLE_11:
       help: Configure the 11th variable
       type: json
       path: ./data.json
-      key: 'devices.ip[3]'
+      key: 'lists[1][12]'
     VARIABLE_12:
       help: Configure the 12th variable
+      type: json
+      path: ./data.json
+      key: 'devices.ip[3]'
+    VARIABLE_13:
+      help: Configure the 13th variable
       type: json
       path: ./data.json
       key: 'devices.ip[-3]'
@@ -85,3 +90,4 @@ variables:
     - echo "VARIABLE_10 = ${VARIABLE_10}"
     - echo "VARIABLE_11 = ${VARIABLE_11}"
     - echo "VARIABLE_12 = ${VARIABLE_12}"
+    - echo "VARIABLE_13 = ${VARIABLE_13}"

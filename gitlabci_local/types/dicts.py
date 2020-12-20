@@ -12,7 +12,7 @@ class Dicts:
 
         # Variables
         queries = path.split('.')
-        result = None
+        result = data if queries else None
 
         # Iterate through queries
         for query in queries:
@@ -29,15 +29,7 @@ class Dicts:
             # Extract key
             if key:
                 if result:
-                    if isinstance(result, list):
-                        result = [
-                            # pylint: disable=not-an-iterable
-                            value.get(key, None) if value else None for value in result
-                        ]
-                    else:
-                        result = result.get(key, None)
-                else:
-                    result = data.get(key, None)
+                    result = result.get(key, None)
 
             # Extract index
             for index in indexes:

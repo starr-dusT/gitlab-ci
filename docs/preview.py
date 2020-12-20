@@ -66,7 +66,7 @@ Executor('gitlabci-local -p one two', workdir='../stages/').\
     finish()
 
 # Configurations runner
-Executor('gitlabci-local -e VARIABLE_8=\'value8\' -e VARIABLE_11=value11 -p', workdir='../configurations/').\
+Executor('gitlabci-local -e VARIABLE_8=\'value8\' -e VARIABLE_12=value12 -p', workdir='../configurations/').\
     read().\
     wait(1).\
     press(Executor.KEY_ENTER).\
@@ -111,6 +111,8 @@ Executor('gitlabci-local -e VARIABLE_8=\'value8\' -e VARIABLE_11=value11 -p', wo
     press(Executor.KEY_DOWN).\
     read().\
     wait(1).\
+    press(Executor.KEY_ENTER).\
+    read().\
     press(Executor.KEY_ENTER).\
     read().\
     wait(1).\
