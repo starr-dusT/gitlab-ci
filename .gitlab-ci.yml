@@ -274,6 +274,32 @@ variables:
     - *unit-tests-podman-before
     - *coverage-template-before
 
+'Coverage Windows':
+  extends:
+    - .coverage-template
+  image: tobix/pywine:3.9
+  variables:
+    COVERAGE_FILE: ${CI_PROJECT_DIR}/coverage-reports/.coverage-windows
+    COVERAGE_XML: ${CI_PROJECT_DIR}/coverage-reports/coverage-windows.xml
+  before_script:
+    - apt-get update -qq
+    - apt-get install -qq -y wget 2>&1 | grep 'Setting up wget'
+    - wget -P /tmp/ -q https://github.com/rprichard/winpty/releases/download/0.4.3/winpty-0.4.3-msys2-2.7.0-x64.tar.gz
+    - tar --strip-components=2 -C /opt/wineprefix/drive_c/windows/ -xf /tmp/winpty-0.4.3-msys2-2.7.0-x64.tar.gz winpty-0.4.3-msys2-2.7.0-x64/bin/
+    - tar --strip-components=2 -C /opt/wineprefix/drive_c/windows/ -xf /tmp/winpty-0.4.3-msys2-2.7.0-x64.tar.gz winpty-0.4.3-msys2-2.7.0-x64/lib/
+    - rm -f /tmp/winpty-0.4.3-msys2-2.7.0-x64.tar.gz
+    - mkdir -p "${COVERAGE_FOLDER}/"
+    - wine pip3 install -q -r requirements/runtime.txt --upgrade 2>/dev/null
+    - wine pip3 install -q -r requirements/coverage.txt --upgrade 2>/dev/null
+    - wine pip3 install -q -r requirements/tests.txt --upgrade 2>/dev/null
+    - echo 'wine coverage "${@}"' | tee /usr/local/bin/coverage >/dev/null
+    - chmod a+x /usr/local/bin/coverage
+    - coverage erase
+    - echo 'coverage run --append --module --source=gitlabci_local gitlabci_local "${@}"' | tee /usr/local/bin/gitlabci-local /usr/local/bin/gcil >/dev/null
+    - chmod a+x /usr/local/bin/gitlabci-local /usr/local/bin/gcil
+  script:
+    - cd ./tests/windows/ && sh ./test.sh
+
 'Py3.6 Docker':
   extends:
     - .unit-tests-template
@@ -384,6 +410,7 @@ variables:
   dependencies:
     - 'Coverage Docker'
     - 'Coverage Podman'
+    - 'Coverage Windows'
   variables:
     GIT_DEPTH: 0
     SONAR_USER_HOME: ${CI_PROJECT_DIR}/.sonar
