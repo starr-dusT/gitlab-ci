@@ -258,9 +258,12 @@ def main():
             else:
                 _environ = dict(environ)
                 _environ[Bundle.ENV_WINPTY] = 'true'
-                process = Popen([winpty] + argv, env=_environ)
-                process.wait()
-                exit(process.returncode)
+                try:
+                    process = Popen([winpty] + argv, env=_environ)
+                    process.wait()
+                    exit(process.returncode)
+                except OSError:
+                    pass
 
         # Unsupported interactive terminal
         print(' %s%s: %sERROR: %sUnsupported non-interactive context%s...%s' %
