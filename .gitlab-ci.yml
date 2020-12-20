@@ -232,6 +232,7 @@ variables:
       fi
   after_script:
     - coverage xml -o "${COVERAGE_XML}"
+    - sed -i 's#\(<source>\).*\(</source>\)#\1.\2#g' "${COVERAGE_XML}"
     - |
       set +x
       common=$(mktemp -d)
