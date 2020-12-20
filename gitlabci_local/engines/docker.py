@@ -23,21 +23,17 @@ class Docker:
         except DockerException:
             raise ModuleNotFoundError() from None
 
+    # Command exec
+    def cmd_exec(self):
+
+        # Result
+        return 'docker exec -it'
+
     # Exec
     def exec(self, container, command):
 
         # Execute command in container
         return container.exec_run(command)
-
-    # Help
-    def help(self, command):
-
-        # Exec command
-        if command == 'exec':
-            return 'docker exec -it'
-
-        # Default fallback
-        return ''
 
     # Get
     def get(self, image):

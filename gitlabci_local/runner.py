@@ -456,7 +456,7 @@ def runner(options, job_data, last_result, jobs_status):
                 shell = 'bash'
 
             # Acquire container informations
-            container_exec = __engine.help('exec')
+            container_exec = __engine.cmd_exec()
             container_name = __engine.name(container)
 
             # Footer debugging informations

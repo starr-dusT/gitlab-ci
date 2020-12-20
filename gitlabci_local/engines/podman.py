@@ -39,6 +39,14 @@ class Podman:
     def __watch(self, arguments):
         return iter(Popen([self.__binary] + arguments, stdout=PIPE).stdout.readline, b'')
 
+    # Command exec
+    def cmd_exec(self):
+
+        # Result
+        if Platform.IS_USER_SUDO:
+            return 'sudo podman exec -it'
+        return 'podman exec -it'
+
     # Exec
     def exec(self, container, command):
 
@@ -48,18 +56,6 @@ class Podman:
 
         # Execute command in container
         return self.__exec(['exec', container] + command)
-
-    # Help
-    def help(self, command):
-
-        # Exec command
-        if command == 'exec':
-            if Platform.IS_USER_SUDO:
-                return 'sudo podman exec -it'
-            return 'podman exec -it'
-
-        # Default fallback
-        return ''
 
     # Get
     def get(self, image):

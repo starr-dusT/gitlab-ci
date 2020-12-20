@@ -99,13 +99,13 @@ class Engine:
         if not self.__engine:
             raise NotImplementedError('Unknown or unsupported container engine...')
 
+    # Command exec
+    def cmd_exec(self):
+        return self.__engine.cmd_exec()
+
     # Exec
     # def exec(self, container, command):
     #     return self.__engine.exec(container, command)
-
-    # Help
-    def help(self, command):
-        return self.__engine.help(command)
 
     # Get
     def get(self, image):
