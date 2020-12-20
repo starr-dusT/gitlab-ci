@@ -9,10 +9,16 @@ from sys import platform, stdin, stdout
 # Platform
 class Platform:
 
+    # Environment
+    ENV_ANDROID = 'ANDROID_ROOT'
+    ENV_SIMULATE_MAC_OS = 'SIMULATE_MAC_OS'
+    ENV_SUDO_USER = 'SUDO_USER'
+
     # Constants
     IS_ANDROID = ('ANDROID_ROOT' in environ)
     IS_LINUX = (platform in ['linux', 'linux2'])
-    IS_MAC_OS = (platform in ['darwin'])
+    IS_MAC_OS = (platform in ['darwin'] or ENV_SIMULATE_MAC_OS in environ)
+    IS_SIMULATED = (ENV_SIMULATE_MAC_OS in environ)
     IS_WINDOWS = (platform in ['win32', 'win64'])
 
     # Paths
@@ -26,8 +32,8 @@ class Platform:
     IS_TTY_STDOUT = stdout.isatty()
 
     # Users
-    IS_USER_SUDO = ('SUDO_USER' in environ)
-    USER_SUDO = environ['SUDO_USER'] if IS_USER_SUDO else ''
+    IS_USER_SUDO = (ENV_SUDO_USER in environ)
+    USER_SUDO = environ[ENV_SUDO_USER] if IS_USER_SUDO else ''
 
     # Flush
     @staticmethod
