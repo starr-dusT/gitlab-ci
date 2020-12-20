@@ -16,6 +16,7 @@ gitlabci-local -q -p
 gcil -p
 timeout 5 gitlabci-local 'Job 1' --bash && exit 1 || true
 timeout 5 gitlabci-local 'Job 1' --debug && exit 1 || true
+! type sudo >/dev/null 2>&1 || (sudo -E env PYTHONPATH="${PYTHONPATH}" timeout 5 gitlabci-local 'Job 1' --debug && exit 1 || true)
 gcil Job
 gcil 1
 gcil 4 && exit 1 || true
