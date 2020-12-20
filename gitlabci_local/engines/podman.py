@@ -43,7 +43,7 @@ class Podman:
     def exec(self, container, command):
 
         # Adapt command
-        if isinstance(command, str):
+        if isinstance(command, str): # pragma: no cover
             command = [command]
 
         # Execute command in container
@@ -140,7 +140,7 @@ class Podman:
         args_volumes = []
 
         # Adapt command
-        if isinstance(command, list):
+        if isinstance(command, list): # pragma: no cover
             args_command = command
         elif isinstance(command, str):
             args_command = [command]
