@@ -209,6 +209,7 @@ variables:
     - .unit-tests-rules
   variables:
     COVERAGE_FOLDER: ${CI_PROJECT_DIR}/coverage-reports
+    COVERAGE_RCFILE: ${CI_PROJECT_DIR}/.coveragerc
     PYTHONPATH: ${CI_PROJECT_DIR}
   before_script: &coverage-template-before |-
     mkdir -p "${COVERAGE_FOLDER}/"
