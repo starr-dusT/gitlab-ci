@@ -214,9 +214,9 @@ variables:
     mkdir -p "${COVERAGE_FOLDER}/"
     apt-get update -qq
     apt-get install -qq -y sudo 2>&1 | grep 'Setting up sudo'
-    pip3 install -q -r requirements/runtime.txt --upgrade
-    pip3 install -q -r requirements/coverage.txt --upgrade
-    pip3 install -q -r requirements/tests.txt --upgrade
+    pip3 install -q -r requirements/runtime.txt --upgrade 2>/dev/null
+    pip3 install -q -r requirements/coverage.txt --upgrade 2>/dev/null
+    pip3 install -q -r requirements/tests.txt --upgrade 2>/dev/null
     if [ -z "${SUITE}" ]; then
       coverage erase
     fi
@@ -236,7 +236,7 @@ variables:
       common=$(mktemp -d)
       cp "${COVERAGE_FOLDER}/.coverage-"* "${common}/"
       COVERAGE_FILE="${common}/.coverage" coverage combine "${common}/.coverage-"*
-      COVERAGE_FILE="${common}/.coverage" coverage report --show-missing --skip-covered
+      COVERAGE_FILE="${common}/.coverage" coverage report --ignore-errors --show-missing --skip-covered
       rm -rf "${common}"
   rules:
     - if: $CI_COMMIT_REF_NAME == "develop"
