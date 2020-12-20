@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 # Standard libraries
-from os import environ, sep
+from os import access, environ, R_OK, sep
 from os.path import expanduser
 from pathlib import Path, PurePosixPath
 from sys import platform, stdin, stdout
@@ -50,6 +50,8 @@ class Platform:
         # Elevated home
         if Platform.IS_USER_SUDO:
             home = Path(expanduser('~%s' % (Platform.USER_SUDO)))
+            if not access(home, R_OK):
+                home = None
 
         # Default home
         if not home or not home.is_dir():
