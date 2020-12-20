@@ -31,7 +31,7 @@ class Volumes:
 
         # Adapt source to allow duplicates
         while source in self.__volumes:
-            if Platform.IS_WINDOWS:
+            if Platform.IS_WINDOWS: # pragma: no cover
                 source = source + Platform.PATH_SEPARATOR + '.'
             else:
                 source = Platform.PATH_SEPARATOR + '.' + source
