@@ -65,3 +65,15 @@ after_script:
   after_script:
     - 'false'
     - echo 'After Job 7'
+
+'Job 8':
+  stage: scripts
+  before_script: []
+  script:
+    - echo 'Job 8'
+
+'Job 9':
+  stage: scripts
+  script:
+    - echo 'Job 9'
+  after_script: []

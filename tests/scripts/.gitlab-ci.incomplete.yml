@@ -1,0 +1,8 @@
+image: alpine:3
+
+stages:
+  - scripts
+
+'Job 1':
+  stage: scripts
+  script: []

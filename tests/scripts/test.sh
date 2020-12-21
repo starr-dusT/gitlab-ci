@@ -17,3 +17,6 @@ gitlabci-local 'Job 4'
 gitlabci-local 'Job 5' && exit 1 || true
 gitlabci-local 'Job 6' && exit 1 || true
 gitlabci-local 'Job 7'
+gitlabci-local 'Job 8'
+gitlabci-local 'Job 9'
+gitlabci-local -c ./.gitlab-ci.incomplete.yml -p && exit 1 || true
