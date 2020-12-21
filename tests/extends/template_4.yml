@@ -6,3 +6,8 @@
   before_script:
     - echo "CONSTANT_1=${CONSTANT_1}"
     - echo "CONSTANT_2=${CONSTANT_2}"
+
+.template_4_2:
+  variables:
+    CONSTANT_3: constant_3
+    CONSTANT_4: constant_4
