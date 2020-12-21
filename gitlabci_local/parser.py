@@ -54,7 +54,7 @@ def reader(options):
                     environment['parameters'][variable] = ''
 
     # Iterate through environment files
-    environment['files'] += [Path(options.path) / '.env']
+    environment['files'].insert(0, Path(options.path) / '.env')
     for environment_file in environment['files']:
         if not environment_file.is_file():
             continue
@@ -64,8 +64,6 @@ def reader(options):
         for variable in environment_file_values:
 
             # Define default environment variable
-            if variable in environment['default']:
-                continue
             environment['default'][variable] = environment_file_values[variable]
 
     # Read GitLab CI YAML
@@ -439,8 +437,7 @@ def stager(options, job_name, data, global_values):
                 job['variables'] = job_extended['variables']
             elif job_extended['variables']:
                 for variable in job_extended['variables']:
-                    if variable not in job['variables']:
-                        job['variables'][variable] = job_extended['variables'][variable]
+                    job['variables'][variable] = job_extended['variables'][variable]
             if job['before_script'] is None:
                 job['before_script'] = job_extended['before_script']
             if job['script'] is None:

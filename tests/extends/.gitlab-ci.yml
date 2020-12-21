@@ -11,6 +11,10 @@ include:
 stages:
   - extends
 
+variables:
+  CONSTANT_4: global_4
+  CONSTANT_5: global_5
+
 'Job 4':
   stage: extends
   extends: Job 3
@@ -55,14 +59,23 @@ stages:
 
 'Template 4 - 3':
   stage: extends
-  extends:
-    - .template_4
-    - .template_4_2
+  extends: .template_4_3
   image: alpine:3
   variables:
     CONSTANT_1: override_1
   script:
     - echo 'Template 4 - 3'
+
+'Template 4 - 4':
+  stage: extends
+  extends:
+    - .template_4
+    - .template_4_4
+  image: alpine:3
+  variables:
+    CONSTANT_1: override_1
+  script:
+    - echo 'Template 4 - 4'
 
 'Templates 1':
   stage: extends
