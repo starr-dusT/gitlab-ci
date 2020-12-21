@@ -213,9 +213,9 @@ variables:
     TERM: ansi
   before_script: &unit-tests-template-before |-
     mkdir -p ./.tmp/
-    pip install dist/*.whl
-    pip install --force-reinstall --no-deps --upgrade dist/*.whl
-    pip show gitlabci-local
+    pip3 install dist/*.whl
+    pip3 install --force-reinstall --no-deps --upgrade dist/*.whl
+    pip3 show gitlabci-local
     pip3 install -q -r requirements/tests.txt --upgrade
   script:
     - for path in ./tests/*; do (cd "${path}/" && sh ./test.sh); done
