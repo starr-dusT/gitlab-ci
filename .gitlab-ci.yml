@@ -17,6 +17,9 @@ variables:
   real_paths: true
   sockets: true
 
+# =============================================================================
+# Stage: development
+
 'Changelog':
   stage: development
   image: local:silent
@@ -77,6 +80,9 @@ variables:
   only:
     - local
 
+# =============================================================================
+# Stage: prepare
+
 'Codestyle':
   stage: prepare
   variables:
@@ -133,6 +139,9 @@ variables:
       when: on_success
   allow_failure: true
 
+# =============================================================================
+# Stage: build
+
 'Build':
   stage: build
   variables:
@@ -152,6 +161,14 @@ variables:
   artifacts:
     paths:
       - dist/
+
+# =============================================================================
+# Stage: test (templates)
+
+.unit-tests-dependencies:
+  before_script: &unit-tests-dependencies-before |-
+    apt-get update -qq
+    apt-get install -qq -y sudo 2>&1 | grep 'Setting up sudo'
 
 .unit-tests-docker:
   services:
@@ -195,8 +212,6 @@ variables:
     TEMP: .tmp
     TERM: ansi
   before_script: &unit-tests-template-before |-
-    apt-get update -qq
-    apt-get install -qq -y sudo 2>&1 | grep 'Setting up sudo'
     mkdir -p ./.tmp/
     pip install dist/*.whl
     pip install --force-reinstall --no-deps --upgrade dist/*.whl
@@ -217,8 +232,6 @@ variables:
   before_script: &coverage-template-before |-
     mkdir -p "${COVERAGE_FOLDER}/"
     chmod 777 "${COVERAGE_FOLDER}"
-    apt-get update -qq
-    apt-get install -qq -y sudo 2>&1 | grep 'Setting up sudo'
     pip3 install -q -r requirements/runtime.txt --upgrade 2>/dev/null
     pip3 install -q -r requirements/coverage.txt --upgrade 2>/dev/null
     pip3 install -q -r requirements/tests.txt --upgrade 2>/dev/null
@@ -261,6 +274,24 @@ variables:
     paths:
       - coverage-reports/
 
+.coverage-template-windows:
+  before_script: &coverage-template-windows-before |-
+    apt-get update -qq
+    apt-get install -qq -y wget 2>&1 | grep 'Setting up wget'
+    wget -P /tmp/ -q https://github.com/rprichard/winpty/releases/download/0.4.3/winpty-0.4.3-msys2-2.7.0-x64.tar.gz
+    tar --strip-components=2 -C /opt/wineprefix/drive_c/windows/ -xf /tmp/winpty-0.4.3-msys2-2.7.0-x64.tar.gz winpty-0.4.3-msys2-2.7.0-x64/bin/
+    tar --strip-components=2 -C /opt/wineprefix/drive_c/windows/ -xf /tmp/winpty-0.4.3-msys2-2.7.0-x64.tar.gz winpty-0.4.3-msys2-2.7.0-x64/lib/
+    rm -f /tmp/winpty-0.4.3-msys2-2.7.0-x64.tar.gz
+    echo 'wine pip3 "${@}"' | tee /usr/local/bin/pip3 >/dev/null
+    chmod a+x /usr/local/bin/pip3
+    echo 'wine coverage "${@}"' | tee /usr/local/bin/coverage >/dev/null
+    chmod a+x /usr/local/bin/coverage
+  script:
+    - cd ./tests/windows/ && sh ./test.sh
+
+# =============================================================================
+# Stage: test (coverage)
+
 'Coverage Docker':
   extends:
     - .coverage-template
@@ -271,6 +302,7 @@ variables:
     COVERAGE_XML: ${CI_PROJECT_DIR}/coverage-reports/coverage-docker.xml
   before_script:
     - *unit-tests-docker-before
+    - *unit-tests-dependencies-before
     - *coverage-template-before
 
 'Coverage Podman':
@@ -283,36 +315,23 @@ variables:
     COVERAGE_XML: ${CI_PROJECT_DIR}/coverage-reports/coverage-podman.xml
   before_script:
     - *unit-tests-podman-before
+    - *unit-tests-dependencies-before
     - *coverage-template-before
 
 'Coverage Windows':
   extends:
     - .coverage-template
+    - .coverage-template-windows
   image: tobix/pywine:3.9
   variables:
     COVERAGE_FILE: ${CI_PROJECT_DIR}/coverage-reports/.coverage-windows
     COVERAGE_XML: ${CI_PROJECT_DIR}/coverage-reports/coverage-windows.xml
   before_script:
-    - apt-get update -qq
-    - apt-get install -qq -y wget 2>&1 | grep 'Setting up wget'
-    - wget -P /tmp/ -q https://github.com/rprichard/winpty/releases/download/0.4.3/winpty-0.4.3-msys2-2.7.0-x64.tar.gz
-    - tar --strip-components=2 -C /opt/wineprefix/drive_c/windows/ -xf /tmp/winpty-0.4.3-msys2-2.7.0-x64.tar.gz winpty-0.4.3-msys2-2.7.0-x64/bin/
-    - tar --strip-components=2 -C /opt/wineprefix/drive_c/windows/ -xf /tmp/winpty-0.4.3-msys2-2.7.0-x64.tar.gz winpty-0.4.3-msys2-2.7.0-x64/lib/
-    - rm -f /tmp/winpty-0.4.3-msys2-2.7.0-x64.tar.gz
-    - mkdir -p "${COVERAGE_FOLDER}/"
-    - chmod 777 "${COVERAGE_FOLDER}"
-    - wine pip3 install -q -r requirements/runtime.txt --upgrade 2>/dev/null
-    - wine pip3 install -q -r requirements/coverage.txt --upgrade 2>/dev/null
-    - wine pip3 install -q -r requirements/tests.txt --upgrade 2>/dev/null
-    - echo 'wine coverage "${@}"' | tee /usr/local/bin/coverage >/dev/null
-    - chmod a+x /usr/local/bin/coverage
-    - coverage erase
-    - coverage run --append --module --source=gitlabci_local gitlabci_local --version >/dev/null
-    - chmod 666 "${COVERAGE_FILE}"
-    - echo 'coverage run --append --module --source=gitlabci_local gitlabci_local "${@}"' | tee /usr/local/bin/gitlabci-local /usr/local/bin/gcil >/dev/null
-    - chmod a+x /usr/local/bin/gitlabci-local /usr/local/bin/gcil
-  script:
-    - cd ./tests/windows/ && sh ./test.sh
+    - *coverage-template-windows-before
+    - *coverage-template-before
+
+# =============================================================================
+# Stage: test (Docker)
 
 'Py3.6 Docker':
   extends:
@@ -322,6 +341,7 @@ variables:
   image: python:3.6
   before_script:
     - *unit-tests-docker-before
+    - *unit-tests-dependencies-before
     - *unit-tests-template-before
 
 'Py3.7 Docker':
@@ -332,6 +352,7 @@ variables:
   image: python:3.7
   before_script:
     - *unit-tests-docker-before
+    - *unit-tests-dependencies-before
     - *unit-tests-template-before
 
 'Py3.8 Docker':
@@ -342,6 +363,7 @@ variables:
   image: python:3.8
   before_script:
     - *unit-tests-docker-before
+    - *unit-tests-dependencies-before
     - *unit-tests-template-before
 
 'Py3.9 Docker':
@@ -352,7 +374,11 @@ variables:
   image: python:3.9
   before_script:
     - *unit-tests-docker-before
+    - *unit-tests-dependencies-before
     - *unit-tests-template-before
+
+# =============================================================================
+# Stage: test (Podman)
 
 'Py3.6 Podman':
   extends:
@@ -362,6 +388,7 @@ variables:
   image: python:3.6
   before_script:
     - *unit-tests-podman-before
+    - *unit-tests-dependencies-before
     - *unit-tests-template-before
 
 'Py3.7 Podman':
@@ -372,6 +399,7 @@ variables:
   image: python:3.7
   before_script:
     - *unit-tests-podman-before
+    - *unit-tests-dependencies-before
     - *unit-tests-template-before
 
 'Py3.8 Podman':
@@ -382,6 +410,7 @@ variables:
   image: python:3.8
   before_script:
     - *unit-tests-podman-before
+    - *unit-tests-dependencies-before
     - *unit-tests-template-before
 
 'Py3.9 Podman':
@@ -392,7 +421,11 @@ variables:
   image: python:3.9
   before_script:
     - *unit-tests-podman-before
+    - *unit-tests-dependencies-before
     - *unit-tests-template-before
+
+# =============================================================================
+# Stage: test (preview)
 
 'Py3.9 Preview':
   extends:
@@ -402,10 +435,14 @@ variables:
   image: python:3.9
   before_script:
     - *unit-tests-docker-before
+    - *unit-tests-dependencies-before
     - *unit-tests-template-before
     - pip3 install -q -r requirements/tests.txt --upgrade
   script:
     - python3 ./docs/preview.py
+
+# =============================================================================
+# Stage: test (local)
 
 'Python Local':
   extends:
@@ -415,6 +452,9 @@ variables:
     - *unit-tests-template-before
   only:
     - local
+
+# =============================================================================
+# Stage: quality
 
 'SonarCloud':
   stage: quality
@@ -443,6 +483,9 @@ variables:
       when: on_success
     - when: never
   allow_failure: true
+
+# =============================================================================
+# Stage: deploy
 
 'Deploy Release':
   stage: deploy
