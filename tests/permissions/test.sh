@@ -37,10 +37,13 @@ chown -R test:test "${temp_dir}/holder/test"
 set -ex
 
 # Run tests
-sudo -H -u test -E env PYTHONPATH="${PYTHONPATH}" gitlabci-local -p
-sudo -H -u test -E env PYTHONPATH="${PYTHONPATH}" gitlabci-local -c "${temp_dir}/holder/root/" -p && exit 1 || true
-sudo -H -u test -E env PYTHONPATH="${PYTHONPATH}" gitlabci-local -c "${temp_dir}/holder/parent/test/" -p
-sudo -H -u test -E env PYTHONPATH="${PYTHONPATH}" gitlabci-local -c "${temp_dir}/holder/test/" -p
+gitlabci-local -H -p
+gitlabci-local --rmi
+timeout -sINT 1 gitlabci-local -p && exit 1 || true
+sudo -H -u test -E env PYTHONPATH="${PYTHONPATH}" gitlabci-local -H -p
+sudo -H -u test -E env PYTHONPATH="${PYTHONPATH}" gitlabci-local -c "${temp_dir}/holder/root/" -H -p && exit 1 || true
+sudo -H -u test -E env PYTHONPATH="${PYTHONPATH}" gitlabci-local -c "${temp_dir}/holder/parent/test/" -H -p
+sudo -H -u test -E env PYTHONPATH="${PYTHONPATH}" gitlabci-local -c "${temp_dir}/holder/test/" -H -p
 find ../ -name '.tmp.entrypoint.*' -print -exec false {} +
 find "${temp_dir}/holder/parent/test/" -name '.tmp.entrypoint.*' -print -exec false {} +
 find "${temp_dir}/holder/test/" -name '.tmp.entrypoint.*' -print -exec false {} +

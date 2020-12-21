@@ -3,6 +3,6 @@ stages:
 
 'Job':
   stage: permissions
-  image: local
+  image: alpine:3.12
   script:
     - echo 'Job'
