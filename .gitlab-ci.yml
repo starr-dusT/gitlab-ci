@@ -243,12 +243,8 @@ variables:
     echo 'coverage run --append --module --source=gitlabci_local gitlabci_local "${@}"' | tee /usr/local/bin/gitlabci-local /usr/local/bin/gcil >/dev/null
     chmod a+x /usr/local/bin/gitlabci-local /usr/local/bin/gcil
   script:
-    - |
-      if [ ! -z "${SUITE}" ]; then
-        (cd "./tests/${SUITE}/" && sh ./test.sh)
-      else
-        for path in ./tests/*; do (cd "${path}/" && sh ./test.sh); done
-      fi
+    - export SUITE=$(echo "${SUITE}" | sed 's/,/\\|/g')
+    - for path in $(ls -1d ./tests/* | grep "\/\(${SUITE}\)"); do (cd "${path}/" && sh ./test.sh); done
   after_script:
     - coverage xml -o "${COVERAGE_XML}"
     - sed -i 's#\(<source>\).*\(</source>\)#\1.\2#g' "${COVERAGE_XML}"
