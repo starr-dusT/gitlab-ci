@@ -34,3 +34,4 @@ stages:
     - echo "VALUE_2 = ${VALUE_2}"
     - echo "VALUE_3 = ${VALUE_3}"
     - echo "VALUE_4 = ${VALUE_4}"
+    - echo "VALUE_5 = ${VALUE_5}"
