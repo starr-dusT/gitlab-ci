@@ -278,14 +278,10 @@ variables:
   before_script: &coverage-template-windows-before |-
     apt-get update -qq
     apt-get install -qq -y wget 2>&1 | grep 'Setting up wget'
-    wget -P /tmp/ -q https://github.com/rprichard/winpty/releases/download/0.4.3/winpty-0.4.3-msys2-2.7.0-x64.tar.gz
-    tar --strip-components=2 -C /opt/wineprefix/drive_c/windows/ -xf /tmp/winpty-0.4.3-msys2-2.7.0-x64.tar.gz winpty-0.4.3-msys2-2.7.0-x64/bin/
-    tar --strip-components=2 -C /opt/wineprefix/drive_c/windows/ -xf /tmp/winpty-0.4.3-msys2-2.7.0-x64.tar.gz winpty-0.4.3-msys2-2.7.0-x64/lib/
-    rm -f /tmp/winpty-0.4.3-msys2-2.7.0-x64.tar.gz
-    echo 'wine pip3 "${@}"' | tee /usr/local/bin/pip3 >/dev/null
-    chmod a+x /usr/local/bin/pip3
     echo 'wine coverage "${@}"' | tee /usr/local/bin/coverage >/dev/null
     chmod a+x /usr/local/bin/coverage
+    echo 'wine pip3 "${@}"' | tee /usr/local/bin/pip3 >/dev/null
+    chmod a+x /usr/local/bin/pip3
   script:
     - cd ./tests/windows/ && sh ./test.sh
 
