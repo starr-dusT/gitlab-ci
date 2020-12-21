@@ -14,6 +14,7 @@ gitlabci-local -p
 gitlabci-local --all </dev/null
 gitlabci-local -q -p
 gcil -p
+timeout 5 gitlabci-local 'Job 1' --sockets
 timeout 5 gitlabci-local 'Job 1' --bash && exit 1 || true
 timeout 5 gitlabci-local 'Job 1' --debug && exit 1 || true
 ! type sudo >/dev/null 2>&1 || (sudo -E env PYTHONPATH="${PYTHONPATH}" timeout 5 gitlabci-local 'Job 1' --debug && exit 1 || true)

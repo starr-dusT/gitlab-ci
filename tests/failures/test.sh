@@ -11,3 +11,5 @@ set -ex
 # Run tests
 gitlabci-local -p && exit 1 || true
 gitlabci-local 'Job 1' 'Job 2'
+gitlabci-local -H -p && exit 1 || true
+gitlabci-local -H 'Job 1' 'Job 2'
