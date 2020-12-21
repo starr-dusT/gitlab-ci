@@ -12,3 +12,4 @@ set -ex
 gitlabci-local -p && exit 1 || true
 gitlabci-local -e IMAGE_REFERENCE_1='alpine:3' -p && exit 1 || true
 gitlabci-local -e IMAGE_REFERENCE_1='alpine:3' -e IMAGE_REFERENCE_5='alpine:3' -p
+IMAGE_REFERENCE_1='alpine:3' IMAGE_REFERENCE_5='alpine:3' gitlabci-local -p
