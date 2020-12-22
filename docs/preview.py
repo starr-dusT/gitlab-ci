@@ -127,5 +127,4 @@ Executor('gitlabci-local -e VARIABLE_8=\'value8\' -e VARIABLE_12=value12 -p', wo
     finish()
 
 # Prompt
-Executor('').\
-    finish()
+Executor(delay_prompt=2.0, hold_prompt=True)
