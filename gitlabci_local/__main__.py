@@ -1,5 +1,5 @@
 # Components
-from gitlabci_local.main import main
+from gitlabci_local.cli.main import main
 
 # Entrypoint
 main()

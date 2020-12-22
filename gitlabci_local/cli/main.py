@@ -8,19 +8,19 @@ from subprocess import check_output, DEVNULL, Popen
 from sys import argv, exit
 
 # Components
-from .menu import selector
-from .engines.engine import supported as engine_supported
-from .features.images import ImagesFeature
-from .features.jobs import JobsFeature
-from .package.bundle import Bundle
-from .package.settings import Settings
-from .package.updates import Updates
-from .package.version import Version
-from .parser import reader
-from .parsers.gitlab import GitLab
-from .prints.colors import Colors
-from .runner import launcher
-from .system.platform import Platform
+from ..menu import selector
+from ..engines.engine import supported as engine_supported
+from ..features.images import ImagesFeature
+from ..features.jobs import JobsFeature
+from ..package.bundle import Bundle
+from ..package.settings import Settings
+from ..package.updates import Updates
+from ..package.version import Version
+from ..parser import reader
+from ..parsers.gitlab import GitLab
+from ..prints.colors import Colors
+from ..runner import launcher
+from ..system.platform import Platform
 
 # Main
 def main():

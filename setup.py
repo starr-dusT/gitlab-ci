@@ -49,8 +49,8 @@ setup(
     python_requires='>=3, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, !=3.5.*',
     entry_points={
         'console_scripts': [
-            'gitlabci-local = gitlabci_local.main:main',
-            'gcil = gitlabci_local.main:main',
+            'gitlabci-local = gitlabci_local.cli.main:main',
+            'gcil = gitlabci_local.cli.main:main',
         ],
     },
 )
