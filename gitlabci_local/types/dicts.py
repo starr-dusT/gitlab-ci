@@ -27,9 +27,8 @@ class Dicts:
                 indexes = []
 
             # Extract key
-            if key:
-                if result:
-                    result = result.get(key, None)
+            if key and result:
+                result = result.get(key, None)
 
             # Extract index
             for index in indexes:
