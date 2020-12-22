@@ -56,6 +56,7 @@ variables:
     - sudo pip3 install -r requirements/deploy.txt --upgrade
     - sudo pip3 install -r requirements/quality.txt --upgrade
     - sudo pip3 install -r requirements/tests.txt --upgrade
+    - sudo pip3 install -r requirements/docs.txt --upgrade
   only:
     - local
 
@@ -71,12 +72,12 @@ variables:
 
 'Preview':
   stage: development
-  image: local:silent
+  before_script:
+    - pip3 install -q dist/*.whl 2>/dev/null
+    - pip3 install -q -r requirements/docs.txt --upgrade 2>/dev/null
+    - pip3 install -q -r requirements/tests.txt --upgrade 2>/dev/null
   script:
-    - for i in $(seq 1 100); do echo ' '; done
-    - sleep 3
-    - python3 ./docs/preview.py
-    - sleep 10
+    - pexpect-executor -- termtosvg ./docs/preview.svg -c 'python3 ./docs/preview.py' -g 80x24 -t ./docs/template.svg
   only:
     - local
 

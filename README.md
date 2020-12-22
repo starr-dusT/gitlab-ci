@@ -26,7 +26,7 @@ is the common and unique interface between GitLab CI and gitlabci-local.
 
 ## Preview
 
-![preview.gif](https://gitlab.com/AdrianDC/gitlabci-local/raw/2.3.0/docs/preview.gif)
+![preview.svg](https://gitlab.com/AdrianDC/gitlabci-local/raw/2.3.0/docs/preview.svg)
 
 ---
 
@@ -319,9 +319,9 @@ JOB_NAME:
 - [git-chglog](https://github.com/git-chglog/git-chglog): CHANGELOG generator
 - [gitlab-release](https://pypi.org/project/gitlab-release/): Utility for publishing on GitLab
 - [OCI](https://opencontainers.org): Open Container Initiative
-- [peek](https://github.com/phw/peek): Simple GIF screen recorder
 - [pexpect-executor](https://pypi.org/project/pexpect-executor/): Automate interactive CLI tools actions
 - [PyPI](https://pypi.org/): The Python Package Index
+- [termtosvg](https://pypi.org/project/termtosvg/): Record terminal sessions as SVG animations
 - [Termux](https://termux.com): Linux terminal emulator on Android
 - [twine](https://pypi.org/project/twine/): Utility for publishing on PyPI
 - [winpty](https://github.com/rprichard/winpty): Windows PTY interface wrapper
