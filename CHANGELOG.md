@@ -1,4 +1,63 @@
 
+<a name="3.0.0"></a>
+## [3.0.0](https://gitlab.com/AdrianDC/gitlabci-local/compare/2.3.0...3.0.0) (2020-12-22)
+
+### Bug Fixes
+
+* resolve [#154](https://gitlab.com/AdrianDC/gitlabci-local/issues/154): preserve variables priority and override order
+* resolve [#153](https://gitlab.com/AdrianDC/gitlabci-local/issues/153): ensure signals are restored and reraised
+* resolve [#152](https://gitlab.com/AdrianDC/gitlabci-local/issues/152): avoid sudoer access from root user
+* resolve [#151](https://gitlab.com/AdrianDC/gitlabci-local/issues/151): configurable WinPTY and limited coverage checks
+* resolve [#151](https://gitlab.com/AdrianDC/gitlabci-local/issues/151): enforce WinPTY and improve coverage
+
+### Cleanups
+
+* docs: refactor the 'Preview' job into a 'termtosvg' job
+* gitlab-ci: add a job-specific report to 'Coverage' jobs
+* docs: use pexpect-executor 1.2.0 to hold the final prompt
+* test: finish parser coverage of .env environment override
+* gitlab-ci: support ',' separated SUITE values for coverage
+* test: finish 'variables' coverage of environment overrides
+* test: finish 'extends' coverage with two 'variables:' nodes
+* test: add empty '{before,after}_script' and 'script' tests
+* test: add '--sockets' and host failures coverage tests
+* finish [#151](https://gitlab.com/AdrianDC/gitlabci-local/issues/151): support non-WinPTY execution environments
+* run: adapt 'run.sh' to missing sudo and wine support
+* gitlab-ci: use 'pip3' instead of 'pip' in tests template
+* test [#153](https://gitlab.com/AdrianDC/gitlabci-local/issues/153): test reraised signals and 'Files.clean' coverage
+* gitlab-ci: unify template scripts and add stages comments
+* engines: ignore 'exec()' from coverage rather than comment
+* test [#152](https://gitlab.com/AdrianDC/gitlabci-local/issues/152): implement permissions tests for temp files
+* gitlab-ci: unify local VSCode coverage to a common XML file
+* types: ignore 'Volumes' Windows case from coverage results
+* gitlab-ci: ensure coverage XML files use relative sources
+* test: add sudoer '--debug' Podman engine test
+* resolve [#150](https://gitlab.com/AdrianDC/gitlabci-local/issues/150): restrict Dicts iterators and improve coverage
+* gitlab-ci: add 'Coverage Windows' tests with PyWine image
+* coverage: add '.coveragerc' to strip Linux / Windows paths
+* engines: refactor 'help' into 'cmd_exec' for coverage tests
+* vscode: ignore '.tmp.entrypoint.*' files in VSCode
+* coverage: ignore safety unused code lines
+* test [#149](https://gitlab.com/AdrianDC/gitlabci-local/issues/149): add macOS simulated test for settings coverage
+* implement [#149](https://gitlab.com/AdrianDC/gitlabci-local/issues/149): handle simulated settings for virtual tests
+* prepare [#149](https://gitlab.com/AdrianDC/gitlabci-local/issues/149): add simulated macOS environment and cleanup
+* gitlab-ci: hide pip warnings and coverage report errors
+* gitlab-ci: use updated 'docker:19-dind' image for 19.03.14
+* gitlab-ci: set host and tool envs for pexpect-executor
+* vscode: disable chords terminal features to allow Ctrl+K
+* changelog: configure groups titles detailed map for chglog
+* changelog: add a cleanup option to hide changelog commits
+
+### Documentation
+
+* readme: add missing modules dependencies and references
+* readme: minor codestyle cleanups of the Linux support table
+
+### Test
+
+* images: use pexpect-executor to pull with an interactive TTY
+
+
 <a name="2.3.0"></a>
 ## [2.3.0](https://gitlab.com/AdrianDC/gitlabci-local/compare/2.2.3...2.3.0) (2020-12-14)
 
