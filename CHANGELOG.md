@@ -1,4 +1,18 @@
 
+<a name="3.0.1"></a>
+## [3.0.1](https://gitlab.com/AdrianDC/gitlabci-local/compare/3.0.0...3.0.1) (2020-12-22)
+
+### Cleanups
+
+* types: reduce unrequired nested if conditions
+* cli: isolate the CLI main entrypoint to a cli/ submodule
+* prints: isolate PyInquirer themes into a 'Menus' class
+
+### Features
+
+* implement [#155](https://gitlab.com/AdrianDC/gitlabci-local/issues/155): add arguments categories for readability
+
+
 <a name="3.0.0"></a>
 ## [3.0.0](https://gitlab.com/AdrianDC/gitlabci-local/compare/2.3.0...3.0.0) (2020-12-22)
 
