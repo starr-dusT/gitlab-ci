@@ -247,6 +247,7 @@ variables:
     - for path in $(ls -1d ./tests/* | grep "\/\(${SUITE}\)"); do (cd "${path}/" && sh ./test.sh); done
   after_script:
     - coverage xml -o "${COVERAGE_XML}"
+    - coverage report --show-missing --skip-covered
     - sed -i 's#\(<source>\).*\(</source>\)#\1.\2#g' "${COVERAGE_XML}"
     - |
       set +x
