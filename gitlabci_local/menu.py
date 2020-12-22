@@ -9,13 +9,12 @@ from pathlib import Path
 from oyaml import safe_load as yaml_safe_load
 from PyInquirer import prompt as PyInquirer_prompt
 from PyInquirer import Separator as PyInquirer_Separator
-from PyInquirer import style_from_dict as PyInquirer_style_from_dict
-from PyInquirer import Token as PyInquirer_Token
 
 # Components
 from .package.bundle import Bundle
 from .package.patcher import Patcher
 from .prints.colors import Colors
+from .prints.menus import Menus
 from .runner import launcher
 from .system.platform import Platform
 from .types.dicts import Dicts
@@ -23,26 +22,6 @@ from .types.lists import Lists
 
 # Patch theme
 Patcher()
-
-# Selector theme
-__SelectorTheme = PyInquirer_style_from_dict({
-    PyInquirer_Token.Separator: '#FFFF00 bold',
-    PyInquirer_Token.QuestionMark: '#FFFF00 bold',
-    PyInquirer_Token.Selected: '#00FF00 bold',
-    PyInquirer_Token.Instruction: '#00FFFF bold',
-    PyInquirer_Token.Pointer: '#FFFF00 bold',
-    PyInquirer_Token.Answer: '#00FFFF bold',
-    PyInquirer_Token.Question: '#00FF00 bold',
-})
-
-# Configurations theme
-__ConfigurationsTheme = PyInquirer_style_from_dict({
-    PyInquirer_Token.Selected: '#00FF00 bold',
-    PyInquirer_Token.Instruction: '#00FFFF bold',
-    PyInquirer_Token.Pointer: '#FFFF00 bold',
-    PyInquirer_Token.Answer: '#00FFFF bold',
-    PyInquirer_Token.Question: '#FFFF00 bold',
-})
 
 # Selector
 def selector(options, jobs):
@@ -129,7 +108,7 @@ def selector(options, jobs):
 
     # Request jobs selection
     if jobs_choices and jobs_available:
-        answers = PyInquirer_prompt(selection_prompt, style=__SelectorTheme)
+        answers = PyInquirer_prompt(selection_prompt, style=Menus.Themes.SELECTOR)
     else:
         print(' %s%s: %sERROR: %sNo jobs found for selection%s' %
               (Colors.GREEN, Bundle.NAME, Colors.RED, Colors.BOLD, Colors.RESET))
@@ -314,7 +293,8 @@ def configurator(options, configurations):
             print(' %s%s  %s%s%s' % (Colors.YELLOW, configuration_prompt[0]['message'],
                                      Colors.CYAN, result[variable], Colors.RESET))
         else:
-            answers = PyInquirer_prompt(configuration_prompt, style=__ConfigurationsTheme)
+            answers = PyInquirer_prompt(configuration_prompt,
+                                        style=Menus.Themes.CONFIGURATIONS)
             if not answers:
                 raise KeyboardInterrupt
             result[variable] = str(answers[variable])
