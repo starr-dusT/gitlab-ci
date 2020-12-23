@@ -1,4 +1,32 @@
 
+<a name="3.0.2"></a>
+## [3.0.2](https://gitlab.com/AdrianDC/gitlabci-local/compare/3.0.1...3.0.2) (2020-12-23)
+
+### Bug Fixes
+
+* resolve [#121](https://gitlab.com/AdrianDC/gitlabci-local/issues/121): handle broken pipe upon logs outputs
+
+### Cleanups
+
+* parsers: refactor 'parse()' into separated methods
+* jobs: refactor 'run()' into an 'Outputs' class and methods
+* vscode: ignore '.ropeproject' folder from tracked files
+* bundle,jobs: isolate env binary paths and jobs variables
+* jobs: isolate script sources to a 'Scripts' class
+* jobs: isolate 'runner' function to a 'Jobs' class
+* features: rename 'jobs' feature to 'ConfigurationsFeature'
+* features: isolate 'select' and 'configure' to 'Menus' class
+* features: fix 'PipelinesFeature' feature class name
+* parsers: isolate 'parse' and 'stage' to the 'GitLab' class
+* parsers: isolate 'parser.read' to a 'Parsers' class
+* features: turn the 'launcher' into a pipeline feature class
+* gitlab-ci: run develop pipeline upon 'CHANGELOG.md' changes
+
+### Test
+
+* regex,simple: rename the jobs' stages to match the tests
+
+
 <a name="3.0.1"></a>
 ## [3.0.1](https://gitlab.com/AdrianDC/gitlabci-local/compare/3.0.0...3.0.1) (2020-12-22)
 
