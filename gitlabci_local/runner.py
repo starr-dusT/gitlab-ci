@@ -14,7 +14,6 @@ from .engines.engine import Engine
 from .prints.colors import Colors
 from .system.platform import Platform
 from .types.files import Files
-from .types.lists import Lists
 from .types.paths import Paths
 from .types.volumes import Volumes
 
@@ -24,87 +23,6 @@ __MARKER_RESULT = '__GITLAB_CI_LOCAL_RESULT__'
 
 # Variables
 __engine = None # pylint: disable=invalid-name
-
-# Launcher
-def launcher(options, jobs):
-
-    # Variables
-    jobs_status = {'jobs_count': 0, 'quiet': True, 'time_launcher': time()}
-    result = None
-
-    # Run selected jobs
-    for job in jobs:
-
-        # Filter jobs list
-        if not options.pipeline and not Lists.match(options.names, job,
-                                                    ignore_case=options.ignore_case,
-                                                    no_regex=options.no_regex):
-            continue
-
-        # Filter stages list
-        if options.pipeline and options.names and not Lists.match(
-                options.names, jobs[job]['stage'], ignore_case=options.ignore_case,
-                no_regex=options.no_regex):
-            continue
-
-        # Filter manual jobs
-        job_manual = (jobs[job]['when'] == 'manual')
-        if job_manual and not options.manual and not Lists.match(
-                options.names, job, ignore_case=options.ignore_case,
-                no_regex=options.no_regex):
-            continue
-
-        # Filter disabled jobs
-        if jobs[job]['options']['disabled']:
-            continue
-
-        # Raise initial result
-        if result is None:
-            result = True
-
-        # Run job
-        attempt = 0
-        expected = result
-        jobs_status['jobs_count'] += 1
-        result = runner(options, jobs[job], result, jobs_status)
-
-        # Retry job if allowed
-        if expected and not result and jobs[job]['retry'] > 0:
-            while not result and attempt < jobs[job]['retry']:
-                attempt += 1
-                result = runner(options, jobs[job], expected, jobs_status)
-
-    # Non quiet jobs
-    if not jobs_status['quiet']:
-
-        # Pipeline jobs footer
-        if jobs_status['jobs_count'] > 1:
-
-            # Evaluate duration total time
-            time_total_duration = time() - jobs_status['time_launcher']
-            time_total_seconds = '%.0f second%s' % (time_total_duration % 60, 's' if
-                                                    time_total_duration % 60 > 1 else '')
-            time_total_minutes = ''
-            if time_total_duration >= 60:
-                time_total_minutes = '%.0f minute%s ' % (
-                    time_total_duration / 60, 's' if time_total_duration / 60 > 1 else '')
-            time_total_string = time_total_minutes + time_total_seconds
-
-            # Final footer
-            print(' %s> Pipeline: %s in %s total%s' %
-                  (Colors.YELLOW, Colors.BOLD + 'Success' if result else Colors.RED +
-                   'Failure', time_total_string, Colors.RESET))
-            print(' ')
-            print(' ')
-            Platform.flush()
-
-        # Simple job footer
-        else:
-            print(' ')
-            Platform.flush()
-
-    # Result
-    return bool(result)
 
 # Runner
 def runner(options, job_data, last_result, jobs_status):

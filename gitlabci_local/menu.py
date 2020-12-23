@@ -11,11 +11,11 @@ from PyInquirer import prompt as PyInquirer_prompt
 from PyInquirer import Separator as PyInquirer_Separator
 
 # Components
+from .features.pipelines import JobsPipelines
 from .package.bundle import Bundle
 from .package.patcher import Patcher
 from .prints.colors import Colors
 from .prints.menus import Menus
-from .runner import launcher
 from .system.platform import Platform
 from .types.dicts import Dicts
 from .types.lists import Lists
@@ -133,7 +133,7 @@ def selector(options, jobs):
 
     # Launch jobs
     if options.names:
-        result = launcher(options, jobs)
+        result = JobsPipelines(jobs, options).launch()
 
     # Result
     return result
