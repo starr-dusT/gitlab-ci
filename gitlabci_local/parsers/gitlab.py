@@ -12,7 +12,7 @@ from oyaml import safe_load as yaml_safe_load
 
 # Components
 from ..containers.images import Images
-from ..menu import configurator
+from ..features.menus import MenusFeature
 
 # GitLab class
 class GitLab:
@@ -203,8 +203,8 @@ class GitLab:
 
             # Parse local configurations
             if 'configurations' in local:
-                configured_variables = configurator(self.__options,
-                                                    local['configurations'])
+                configured_variables = MenusFeature(options=self.__options).configure(
+                    local['configurations'])
                 global_values['variables'].update(configured_variables)
 
         # Prepare default variables

@@ -8,8 +8,8 @@ from subprocess import check_output, DEVNULL, Popen
 from sys import argv, exit
 
 # Components
-from ..menu import selector
 from ..engines.engine import supported as engine_supported
+from ..features.menus import MenusFeature
 from ..features.images import ImagesFeature
 from ..features.jobs import JobsFeature
 from ..features.pipelines import PipelinesFeature
@@ -222,37 +222,37 @@ def main():
 
     # Pull jobs images
     elif options.pull:
-        result = ImagesFeature(jobs, options).pull(force=options.force)
+        result = ImagesFeature(jobs=jobs, options=options).pull(force=options.force)
 
     # Remove jobs images
     elif options.rmi:
-        result = ImagesFeature(jobs, options).rmi()
+        result = ImagesFeature(jobs=jobs, options=options).rmi()
 
     # Select job
     elif options.list and interactive:
         options.manual = True
-        result = selector(options, jobs)
+        result = MenusFeature(jobs=jobs, options=options).select()
 
     # Select jobs
     elif options.select and interactive:
-        result = selector(options, jobs)
+        result = MenusFeature(jobs=jobs, options=options).select()
 
     # Launch pipeline
     elif options.pipeline:
-        result = PipelinesFeature(jobs, options).launch()
+        result = PipelinesFeature(jobs=jobs, options=options).launch()
 
     # Launch jobs
     elif options.names:
-        result = PipelinesFeature(jobs, options).launch()
+        result = PipelinesFeature(jobs=jobs, options=options).launch()
 
     # Select jobs
     elif interactive:
-        result = selector(options, jobs)
+        result = MenusFeature(jobs=jobs, options=options).select()
 
     # Launch all jobs
     elif options.all:
         options.pipeline = True
-        result = PipelinesFeature(jobs, options).launch()
+        result = PipelinesFeature(jobs=jobs, options=options).launch()
 
     # Unsupported case
     else:
