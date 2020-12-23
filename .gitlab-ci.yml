@@ -99,6 +99,7 @@ variables:
   rules:
     - if: $CI_COMMIT_REF_NAME == "develop"
       changes:
+        - 'CHANGELOG.md'
         - 'docs/**/*'
         - 'gitlabci_local/**/*'
         - 'setup.py'
@@ -133,6 +134,7 @@ variables:
   rules:
     - if: $CI_COMMIT_REF_NAME == "develop"
       changes:
+        - 'CHANGELOG.md'
         - 'docs/**/*'
         - 'gitlabci_local/**/*'
         - 'setup.py'
@@ -156,6 +158,7 @@ variables:
   rules:
     - if: $CI_COMMIT_REF_NAME == "develop"
       changes:
+        - 'CHANGELOG.md'
         - 'gitlabci_local/**/*'
     - if: $CI_COMMIT_TAG || $CI_PIPELINE_SOURCE == "trigger" || $CI_PIPELINE_SOURCE == "web" || $CI_COMMIT_REF_NAME != "develop"
       when: on_success
@@ -201,6 +204,7 @@ variables:
   rules:
     - if: $CI_COMMIT_REF_NAME == "develop"
       changes:
+        - 'CHANGELOG.md'
         - 'gitlabci_local/**/*'
     - if: $CI_COMMIT_TAG || $CI_PIPELINE_SOURCE == "trigger" || $CI_PIPELINE_SOURCE == "web" || $CI_COMMIT_REF_NAME != "develop"
       when: on_success
@@ -264,6 +268,7 @@ variables:
   rules:
     - if: $CI_COMMIT_REF_NAME == "develop"
       changes:
+        - 'CHANGELOG.md'
         - 'gitlabci_local/**/*'
         - 'tests/**/*'
     - if: $CI_COMMIT_TAG || $CI_PIPELINE_SOURCE == "trigger" || $CI_PIPELINE_SOURCE == "web" || $CI_COMMIT_REF_NAME != "develop"
@@ -471,6 +476,7 @@ variables:
   rules:
     - if: $CI_COMMIT_REF_NAME == "develop"
       changes:
+        - 'CHANGELOG.md'
         - 'gitlabci_local/**/*'
         - 'tests/**/*'
     - if: $CI_COMMIT_REF_NAME == "master"
