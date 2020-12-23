@@ -11,6 +11,7 @@ from time import sleep, time
 
 # Components
 from ..engines.engine import Engine
+from ..package.bundle import Bundle
 from ..prints.colors import Colors
 from ..system.platform import Platform
 from ..types.paths import Paths
@@ -219,12 +220,16 @@ class Jobs:
               | S_IRGRP | S_IROTH | S_IXOTH)
         script_file.close()
 
+        # Acquire CI environment
+        env_job_name = job_data['options']['env_job_name']
+        env_job_path = job_data['options']['env_job_path']
+
         # Configure CI environment
-        environ['CI_JOB_NAME'] = job_data['name']
-        environ['CI_PROJECT_DIR'] = target_project
+        environ[env_job_name] = job_data['name']
+        environ[env_job_path] = target_project
 
         # Configure local environment
-        environ['CI_LOCAL'] = 'true'
+        environ[Bundle.ENV_LOCAL] = 'true'
 
         # Prepare variables
         variables = dict()
@@ -234,15 +239,15 @@ class Jobs:
             variables[variable] = expandvars(str(job_data['variables'][variable]))
 
         # Prepare CI variables
-        variables['CI_JOB_NAME'] = environ['CI_JOB_NAME']
-        variables['CI_PROJECT_DIR'] = environ['CI_PROJECT_DIR']
-        variables['CI_LOCAL'] = environ['CI_LOCAL']
+        variables[env_job_name] = environ[env_job_name]
+        variables[env_job_path] = environ[env_job_path]
+        variables[Bundle.ENV_LOCAL] = environ[Bundle.ENV_LOCAL]
 
         # Container execution
         if not host:
 
             # Configure engine variables
-            variables['CI_LOCAL_ENGINE_NAME'] = self.__engine.name()
+            variables[Bundle.ENV_ENGINE_NAME] = self.__engine.name()
 
             # Prepare volumes mounts
             volumes = Volumes()

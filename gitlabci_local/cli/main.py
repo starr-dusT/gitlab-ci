@@ -263,8 +263,8 @@ def main():
             # Prepare WinPTY variables
             hint = ' (on Windows, winpty is required)'
             winpty = None
-            if 'WINPTY_BINARY_PATH' in environ:
-                winpty = environ['WINPTY_BINARY_PATH']
+            if Bundle.ENV_WINPTY_PATH in environ:
+                winpty = environ[Bundle.ENV_WINPTY_PATH]
 
             # Acquire WinPTY path
             try:

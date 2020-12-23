@@ -20,6 +20,10 @@ class GitLab:
     # Constants
     LOCAL_NODE = '.local'
 
+    # Environment
+    ENV_JOB_NAME = 'CI_JOB_NAME'
+    ENV_PROJECT_DIR = 'CI_PROJECT_DIR'
+
     # Members
     __options = None
 
@@ -359,6 +363,8 @@ class GitLab:
         job['options']['host'] = False
         job['options']['quiet'] = False
         job['options']['silent'] = False
+        job['options']['env_job_name'] = self.ENV_JOB_NAME
+        job['options']['env_job_path'] = self.ENV_PROJECT_DIR
 
         # Extract job extends
         if 'extends' in job_data and job_data['extends']:

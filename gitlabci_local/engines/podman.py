@@ -5,6 +5,7 @@ from os import environ
 from subprocess import DEVNULL, PIPE, Popen, run
 
 # Components
+from ..package.bundle import Bundle
 from ..system.platform import Platform
 
 # Podman class
@@ -17,8 +18,8 @@ class Podman:
     def __init__(self):
 
         # Configure binary
-        if 'PODMAN_BINARY_PATH' in environ:
-            self.__binary = environ['PODMAN_BINARY_PATH']
+        if Bundle.ENV_PODMAN_BINARY_PATH in environ:
+            self.__binary = environ[Bundle.ENV_PODMAN_BINARY_PATH]
 
         # Check engine support
         try:
