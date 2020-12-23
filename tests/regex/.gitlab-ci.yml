@@ -1,19 +1,19 @@
 image: alpine:3
 
 stages:
-  - test
+  - regex
 
 'Test C++':
-  stage: test
+  stage: regex
   script:
     - echo 'Test C++'
 
 'Test Python':
-  stage: test
+  stage: regex
   script:
     - echo 'Test Python'
 
 'Test .*':
-  stage: test
+  stage: regex
   script:
     - echo 'Test .*'
