@@ -12,10 +12,10 @@ from time import sleep, time
 # Components
 from ..engines.engine import Engine
 from ..package.bundle import Bundle
-from ..prints.colors import Colors
 from ..system.platform import Platform
 from ..types.paths import Paths
 from ..types.volumes import Volumes
+from .outputs import Outputs
 from .scripts import Scripts
 
 # Jobs class
@@ -34,6 +34,159 @@ class Jobs:
 
         # Prepare options
         self.__options = options
+
+    # Run container
+    def __run_container(self, variables, path_parent, target_parent, image, job_data,
+                        script_file, entrypoint, network, target_workdir, last_result,
+                        result):
+
+        # Configure engine variables
+        variables[Bundle.ENV_ENGINE_NAME] = self.__engine.name()
+
+        # Prepare volumes mounts
+        volumes = Volumes()
+
+        # Mount repository folder
+        volumes.add(path_parent, target_parent, 'rw', True)
+
+        # Extend mounts
+        if self.__options.volume:
+            for volume in self.__options.volume:
+                cwd = Path('.')
+                volume_local = False
+                volume_nodes = volume.split(':')
+
+                # Handle .local volumes
+                if volume_nodes[0] == '.local':
+                    cwd = self.__options.path
+                    volume_local = True
+                    volume_nodes.pop(0)
+
+                # Parse HOST:TARGET:MODE
+                if len(volume_nodes) == 3:
+                    volume_host = Paths.resolve(cwd / expandvars(volume_nodes[0]))
+                    volume_target = expandvars(volume_nodes[1])
+                    volume_mode = volume_nodes[2]
+
+                # Parse HOST:TARGET
+                elif len(volume_nodes) == 2:
+                    volume_host = Paths.resolve(cwd / expandvars(volume_nodes[0]))
+                    volume_target = expandvars(volume_nodes[1])
+                    volume_mode = 'rw'
+
+                # Parse VOLUME
+                else:
+                    volume_host = Paths.resolve(cwd / expandvars(volume))
+                    volume_target = Paths.resolve(cwd / expandvars(volume))
+                    volume_mode = 'rw'
+
+                # Append volume mounts
+                volumes.add(volume_host, volume_target, volume_mode, not volume_local)
+
+        # Append sockets mounts
+        if self.__options.sockets:
+            self.__engine.sockets(volumes)
+
+        # Image validation
+        if not image: # pragma: no cover
+            raise ValueError(
+                'Missing image for "%s / %s"' % (job_data['stage'], job_data['name']))
+        self.__engine.get(image)
+
+        # Launch container
+        container = self.__engine.run(image, script_file.target(), entrypoint, variables,
+                                      network, volumes, target_workdir)
+
+        # Create interruption handler
+        def interrupt_handler(unused_signalnum, unused_handler):
+            Outputs.interruption()
+            self.__engine.stop(container, 0)
+
+        # Register interruption handler
+        handler_int_original = getsignal(SIGINT)
+        handler_term_original = getsignal(SIGTERM)
+        signal(SIGINT, interrupt_handler)
+        signal(SIGTERM, interrupt_handler)
+
+        # Execution wrapper
+        success = False
+
+        # Show container logs
+        for line in self.__engine.logs(container):
+            if isinstance(line, bytes):
+                line_decoded = line.decode()
+                if self.__MARKER_DEBUG in line_decoded:
+                    break
+                if self.__MARKER_RESULT in line_decoded:
+                    break
+                stdout.buffer.write(line)
+                Platform.flush()
+
+        # Runner bash or debug mode
+        if self.__options.bash or self.__options.debug:
+
+            # Select shell
+            shell = 'sh'
+            if self.__engine.supports(container, 'bash'):
+                shell = 'bash'
+
+            # Acquire container informations
+            container_exec = self.__engine.cmd_exec()
+            container_name = self.__engine.name(container)
+
+            # Debugging informations
+            Outputs.debugging(container_exec, container_name, shell)
+
+        # Check container status
+        success = self.__engine.wait(container)
+
+        # Stop container
+        self.__engine.stop(container, 0)
+        sleep(0.1)
+
+        # Remove container
+        self.__engine.remove(container)
+
+        # Unregister interruption handler
+        signal(SIGINT, handler_int_original)
+        signal(SIGTERM, handler_term_original)
+
+        # Result evaluation
+        if job_data['when'] in ['on_failure', 'always']:
+            result = last_result
+        elif success:
+            result = True
+        return result
+
+    # Run native
+    def __run_native(self, variables, entrypoint, script_file, job_data, last_result,
+                     result):
+
+        # Prepare environment
+        _environ = dict(environ)
+        environ.update(variables)
+
+        # Native execution
+        scripts = []
+        if entrypoint:
+            scripts += entrypoint
+        if not scripts:
+            scripts = ['sh']
+        scripts += ['"%s"' % script_file.name()]
+        success = (system(' '.join(scripts)) == 0)
+
+        # Result evaluation
+        if job_data['when'] in ['on_failure', 'always']:
+            result = last_result
+        elif success:
+            result = True
+
+        # Restore environment
+        environ.clear()
+        environ.update(_environ)
+
+        # Result
+        return result
 
     # Run
     def run(self, job_data, last_result, jobs_status):
@@ -84,14 +237,7 @@ class Jobs:
 
         # Header
         if not quiet:
-            if jobs_status['jobs_count'] > 1:
-                print(' ')
-            print(' %s===[ %s%s: %s%s %s(%s, %s) %s]===%s' %
-                  (Colors.GREEN, Colors.YELLOW, job_data['stage'], Colors.YELLOW,
-                   job_data['name'], Colors.CYAN, image, engine_type, Colors.GREEN,
-                   Colors.RESET))
-            print(' ')
-            Platform.flush()
+            Outputs.header(jobs_status, job_data, image, engine_type)
 
         # Acquire project paths
         path_project = Paths.resolve(self.__options.path)
@@ -245,161 +391,14 @@ class Jobs:
 
         # Container execution
         if not host:
-
-            # Configure engine variables
-            variables[Bundle.ENV_ENGINE_NAME] = self.__engine.name()
-
-            # Prepare volumes mounts
-            volumes = Volumes()
-
-            # Mount repository folder
-            volumes.add(path_parent, target_parent, 'rw', True)
-
-            # Extend mounts
-            if self.__options.volume:
-                for volume in self.__options.volume:
-                    cwd = Path('.')
-                    volume_local = False
-                    volume_nodes = volume.split(':')
-
-                    # Handle .local volumes
-                    if volume_nodes[0] == '.local':
-                        cwd = self.__options.path
-                        volume_local = True
-                        volume_nodes.pop(0)
-
-                    # Parse HOST:TARGET:MODE
-                    if len(volume_nodes) == 3:
-                        volume_host = Paths.resolve(cwd / expandvars(volume_nodes[0]))
-                        volume_target = expandvars(volume_nodes[1])
-                        volume_mode = volume_nodes[2]
-
-                    # Parse HOST:TARGET
-                    elif len(volume_nodes) == 2:
-                        volume_host = Paths.resolve(cwd / expandvars(volume_nodes[0]))
-                        volume_target = expandvars(volume_nodes[1])
-                        volume_mode = 'rw'
-
-                    # Parse VOLUME
-                    else:
-                        volume_host = Paths.resolve(cwd / expandvars(volume))
-                        volume_target = Paths.resolve(cwd / expandvars(volume))
-                        volume_mode = 'rw'
-
-                    # Append volume mounts
-                    volumes.add(volume_host, volume_target, volume_mode, not volume_local)
-
-            # Append sockets mounts
-            if self.__options.sockets:
-                self.__engine.sockets(volumes)
-
-            # Image validation
-            if not image: # pragma: no cover
-                raise ValueError(
-                    'Missing image for "%s / %s"' % (job_data['stage'], job_data['name']))
-            self.__engine.get(image)
-
-            # Launch container
-            container = self.__engine.run(image, script_file.target(), entrypoint,
-                                          variables, network, volumes, target_workdir)
-
-            # Create interruption handler
-            def interrupt_handler(unused_signalnum, unused_handler):
-                print(' ')
-                print(' ')
-                print(
-                    ' %s> WARNING: %sUser interruption detected, stopping the container...%s'
-                    % (Colors.YELLOW, Colors.BOLD, Colors.RESET))
-                print(' ')
-                Platform.flush()
-                self.__engine.stop(container, 0)
-
-            # Register interruption handler
-            handler_int_original = getsignal(SIGINT)
-            handler_term_original = getsignal(SIGTERM)
-            signal(SIGINT, interrupt_handler)
-            signal(SIGTERM, interrupt_handler)
-
-            # Execution wrapper
-            success = False
-
-            # Show container logs
-            for line in self.__engine.logs(container):
-                if isinstance(line, bytes):
-                    line_decoded = line.decode()
-                    if self.__MARKER_DEBUG in line_decoded:
-                        break
-                    if self.__MARKER_RESULT in line_decoded:
-                        break
-                    stdout.buffer.write(line)
-                    Platform.flush()
-
-            # Runner bash or debug mode
-            if self.__options.bash or self.__options.debug:
-
-                # Select shell
-                shell = 'sh'
-                if self.__engine.supports(container, 'bash'):
-                    shell = 'bash'
-
-                # Acquire container informations
-                container_exec = self.__engine.cmd_exec()
-                container_name = self.__engine.name(container)
-
-                # Footer debugging informations
-                print(' ')
-                print(
-                    ' %s> INFORMATION: %sUse \'%s%s %s %s%s\' commands for debugging. Interrupt with Ctrl+C...%s'
-                    % (Colors.YELLOW, Colors.BOLD, Colors.CYAN, container_exec,
-                       container_name, shell, Colors.BOLD, Colors.RESET))
-                print(' ')
-                Platform.flush()
-
-            # Check container status
-            success = self.__engine.wait(container)
-
-            # Stop container
-            self.__engine.stop(container, 0)
-            sleep(0.1)
-
-            # Remove container
-            self.__engine.remove(container)
-
-            # Unregister interruption handler
-            signal(SIGINT, handler_int_original)
-            signal(SIGTERM, handler_term_original)
-
-            # Result evaluation
-            if job_data['when'] in ['on_failure', 'always']:
-                result = last_result
-            elif success:
-                result = True
+            result = self.__run_container(variables, path_parent, target_parent, image,
+                                          job_data, script_file, entrypoint, network,
+                                          target_workdir, last_result, result)
 
         # Native execution
         else:
-
-            # Prepare environment
-            _environ = dict(environ)
-            environ.update(variables)
-
-            # Native execution
-            scripts = []
-            if entrypoint:
-                scripts += entrypoint
-            if not scripts:
-                scripts = ['sh']
-            scripts += ['"%s"' % script_file.name()]
-            success = (system(' '.join(scripts)) == 0)
-
-            # Result evaluation
-            if job_data['when'] in ['on_failure', 'always']:
-                result = last_result
-            elif success:
-                result = True
-
-            # Restore environment
-            environ.clear()
-            environ.update(_environ)
+            result = self.__run_native(variables, entrypoint, script_file, job_data,
+                                       last_result, result)
 
         # Initial job details
         job_details = ''
@@ -431,11 +430,7 @@ class Jobs:
         print(' ')
         Platform.flush()
         if not quiet:
-            print(' %s> Result: %s in %s%s%s' %
-                  (Colors.YELLOW, Colors.GREEN + 'Success' if result else Colors.RED +
-                   'Failure', time_string, Colors.CYAN + job_details, Colors.RESET))
-            print(' ')
-            Platform.flush()
+            Outputs.footer(result, time_string, job_details)
 
         # Allowed failure result
         if job_data['when'] not in ['on_failure', 'always'
