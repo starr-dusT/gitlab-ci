@@ -9,8 +9,8 @@ from ..runner import runner
 from ..system.platform import Platform
 from ..types.lists import Lists
 
-# JobsPipelines class
-class JobsPipelines:
+# PipelinesFeature class
+class PipelinesFeature:
 
     # Members
     __jobs = None

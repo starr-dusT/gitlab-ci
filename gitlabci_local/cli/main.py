@@ -12,7 +12,7 @@ from ..menu import selector
 from ..engines.engine import supported as engine_supported
 from ..features.images import ImagesFeature
 from ..features.jobs import JobsFeature
-from ..features.pipelines import JobsPipelines
+from ..features.pipelines import PipelinesFeature
 from ..package.bundle import Bundle
 from ..package.settings import Settings
 from ..package.updates import Updates
@@ -239,11 +239,11 @@ def main():
 
     # Launch pipeline
     elif options.pipeline:
-        result = JobsPipelines(jobs, options).launch()
+        result = PipelinesFeature(jobs, options).launch()
 
     # Launch jobs
     elif options.names:
-        result = JobsPipelines(jobs, options).launch()
+        result = PipelinesFeature(jobs, options).launch()
 
     # Select jobs
     elif interactive:
@@ -252,7 +252,7 @@ def main():
     # Launch all jobs
     elif options.all:
         options.pipeline = True
-        result = JobsPipelines(jobs, options).launch()
+        result = PipelinesFeature(jobs, options).launch()
 
     # Unsupported case
     else:

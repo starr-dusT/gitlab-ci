@@ -11,7 +11,7 @@ from PyInquirer import prompt as PyInquirer_prompt
 from PyInquirer import Separator as PyInquirer_Separator
 
 # Components
-from .features.pipelines import JobsPipelines
+from .features.pipelines import PipelinesFeature
 from .package.bundle import Bundle
 from .package.patcher import Patcher
 from .prints.colors import Colors
@@ -133,7 +133,7 @@ def selector(options, jobs):
 
     # Launch jobs
     if options.names:
-        result = JobsPipelines(jobs, options).launch()
+        result = PipelinesFeature(jobs, options).launch()
 
     # Result
     return result
