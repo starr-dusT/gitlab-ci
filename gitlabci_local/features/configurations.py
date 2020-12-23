@@ -11,8 +11,8 @@ from oyaml import dump as yaml_dump
 from ..system.platform import Platform
 from ..types.lists import Lists
 
-# JobsFeature class
-class JobsFeature:
+# ConfigurationsFeature class
+class ConfigurationsFeature:
 
     # Members
     __configuration = None

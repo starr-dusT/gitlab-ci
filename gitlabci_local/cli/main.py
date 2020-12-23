@@ -9,9 +9,9 @@ from sys import argv, exit
 
 # Components
 from ..engines.engine import supported as engine_supported
-from ..features.menus import MenusFeature
+from ..features.configurations import ConfigurationsFeature
 from ..features.images import ImagesFeature
-from ..features.jobs import JobsFeature
+from ..features.menus import MenusFeature
 from ..features.pipelines import PipelinesFeature
 from ..package.bundle import Bundle
 from ..package.settings import Settings
@@ -218,7 +218,7 @@ def main():
 
     # Dump configuration
     if options.dump:
-        result = JobsFeature(jobs, options).dump()
+        result = ConfigurationsFeature(jobs=jobs, options=options).dump()
 
     # Pull jobs images
     elif options.pull:
