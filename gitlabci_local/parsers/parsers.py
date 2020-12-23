@@ -11,8 +11,8 @@ from oyaml import safe_load as yaml_safe_load, YAMLError
 
 # Components
 from ..package.bundle import Bundle
-from ..parser import parser
 from ..prints.colors import Colors
+from .gitlab import GitLab
 
 # Parsers class
 class Parsers:
@@ -77,7 +77,7 @@ class Parsers:
         try:
             with open(self.__options.configuration, 'r') as configuration_data:
                 data = yaml_safe_load(configuration_data)
-                return parser(self.__options, data, environment)
+                return GitLab(self.__options).parse(data, environment)
         except YAMLError as exc:
             print(' ')
             print(' %s%s: %sERROR: %s%s%s' %
