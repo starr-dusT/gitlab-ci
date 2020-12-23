@@ -33,20 +33,67 @@ class GitLab:
         # Prepare options
         self.__options = options
 
-    # Parse
-    def parse(self, data, environment):
+    # Globals
+    def __globals(self, data, global_values, stages):
 
-        # Variables
-        global_values = dict({
-            'after_script': [],
-            'before_script': [],
-            'image': '',
-            'entrypoint': None,
-            'variables': dict()
-        })
-        jobs = dict()
-        names_local = False
-        stages = dict()
+        # Iterate through nodes
+        for node in data:
+
+            # Filter services node
+            if node == 'services':
+                continue
+
+            # Filter image node
+            if node == 'image':
+                if not global_values['image']:
+                    image_data = data[node]
+                    if isinstance(image_data, dict):
+                        global_values['image'] = expandvars(image_data['name'])
+                        if 'entrypoint' in image_data and len(
+                                image_data['entrypoint']) > 0:
+                            global_values['entrypoint'] = image_data['entrypoint'][:]
+                        else:
+                            global_values['entrypoint'] = None
+                    else:
+                        global_values['image'] = expandvars(image_data)
+                        global_values['entrypoint'] = None
+                continue
+
+            # Filter before_script node
+            if node == 'before_script':
+                if isinstance(data[node], str):
+                    global_values['before_script'] = [data[node]]
+                else:
+                    global_values['before_script'] = data[node]
+                continue
+
+            # Filter after_script node
+            if node == 'after_script':
+                if isinstance(data[node], str):
+                    global_values['after_script'] = [data[node]]
+                else:
+                    global_values['after_script'] = data[node]
+                continue
+
+            # Filter stages node
+            if node == 'stages':
+                for i, stage in enumerate(data['stages']):
+                    stages[stage] = i
+                continue
+
+            # Filter variables node
+            if node == 'variables':
+                for variable in data['variables']:
+                    if variable not in global_values['variables']:
+                        if data['variables'][variable] is None:
+                            global_values['variables'][variable] = ''
+                        else:
+                            global_values['variables'][variable] = str(
+                                data['variables'][variable])
+                continue
+
+    # Include
+    def __include(self, data):
 
         # Parse nested include
         if 'include' in data and data['include']:
@@ -67,9 +114,14 @@ class GitLab:
             data = data_new
             data_new = None
 
-        # Prepare parameters variables
-        if environment['parameters']:
-            global_values['variables'].update(environment['parameters'])
+        # Result
+        return data
+
+    # Local
+    def __local(self, data, global_values):
+
+        # Variables
+        names_local = False
 
         # Filter local node
         if GitLab.LOCAL_NODE in data and data[GitLab.LOCAL_NODE]:
@@ -211,6 +263,30 @@ class GitLab:
                     local['configurations'])
                 global_values['variables'].update(configured_variables)
 
+    # Parse
+    def parse(self, data, environment):
+
+        # Variables
+        global_values = dict({
+            'after_script': [],
+            'before_script': [],
+            'image': '',
+            'entrypoint': None,
+            'variables': dict()
+        })
+        jobs = dict()
+        stages = dict()
+
+        # Parse nested include
+        data = self.__include(data)
+
+        # Prepare parameters variables
+        if environment['parameters']:
+            global_values['variables'].update(environment['parameters'])
+
+        # Filter local node
+        self.__local(data, global_values)
+
         # Prepare default variables
         if environment['default']:
             for variable in environment['default']:
@@ -223,7 +299,7 @@ class GitLab:
                 if variable not in environ:
                     environ[variable] = global_values['variables'][variable]
 
-        # Prepare global values
+        # Prepare global image
         if self.__options.image:
             if isinstance(self.__options.image, dict):
                 global_values['image'] = expandvars(self.__options.image['name'])
@@ -236,61 +312,8 @@ class GitLab:
                 global_values['image'] = expandvars(self.__options.image)
                 global_values['entrypoint'] = None
 
-        # Iterate through nodes
-        for node in data:
-
-            # Filter services node
-            if node == 'services':
-                continue
-
-            # Filter image node
-            if node == 'image':
-                if not global_values['image']:
-                    image_data = data[node]
-                    if isinstance(image_data, dict):
-                        global_values['image'] = expandvars(image_data['name'])
-                        if 'entrypoint' in image_data and len(
-                                image_data['entrypoint']) > 0:
-                            global_values['entrypoint'] = image_data['entrypoint'][:]
-                        else:
-                            global_values['entrypoint'] = None
-                    else:
-                        global_values['image'] = expandvars(image_data)
-                        global_values['entrypoint'] = None
-                continue
-
-            # Filter before_script node
-            if node == 'before_script':
-                if isinstance(data[node], str):
-                    global_values['before_script'] = [data[node]]
-                else:
-                    global_values['before_script'] = data[node]
-                continue
-
-            # Filter after_script node
-            if node == 'after_script':
-                if isinstance(data[node], str):
-                    global_values['after_script'] = [data[node]]
-                else:
-                    global_values['after_script'] = data[node]
-                continue
-
-            # Filter stages node
-            if node == 'stages':
-                for i, stage in enumerate(data['stages']):
-                    stages[stage] = i
-                continue
-
-            # Filter variables node
-            if node == 'variables':
-                for variable in data['variables']:
-                    if variable not in global_values['variables']:
-                        if data['variables'][variable] is None:
-                            global_values['variables'][variable] = ''
-                        else:
-                            global_values['variables'][variable] = str(
-                                data['variables'][variable])
-                continue
+        # Global nodes
+        self.__globals(data, global_values, stages)
 
         # Prepare environment
         _environ = dict(environ)
