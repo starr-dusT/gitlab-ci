@@ -17,8 +17,8 @@ from ..package.bundle import Bundle
 from ..package.settings import Settings
 from ..package.updates import Updates
 from ..package.version import Version
-from ..parser import reader
 from ..parsers.gitlab import GitLab
+from ..parsers.parsers import Parsers
 from ..prints.colors import Colors
 from ..system.platform import Platform
 
@@ -208,7 +208,7 @@ def main():
         options.tags_default = True
 
     # Read configuration
-    jobs = reader(options)
+    jobs = Parsers(options).read()
     if not jobs:
         exit(1)
 

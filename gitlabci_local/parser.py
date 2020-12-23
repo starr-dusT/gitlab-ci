@@ -5,85 +5,15 @@ from collections import OrderedDict
 from os import environ
 from os.path import expandvars
 from pathlib import Path
-from sys import exc_info
 
 # Modules libraries
 from dotenv import dotenv_values
 from oyaml import safe_load as yaml_safe_load
-from oyaml import YAMLError
 
 # Components
 from .containers.images import Images
 from .menu import configurator
-from .package.bundle import Bundle
 from .parsers.gitlab import GitLab
-from .prints.colors import Colors
-
-# Reader
-def reader(options):
-
-    # Variables
-    environment = {
-        'default': dict(),
-        'files': [],
-        'parameters': dict(),
-    }
-
-    # Parse environment options
-    if options.env:
-        for env in options.env:
-            env_parsed = env.split('=', 1)
-
-            # Parse VARIABLE=value
-            if len(env_parsed) == 2:
-                variable = env_parsed[0]
-                value = env_parsed[1]
-                environ[variable] = value
-                environment['parameters'][variable] = value
-
-            # Parse ENVIRONMENT_FILE
-            elif (Path(options.path) / env).is_file():
-                environment['files'] += [Path(options.path) / env]
-
-            # Parse VARIABLE
-            else:
-                variable = env
-                if variable in environ:
-                    environment['parameters'][variable] = environ[variable]
-                else:
-                    environment['parameters'][variable] = ''
-
-    # Iterate through environment files
-    environment['files'].insert(0, Path(options.path) / '.env')
-    for environment_file in environment['files']:
-        if not environment_file.is_file():
-            continue
-
-        # Parse environment files
-        environment_file_values = dotenv_values(dotenv_path=environment_file)
-        for variable in environment_file_values:
-
-            # Define default environment variable
-            environment['default'][variable] = environment_file_values[variable]
-
-    # Read GitLab CI YAML
-    try:
-        with open(options.configuration, 'r') as configuration_data:
-            data = yaml_safe_load(configuration_data)
-            return parser(options, data, environment)
-    except YAMLError as exc:
-        print(' ')
-        print(' %s%s: %sERROR: %s%s%s' %
-              (Colors.GREEN, Bundle.NAME, Colors.RED, Colors.BOLD, exc, Colors.RESET))
-        print(' ')
-    except (FileNotFoundError, PermissionError):
-        print(' ')
-        print(' %s%s: %sERROR: %s%s%s' % (Colors.GREEN, Bundle.NAME, Colors.RED,
-                                          Colors.BOLD, str(exc_info()[1]), Colors.RESET))
-        print(' ')
-
-    # Failure
-    return None
 
 # Parser
 def parser(options, data, environment):
