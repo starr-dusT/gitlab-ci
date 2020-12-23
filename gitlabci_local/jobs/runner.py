@@ -6,16 +6,16 @@ from os.path import expandvars
 from pathlib import Path, PurePosixPath
 from signal import getsignal, SIGINT, signal, SIGTERM
 from stat import S_IRGRP, S_IROTH, S_IXGRP, S_IXOTH, S_IXUSR
-from sys import exc_info, stdout
+from sys import stdout
 from time import sleep, time
 
 # Components
 from ..engines.engine import Engine
 from ..prints.colors import Colors
 from ..system.platform import Platform
-from ..types.files import Files
 from ..types.paths import Paths
 from ..types.volumes import Volumes
+from .scripts import Scripts
 
 # Jobs class
 class Jobs:
@@ -38,7 +38,6 @@ class Jobs:
     def run(self, job_data, last_result, jobs_status):
 
         # Variables
-        error = None
         host = False
         quiet = self.__options.quiet
         real_paths = self.__options.real_paths and (Platform.IS_LINUX
@@ -150,122 +149,75 @@ class Jobs:
         if self.__options.after:
             scripts_after += job_data['after_script']
 
-        # Prepare temporary script (parent)
-        try:
-            script_file = Files.temp(path=path_parent, prefix='.tmp.entrypoint.')
-            target_file = Paths.get(Path(target_parent) / Path(script_file.name).name)
-        except PermissionError:
-            error = str(exc_info()[1])
-
-        # Prepare temporary script (project)
-        if not script_file:
-            try:
-                script_file = Files.temp(path=path_project, prefix='.tmp.entrypoint.')
-                target_file = Paths.get(
-                    Path(target_project) / Path(script_file.name).name)
-            except PermissionError:
-                error = str(exc_info()[1])
-
-        # Failed temporary script
-        if not script_file:
-            raise PermissionError(error)
+        # Prepare script file
+        script_file = Scripts(
+            paths={
+                path_parent: target_parent,
+                path_project: target_project
+            }, prefix='.tmp.entrypoint.')
 
         # Prepare execution context
-        script_file.write('#!/bin/sh')
-        script_file.write('\n')
+        script_file.shebang()
         script_file.write('result=1')
-        script_file.write('\n')
 
         # Prepare host working directory
         if host:
             script_file.write('cd "%s"' % target_workdir)
-            script_file.write('\n')
 
         # Prepare before_script/script context
-        script_file.write('(')
-        script_file.write('\n')
-        if job_data['options']['silent']:
-            script_file.write('set -e')
-        else:
-            script_file.write('set -ex')
-        script_file.write('\n')
+        script_file.subshell_start()
+        script_file.configure(errors=True, verbose=not job_data['options']['silent'])
 
         # Prepare before_script commands
         if len(scripts_before) > 0:
-            script_file.write('{')
-            script_file.write('\n')
-            script_file.write('\n'.join(scripts_before))
-            script_file.write('\n')
-            script_file.write('}')
-            script_file.write('\n')
-            script_file.flush()
+            script_file.subgroup_start()
+            script_file.writelines(scripts_before)
+            script_file.subgroup_stop()
 
         # Prepare script commands
         if len(scripts_commands) > 0:
-            script_file.write('{')
-            script_file.write('\n')
-            script_file.write('\n'.join(scripts_commands))
-            script_file.write('\n')
-            script_file.write('}')
-            script_file.flush()
+            script_file.subgroup_start()
+            script_file.writelines(scripts_commands)
+            script_file.subgroup_stop()
         else:
             script_file.write('false')
-            script_file.flush()
 
         # Finish before_script/script context
-        script_file.write('\n')
-        script_file.write(') 2>&1')
-        script_file.write('\n')
+        script_file.subshell_stop()
         script_file.write('result=${?}')
-        script_file.flush()
 
         # Prepare debug script commands
         if len(scripts_debug) > 0:
-            script_file.write('\n')
-            script_file.write('(')
-            script_file.write('\n')
+            script_file.subshell_start()
             if not job_data['options']['silent']:
-                script_file.write('set -x')
-            script_file.write('\n')
-            script_file.write('\n'.join(scripts_debug))
-            script_file.write('\n')
-            script_file.write(') 2>&1')
-            script_file.flush()
+                script_file.configure(errors=False, verbose=True)
+            script_file.writelines(scripts_debug)
+            script_file.subshell_stop()
 
         # Prepare after_script commands
         if len(scripts_after) > 0:
-            script_file.write('\n')
-            script_file.write('(')
-            script_file.write('\n')
+            script_file.subshell_start()
             if job_data['options']['silent']:
-                script_file.write('set -e')
+                script_file.configure(errors=True, verbose=False)
             else:
-                script_file.write('set -ex')
-            script_file.write('\n')
-            script_file.write('{')
-            script_file.write('\n')
-            script_file.write('\n'.join(scripts_after))
-            script_file.write('\n')
-            script_file.write('}')
-            script_file.write('\n')
-            script_file.write(') 2>&1')
-            script_file.flush()
+                script_file.configure(errors=True, verbose=True)
+            script_file.subgroup_start()
+            script_file.writelines(scripts_after)
+            script_file.subgroup_stop()
+            script_file.subshell_stop()
 
         # Prepare container result
         if not host:
-            script_file.write('\n')
             script_file.write('echo "%s:${result}"' % (self.__MARKER_RESULT))
 
         # Prepare execution result
-        script_file.write('\n')
         script_file.write('exit "${result}"')
-        script_file.write('\n')
 
         # Prepare script execution
-        script_stat = stat(script_file.name)
-        chmod(script_file.name, script_stat.st_mode | S_IXUSR | S_IXGRP
+        script_stat = stat(script_file.name())
+        chmod(script_file.name(), script_stat.st_mode | S_IXUSR | S_IXGRP
               | S_IRGRP | S_IROTH | S_IXOTH)
-        script_file.file.close()
+        script_file.close()
 
         # Configure CI environment
         environ['CI_JOB_NAME'] = job_data['name']
@@ -343,8 +295,8 @@ class Jobs:
             self.__engine.get(image)
 
             # Launch container
-            container = self.__engine.run(image, target_file, entrypoint, variables,
-                                          network, volumes, target_workdir)
+            container = self.__engine.run(image, script_file.target(), entrypoint,
+                                          variables, network, volumes, target_workdir)
 
             # Create interruption handler
             def interrupt_handler(unused_signalnum, unused_handler):
@@ -431,7 +383,7 @@ class Jobs:
                 scripts += entrypoint
             if not scripts:
                 scripts = ['sh']
-            scripts += ['"%s"' % script_file.name]
+            scripts += ['"%s"' % script_file.name()]
             success = (system(' '.join(scripts)) == 0)
 
             # Result evaluation
