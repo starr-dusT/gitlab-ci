@@ -327,7 +327,7 @@ class Jobs:
                     if self.__MARKER_RESULT in line_decoded:
                         break
                     stdout.buffer.write(line)
-                    stdout.buffer.flush()
+                    Platform.flush()
 
             # Runner bash or debug mode
             if self.__options.bash or self.__options.debug:
