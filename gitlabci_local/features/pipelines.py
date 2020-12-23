@@ -4,8 +4,8 @@
 from time import time
 
 # Components
+from ..jobs.runner import Jobs
 from ..prints.colors import Colors
-from ..runner import runner
 from ..system.platform import Platform
 from ..types.lists import Lists
 
@@ -67,14 +67,15 @@ class PipelinesFeature:
             attempt = 0
             expected = result
             jobs_status['jobs_count'] += 1
-            result = runner(self.__options, self.__jobs[job], result, jobs_status)
+            result = Jobs(options=self.__options).run(self.__jobs[job], result,
+                                                      jobs_status)
 
             # Retry job if allowed
             if expected and not result and self.__jobs[job]['retry'] > 0:
                 while not result and attempt < self.__jobs[job]['retry']:
                     attempt += 1
-                    result = runner(self.__options, self.__jobs[job], expected,
-                                    jobs_status)
+                    result = Jobs(options=self.__options).run(self.__jobs[job], expected,
+                                                              jobs_status)
 
         # Non quiet jobs
         if not jobs_status['quiet']:
