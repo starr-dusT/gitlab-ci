@@ -223,7 +223,8 @@ variables:
     pip3 show gitlabci-local
     pip3 install -q -r requirements/tests.txt --upgrade
   script:
-    - for path in ./tests/*; do (cd "${path}/" && sh ./test.sh); done
+    - export SUITE=$(echo "${SUITE}" | sed 's/,/\\|/g')
+    - for path in $(ls -1d ./tests/* | grep "\/\(${SUITE}\)"); do (cd "${path}/" && sh ./test.sh); done
 
 .coverage-template:
   extends:
@@ -247,9 +248,6 @@ variables:
     chmod 666 "${COVERAGE_FILE}"
     echo 'coverage run --append --module --source=gitlabci_local gitlabci_local "${@}"' | tee /usr/local/bin/gitlabci-local /usr/local/bin/gcil >/dev/null
     chmod a+x /usr/local/bin/gitlabci-local /usr/local/bin/gcil
-  script:
-    - export SUITE=$(echo "${SUITE}" | sed 's/,/\\|/g')
-    - for path in $(ls -1d ./tests/* | grep "\/\(${SUITE}\)"); do (cd "${path}/" && sh ./test.sh); done
   after_script:
     - coverage xml -o "${COVERAGE_XML}"
     - coverage report --show-missing --skip-covered
