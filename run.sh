@@ -17,7 +17,7 @@ echo ''
 
 # Execute job scripts
 sed -n "/^'${JOB}.*':$/,/^$/{ /^  script:$/{ :a; n; /    - /{ s/^ *- //p; ba; } } }" ./.gitlab-ci.yml |
-  while read -r line; do
+  while [ "${?}" -eq 0 ] && read -r line; do
     if ! type sudo >/dev/null 2>&1 || [ "${OSTYPE}" = 'msys' ]; then
       line=$(echo "${line}" | sed 's/sudo //g')
     fi
@@ -30,8 +30,13 @@ sed -n "/^'${JOB}.*':$/,/^$/{ /^  script:$/{ :a; n; /    - /{ s/^ *- //p; ba; } 
     echo "+ ${line}"
     sh -c "${line}"
   done
+result=${?}
 
 # Footer
 echo ''
-printf " \033[1;33m> Result: \033[1;32mSuccess\033[0m\n"
+if [ "${result}" -eq 0 ]; then
+  printf " \033[1;33m> Result: \033[1;32mSuccess\033[0m\n"
+else
+  printf " \033[1;33m> Result: \033[1;31mFailure\033[0m\n"
+fi
 echo ''
