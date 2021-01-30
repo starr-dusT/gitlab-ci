@@ -188,6 +188,7 @@ variables:
     - Build
   variables:
     DOCKER_HOST: tcp://127.0.0.1:9999
+    STORAGE_DRIVER: vfs
   before_script: &unit-tests-podman-before |-
     echo 'deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/Debian_10/ /' >/etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list
     curl -L -sS https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/Debian_10/Release.key | apt-key add - >/dev/null 2>&1
@@ -198,7 +199,6 @@ variables:
     apt-get install -qq -y podman 2>&1 | grep 'Setting up podman'
     sed -i 's#.*cgroup_manager = ".*"#cgroup_manager = "cgroupfs"#g' /etc/containers/containers.conf
     sed -i 's#.*events_logger = ".*"#events_logger = "file"#g' /etc/containers/containers.conf
-    sed -i 's#driver = ""#driver = "vfs"#g' /etc/containers/storage.conf
 
 .unit-tests-rules:
   rules:
