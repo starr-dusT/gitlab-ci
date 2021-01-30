@@ -1,4 +1,33 @@
 
+<a name="3.1.0"></a>
+## [3.1.0](https://gitlab.com/AdrianDC/gitlabci-local/compare/3.0.2...3.1.0) (2021-01-30)
+
+### Bug Fixes
+
+* resolve [#156](https://gitlab.com/AdrianDC/gitlabci-local/issues/156): expand nested variables values like GitLab CI
+
+### Cleanups
+
+* docs: refresh the preview SVG for the latest 3.1.0 release
+* gitlab-ci: synchronize stderr outputs with stdout outputs
+* readme, test: add Android 11 to the tested environments
+* readme: resolve a minor typo about --settings in README
+* gitlab-ci: allow to use the 'SUITE' for regular tests jobs
+* gitlab-ci: remove unnecessary 'wget' for 'Coverage Windows'
+* test: minor codestyle improvements in TEST.md
+* run: handle scripts failures upon job lines executions
+
+### Features
+
+* implement [#157](https://gitlab.com/AdrianDC/gitlabci-local/issues/157): see the job name upon result for readability
+
+### Test
+
+* gitlab-ci: fix Podman VFS storage driver with STORAGE_DRIVER
+* test [#156](https://gitlab.com/AdrianDC/gitlabci-local/issues/156): resolve 'project' variables being now handled
+* gitlab-ci: raise libseccomp2 to 2.5.1-1 for Podman tests
+
+
 <a name="3.0.2"></a>
 ## [3.0.2](https://gitlab.com/AdrianDC/gitlabci-local/compare/3.0.1...3.0.2) (2020-12-23)
 
