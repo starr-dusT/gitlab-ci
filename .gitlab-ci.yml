@@ -224,7 +224,7 @@ variables:
     pip3 install -q -r requirements/tests.txt --upgrade
   script:
     - export SUITE=$(echo "${SUITE}" | sed 's/,/\\|/g')
-    - for path in $(ls -1d ./tests/* | grep "\/\(${SUITE}\)"); do (cd "${path}/" && sh ./test.sh); done
+    - for path in $(ls -1d ./tests/* | grep "\/\(${SUITE}\)"); do (cd "${path}/" && sh ./test.sh 2>&1); done
 
 .coverage-template:
   extends:
@@ -282,7 +282,7 @@ variables:
     echo 'wine pip3 "${@}"' | tee /usr/local/bin/pip3 >/dev/null
     chmod a+x /usr/local/bin/pip3
   script:
-    - cd ./tests/windows/ && sh ./test.sh
+    - cd ./tests/windows/ && sh ./test.sh 2>&1
 
 # =============================================================================
 # Stage: test (coverage)
