@@ -191,10 +191,10 @@ variables:
   before_script: &unit-tests-podman-before |-
     echo 'deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/Debian_10/ /' >/etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list
     curl -L -sS https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/Debian_10/Release.key | apt-key add - >/dev/null 2>&1
-    wget -P /tmp/ -q http://ftp.br.debian.org/debian/pool/main/libs/libseccomp/libseccomp2_2.5.0-3+b1_amd64.deb
+    wget -P /tmp/ -q http://ftp.br.debian.org/debian/pool/main/libs/libseccomp/libseccomp2_2.5.1-1_amd64.deb
     apt-get update -qq
-    apt-get install -qq -y /tmp/libseccomp2_2.5.0-3+b1_amd64.deb 2>&1 | grep 'Setting up libseccomp2'
-    rm -f /tmp/libseccomp2_2.5.0-3+b1_amd64.deb
+    apt-get install -qq -y /tmp/libseccomp2_2.5.1-1_amd64.deb 2>&1 | grep 'Setting up libseccomp2'
+    rm -f /tmp/libseccomp2_2.5.1-1_amd64.deb
     apt-get install -qq -y podman 2>&1 | grep 'Setting up podman'
     sed -i 's#.*cgroup_manager = ".*"#cgroup_manager = "cgroupfs"#g' /etc/containers/containers.conf
     sed -i 's#.*events_logger = ".*"#events_logger = "file"#g' /etc/containers/containers.conf
