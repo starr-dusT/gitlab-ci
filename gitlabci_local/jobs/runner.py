@@ -438,7 +438,7 @@ class Jobs:
         print(' ')
         Platform.flush()
         if not quiet:
-            Outputs.footer(result, time_string, job_details)
+            Outputs.footer(result, time_string, job_data, job_details)
 
         # Allowed failure result
         if job_data['when'] not in ['on_failure', 'always'

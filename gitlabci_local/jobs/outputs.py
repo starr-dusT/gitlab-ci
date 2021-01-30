@@ -23,12 +23,13 @@ class Outputs:
 
     # Footer
     @staticmethod
-    def footer(result, time_string, job_details):
+    def footer(result, time_string, job_data, job_details):
 
         # Footer output
-        print(' %s> Result: %s in %s%s%s' %
-              (Colors.YELLOW, Colors.GREEN + 'Success' if result else Colors.RED +
-               'Failure', time_string, Colors.CYAN + job_details, Colors.RESET))
+        print(' %s> %s: %s in %s%s%s' %
+              (Colors.YELLOW, job_data['name'],
+               Colors.GREEN + 'Success' if result else Colors.RED + 'Failure',
+               time_string, Colors.CYAN + job_details, Colors.RESET))
         print(' ')
         Platform.flush()
 

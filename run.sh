@@ -35,8 +35,8 @@ result=${?}
 # Footer
 echo ''
 if [ "${result}" -eq 0 ]; then
-  printf " \033[1;33m> Result: \033[1;32mSuccess\033[0m\n"
+  printf " \033[1;33m> ${JOB}: \033[1;32mSuccess\033[0m\n"
 else
-  printf " \033[1;33m> Result: \033[1;31mFailure\033[0m\n"
+  printf " \033[1;33m> ${JOB}: \033[1;31mFailure\033[0m\n"
 fi
 echo ''
