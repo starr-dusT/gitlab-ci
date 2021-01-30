@@ -206,9 +206,9 @@ gitlabci-local currently supports these container engines:
 
 ## Supported Android systems
 
-|     Engines     | Android (7.0, 7.1, 8.0, 8.1, 9.0, 10, ...) |
-| :-------------: | :----------------------------------------: |
-| Native (Termux) |                   **✓**                    |
+|     Engines     | Android (7.0, 7.1, 8.0, 8.1, 9.0, 10, 11, ...) |
+| :-------------: | :--------------------------------------------: |
+| Native (Termux) |                     **✓**                      |
 
 ---
 

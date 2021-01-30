@@ -48,7 +48,7 @@ The following engines are available:
 
 ## Test on Android
 
-The following tools are required for Android hosts tests (example: 10, ...):
+The following tools are required for Android hosts tests (example: 11, 10, ...):
 
 - **Termux :** Install the `Termux` application (https://termux.com)
 - **OpenSSL :** Type `pkg install openssl` in the Termux app
