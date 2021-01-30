@@ -222,7 +222,7 @@ or to disable the automated updates daily check (`[updates] > enabled`)
 The `settings.ini` file location and contents can be shown with the following command:
 
 ```yml
-gitlabci-local --setings
+gitlabci-local --settings
 ```
 
 ---
