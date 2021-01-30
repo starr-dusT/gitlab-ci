@@ -1,0 +1,31 @@
+image: alpine:3
+
+stages:
+  - scripts
+
+variables:
+  DOUBLE_NESTED_1_1: 'doublenested/variable/${NESTED_1_1}/value'
+  DOUBLE_NESTED_2_1: 'doublenested/variable/${NESTED_2_1}/value'
+  NESTED_1_1: 'nested/variable/${CONSTANT_1}/value'
+  NESTED_2_1: 'nested/variable/${CONSTANT_2}/value'
+  CONSTANT_1: 'constant1'
+  CONSTANT_2: 'constant2'
+  NESTED_1_2: 'nested/variable/${CONSTANT_1}/value'
+  NESTED_2_2: 'nested/variable/${CONSTANT_2}/value'
+  DOUBLE_NESTED_1_2: 'doublenested/variable/${NESTED_1_2}/value'
+  DOUBLE_NESTED_2_2: 'doublenested/variable/${NESTED_2_2}/value'
+
+'Job 1':
+  stage: scripts
+  script:
+    - echo 'Job 1'
+    - echo "CONSTANT_1 = ${CONSTANT_1}" | grep -v '\$'
+    - echo "CONSTANT_2 = ${CONSTANT_2}" | grep -v '\$'
+    - echo "NESTED_1_1 = ${NESTED_1_1}" | grep -v '\$'
+    - echo "NESTED_2_1 = ${NESTED_2_1}" | grep -v '\$'
+    - echo "NESTED_1_2 = ${NESTED_1_2}" | grep -v '\$'
+    - echo "NESTED_2_2 = ${NESTED_2_2}" | grep -v '\$'
+    - echo "DOUBLE_NESTED_1_1 = ${DOUBLE_NESTED_1_1}" | grep '\$'
+    - echo "DOUBLE_NESTED_2_1 = ${DOUBLE_NESTED_2_1}" | grep '\$'
+    - echo "DOUBLE_NESTED_1_2 = ${DOUBLE_NESTED_1_2}" | grep '\$'
+    - echo "DOUBLE_NESTED_2_2 = ${DOUBLE_NESTED_2_2}" | grep '\$'

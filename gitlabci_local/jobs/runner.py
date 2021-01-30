@@ -380,9 +380,17 @@ class Jobs:
         # Prepare variables
         variables = dict()
 
+        # Prepare environment
+        _environ = dict(environ)
+        environ.update(job_data['variables'])
+
         # Prepare job variables
         for variable in job_data['variables']:
             variables[variable] = expandvars(str(job_data['variables'][variable]))
+
+        # Restore environment
+        environ.clear()
+        environ.update(_environ)
 
         # Prepare CI variables
         variables[env_job_name] = environ[env_job_name]
