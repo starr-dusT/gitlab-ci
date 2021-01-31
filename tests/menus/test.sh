@@ -18,3 +18,5 @@ pexpect-executor --space --enter -- gitlabci-local -p -s menus-1
 pexpect-executor -- gitlabci-local -p -s menus-0
 pexpect-executor --up --up --space --enter -- gitlabci-local -p -m -l
 pexpect-executor --ctrl c -- gitlabci-local -p -m -l
+pexpect-executor --space --enter -- gitlabci-local -c ./.gitlab-ci.select.yml -s
+pexpect-executor --enter -- gitlabci-local -c ./.gitlab-ci.select.yml -l

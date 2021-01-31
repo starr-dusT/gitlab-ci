@@ -231,10 +231,12 @@ def main():
     # Select job
     elif options.list and interactive:
         options.manual = True
+        options.no_regex = True
         result = MenusFeature(jobs=jobs, options=options).select()
 
     # Select jobs
     elif options.select and interactive:
+        options.no_regex = True
         result = MenusFeature(jobs=jobs, options=options).select()
 
     # Launch pipeline
@@ -247,6 +249,7 @@ def main():
 
     # Select jobs
     elif interactive:
+        options.no_regex = True
         result = MenusFeature(jobs=jobs, options=options).select()
 
     # Launch all jobs
