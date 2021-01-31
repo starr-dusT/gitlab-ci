@@ -26,7 +26,7 @@ is the common and unique interface between GitLab CI and gitlabci-local.
 
 ## Preview
 
-![preview.svg](https://gitlab.com/AdrianDC/gitlabci-local/raw/3.1.0/docs/preview.svg)
+![preview.svg](https://gitlab.com/AdrianDC/gitlabci-local/raw/3.1.1/docs/preview.svg)
 
 ---
 

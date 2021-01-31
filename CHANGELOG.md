@@ -1,4 +1,12 @@
 
+<a name="3.1.1"></a>
+## [3.1.1](https://gitlab.com/AdrianDC/gitlabci-local/compare/3.1.0...3.1.1) (2021-02-01)
+
+### Bug Fixes
+
+* resolve [#158](https://gitlab.com/AdrianDC/gitlabci-local/issues/158): prevent regex matches in interactive menus
+
+
 <a name="3.1.0"></a>
 ## [3.1.0](https://gitlab.com/AdrianDC/gitlabci-local/compare/3.0.2...3.1.0) (2021-01-30)
 
