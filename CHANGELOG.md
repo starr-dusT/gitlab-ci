@@ -1,4 +1,12 @@
 
+<a name="3.1.2"></a>
+## [3.1.2](https://gitlab.com/AdrianDC/gitlabci-local/compare/3.1.1...3.1.2) (2021-02-09)
+
+### Bug Fixes
+
+* resolve [#159](https://gitlab.com/AdrianDC/gitlabci-local/issues/159): support nested anchor scripts syntaxes
+
+
 <a name="3.1.1"></a>
 ## [3.1.1](https://gitlab.com/AdrianDC/gitlabci-local/compare/3.1.0...3.1.1) (2021-02-01)
 
