@@ -9,5 +9,9 @@ cd "${test_path}/"
 set -ex
 
 # Run tests
+gitlabci-local --dump
 gitlabci-local -p
+gitlabci-local -c ./.gitlab-ci.str.yml --dump
 gitlabci-local -c ./.gitlab-ci.str.yml -p
+gitlabci-local -c ./.gitlab-ci.nested.yml --dump
+gitlabci-local -c ./.gitlab-ci.nested.yml -p
