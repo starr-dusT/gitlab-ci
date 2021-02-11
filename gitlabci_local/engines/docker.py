@@ -2,7 +2,7 @@
 
 # Modules libraries
 from docker import from_env
-from docker.errors import DockerException, ImageNotFound
+from docker.errors import APIError, DockerException, ImageNotFound
 
 # Components
 from ..system.platform import Platform
@@ -137,8 +137,14 @@ class Docker:
     # Supports
     def supports(self, container, binary):
 
+        # Variables
+        exit_code = 1
+
         # Validate binary support
-        exit_code, unused_output = self.exec(container, 'whereis %s' % (binary))
+        try:
+            exit_code, unused_output = self.exec(container, 'whereis %s' % (binary))
+        except APIError: # pragma: no cover
+            pass
 
         # Result
         return exit_code == 0
