@@ -1,0 +1,21 @@
+image: docker:latest
+
+services:
+  - docker:dind
+
+stages:
+  - sockets
+
+'Job 1':
+  stage: sockets
+  script:
+    - echo 'Job 1'
+    - docker system info
+    - docker ps
+
+'Job 2':
+  stage: sockets
+  services: []
+  script:
+    - echo 'Job 2'
+    - docker ps

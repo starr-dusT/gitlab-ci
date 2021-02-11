@@ -88,7 +88,7 @@ class Jobs:
                 volumes.add(volume_host, volume_target, volume_mode, not volume_local)
 
         # Append sockets mounts
-        if self.__options.sockets:
+        if self.__options.sockets or job_data['options']['sockets']:
             self.__engine.sockets(volumes)
 
         # Image validation

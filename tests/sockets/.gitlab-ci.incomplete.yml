@@ -1,0 +1,11 @@
+image: docker:latest
+
+stages:
+  - sockets
+
+'Job 1':
+  stage: sockets
+  script:
+    - echo 'Job 1'
+    - docker system info
+    - docker ps

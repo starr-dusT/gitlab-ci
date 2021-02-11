@@ -1,0 +1,19 @@
+image: docker:latest
+
+stages:
+  - sockets
+
+'Job 1':
+  stage: sockets
+  services:
+    - image:tag
+    - docker:19-dind
+  script:
+    - echo 'Job 1'
+    - docker system info
+    - docker ps
+
+'Job 3':
+  stage: sockets
+  script:
+    - echo 'Job 2'

@@ -5,6 +5,7 @@ from collections import OrderedDict
 from os import environ
 from os.path import expandvars
 from pathlib import Path
+from re import match
 
 # Modules libraries
 from dotenv import dotenv_values
@@ -60,10 +61,6 @@ class GitLab:
         # Iterate through nodes
         for node in data:
 
-            # Filter services node
-            if node == 'services':
-                continue
-
             # Filter image node
             if node == 'image':
                 if not global_values['image']:
@@ -88,6 +85,11 @@ class GitLab:
             # Filter after_script node
             if node == 'after_script':
                 global_values['after_script'] = self.__scripts(data[node])
+                continue
+
+            # Filter services node
+            if node == 'services':
+                global_values['services'] = data[node][:]
                 continue
 
             # Filter stages node
@@ -287,6 +289,7 @@ class GitLab:
             'before_script': [],
             'image': '',
             'entrypoint': None,
+            'services': [],
             'variables': dict()
         })
         jobs = dict()
@@ -339,8 +342,8 @@ class GitLab:
 
             # Ignore global nodes
             if node in [
-                    'after_script', 'before_script', 'image', 'include', 'stages',
-                    'variables'
+                    'after_script', 'before_script', 'image', 'include', 'services',
+                    'stages', 'variables'
             ]:
                 continue
 
@@ -394,6 +397,7 @@ class GitLab:
         job['retry'] = None
         job['when'] = None
         job['allow_failure'] = None
+        job['services'] = None
         job['tags'] = None
         job['trigger'] = None
         job['options'] = dict()
@@ -401,6 +405,7 @@ class GitLab:
         job['options']['host'] = False
         job['options']['quiet'] = False
         job['options']['silent'] = False
+        job['options']['sockets'] = False
         job['options']['env_job_name'] = self.ENV_JOB_NAME
         job['options']['env_job_path'] = self.ENV_PROJECT_DIR
 
@@ -446,6 +451,8 @@ class GitLab:
                     job['when'] = job_extended['when']
                 if job['allow_failure'] is None:
                     job['allow_failure'] = job_extended['allow_failure']
+                if job['services'] is None:
+                    job['services'] = job_extended['services']
                 if job['tags'] is None:
                     job['tags'] = job_extended['tags']
                 if job['trigger'] is None:
@@ -472,6 +479,8 @@ class GitLab:
                 job['after_script'] = global_values['after_script'][:]
             if job['retry'] is None:
                 job['retry'] = 0
+            if job['services'] is None:
+                job['services'] = global_values['services'][:]
             if job['when'] is None:
                 job['when'] = 'on_success'
             if job['allow_failure'] is None:
@@ -537,6 +546,10 @@ class GitLab:
         if 'allow_failure' in job_data and job_data['allow_failure'] in [True, False]:
             job['allow_failure'] = job_data['allow_failure']
 
+        # Extract job services
+        if 'services' in job_data and isinstance(job_data['services'], list):
+            job['services'] = job_data['services'][:]
+
         # Extract job tags
         if 'tags' in job_data and job_data['tags']:
             job['tags'] = job_data['tags'][:]
@@ -559,6 +572,12 @@ class GitLab:
             job['options']['host'] = Images.host(job['image'])
             job['options']['quiet'] = Images.quiet(job['image'])
             job['options']['silent'] = Images.silent(job['image'])
+
+        # Detect sockets services
+        if job['services']:
+            for service in job['services']:
+                if match(r'docker:.*dind', service):
+                    job['options']['sockets'] = True
 
         # Result
         return job
