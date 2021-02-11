@@ -58,21 +58,21 @@ is the common and unique interface between GitLab CI and gitlabci-local.
 | --update-check     | Check for newer package updates             |
 | --settings         | Show the current settings path and contents |
 
-| Pipeline arguments |                                                                                         |
-| ------------------ | --------------------------------------------------------------------------------------- |
-| -p, --pipeline     | Automatically run pipeline stages rather than jobs                                      |
-| -q, --quiet        | Hide jobs execution context                                                             |
-| -c CONFIGURATION   | Path to the .gitlab-ci.yml configuration file or folder                                 |
-| -B, --no-before    | Disable before_script executions                                                        |
-| -A, --no-after     | Disable after_script executions                                                         |
-| -n NETWORK         | Configure the network mode used<br>Choices: bridge, host, none. Default: bridge         |
-| -e ENV             | Define VARIABLE=value, pass VARIABLE or ENV file                                        |
-| -E ENGINE          | Force a specific engine (or define CI_LOCAL_ENGINE)<br>Default list: auto,podman,docker |
-| -H, --host         | Run all jobs on the host rather than containers                                         |
-| -r, --real-paths   | Mount real folder paths in the container (Linux only)                                   |
-| -S, --sockets      | Mount engine sockets for nested containers                                              |
-| -v VOLUME          | Mount VOLUME or HOST:TARGET in containers                                               |
-| -w WORKDIR         | Override the container's working path                                                   |
+| Pipeline arguments |                                                                                                 |
+| ------------------ | ----------------------------------------------------------------------------------------------- |
+| -p, --pipeline     | Automatically run pipeline stages rather than jobs                                              |
+| -q, --quiet        | Hide jobs execution context                                                                     |
+| -c CONFIGURATION   | Path to the .gitlab-ci.yml configuration file or folder                                         |
+| -B, --no-before    | Disable before_script executions                                                                |
+| -A, --no-after     | Disable after_script executions                                                                 |
+| -n NETWORK         | Configure the network mode used<br>Choices: bridge, host, none. Default: bridge                 |
+| -e ENV             | Define VARIABLE=value, pass VARIABLE or ENV file                                                |
+| -E ENGINE          | Force a specific engine (or define CI_LOCAL_ENGINE)<br>Default list: auto,podman,docker         |
+| -H, --host         | Run all jobs on the host rather than containers                                                 |
+| -r, --real-paths   | Mount real folder paths in the container (Linux only)                                           |
+| -S, --sockets      | Mount engine sockets for nested containers<br>(Enabled by default with services: docker:\*dind) |
+| -v VOLUME          | Mount VOLUME or HOST:TARGET in containers                                                       |
+| -w WORKDIR         | Override the container's working path                                                           |
 
 | Debugging arguments |                                            |
 | ------------------- | ------------------------------------------ |

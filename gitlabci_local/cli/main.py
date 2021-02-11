@@ -80,8 +80,10 @@ def main():
                        help='Run all jobs on the host rather than containers')
     group.add_argument('-r', '--real-paths', dest='real_paths', action='store_true',
                        help='Mount real folder paths in the container (Linux only)')
-    group.add_argument('-S', '--sockets', dest='sockets', action='store_true',
-                       help='Mount engine sockets for nested containers')
+    group.add_argument(
+        '-S', '--sockets', dest='sockets', action='store_true', help=
+        'Mount engine sockets for nested containers\n(Enabled by default with services: docker:*dind)'
+    )
     group.add_argument('-v', dest='volume', action='append',
                        help='Mount VOLUME or HOST:TARGET in containers')
     group.add_argument('-w', dest='workdir',
