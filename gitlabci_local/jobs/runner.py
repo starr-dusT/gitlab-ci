@@ -199,11 +199,19 @@ class Jobs:
         # Variables
         host = False
         quiet = self.__options.quiet
-        real_paths = self.__options.real_paths and (Platform.IS_LINUX
-                                                    or Platform.IS_MAC_OS)
+        real_paths = False
         result = False
         script_file = None
         time_start = time()
+
+        # Prepare real paths
+        if self.__options.real_paths:
+            if Platform.IS_LINUX or Platform.IS_MAC_OS:
+                real_paths = True
+
+            # Unavailable feature
+            else: # pragma: no cover
+                Outputs.warning('The real paths feature is not available...')
 
         # Filter when
         if last_result and job_data['when'] not in ['on_success', 'manual', 'always']:

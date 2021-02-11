@@ -57,3 +57,13 @@ class Outputs:
               (Colors.YELLOW, Colors.BOLD, Colors.RESET))
         print(' ')
         Platform.flush()
+
+    # Warning
+    @staticmethod
+    def warning(message):
+
+        # Warning output
+        print(
+            ' %s> WARNING: %s%s%s' % (Colors.YELLOW, Colors.BOLD, message, Colors.RESET))
+        print(' ')
+        Platform.flush()

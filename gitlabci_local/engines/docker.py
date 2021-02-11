@@ -5,6 +5,7 @@ from docker import from_env
 from docker.errors import APIError, DockerException, ImageNotFound
 
 # Components
+from ..jobs.outputs import Outputs
 from ..system.platform import Platform
 
 # Docker class
@@ -127,6 +128,10 @@ class Docker:
         # Add socket volume
         if Platform.IS_LINUX:
             volumes.add('/var/run/docker.sock', '/var/run/docker.sock', 'rw', True)
+
+        # Unavailable feature
+        else: # pragma: no cover
+            Outputs.warning('The Docker sockets feature is not available...')
 
     # Stop
     def stop(self, container, timeout):
