@@ -27,10 +27,14 @@ class Jobs:
 
     # Members
     __engine = None
+    __interrupted = False
     __options = None
 
     # Constructor
     def __init__(self, options):
+
+        # Prepare flags
+        self.__interrupted = False
 
         # Prepare options
         self.__options = options
@@ -99,6 +103,7 @@ class Jobs:
 
         # Create interruption handler
         def interrupt_handler(unused_signalnum, unused_handler):
+            self.__interrupted = True
             Outputs.interruption()
             self.__engine.stop(container, 0)
 
@@ -123,7 +128,7 @@ class Jobs:
                 Platform.flush()
 
         # Runner bash or debug mode
-        if self.__options.bash or self.__options.debug:
+        if not self.__interrupted and (self.__options.bash or self.__options.debug):
 
             # Select shell
             shell = 'sh'
