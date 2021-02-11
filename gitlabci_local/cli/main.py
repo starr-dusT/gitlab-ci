@@ -78,8 +78,9 @@ def main():
         (Bundle.ENV_ENGINE, ','.join(engine_supported())))
     group.add_argument('-H', '--host', dest='host', action='store_true',
                        help='Run all jobs on the host rather than containers')
-    group.add_argument('-r', '--real-paths', dest='real_paths', action='store_true',
-                       help='Mount real folder paths in the container (Linux only)')
+    group.add_argument(
+        '-r', '--real-paths', dest='real_paths', action='store_true',
+        help='Mount real folder paths in the container (Linux / macOS only)')
     group.add_argument(
         '-S', '--sockets', dest='sockets', action='store_true', help=
         'Mount engine sockets for nested containers\n(Enabled by default with services: docker:*dind)'

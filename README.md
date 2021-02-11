@@ -69,7 +69,7 @@ is the common and unique interface between GitLab CI and gitlabci-local.
 | -e ENV             | Define VARIABLE=value, pass VARIABLE or ENV file                                                |
 | -E ENGINE          | Force a specific engine (or define CI_LOCAL_ENGINE)<br>Default list: auto,podman,docker         |
 | -H, --host         | Run all jobs on the host rather than containers                                                 |
-| -r, --real-paths   | Mount real folder paths in the container (Linux only)                                           |
+| -r, --real-paths   | Mount real folder paths in the container (Linux / macOS only)                                   |
 | -S, --sockets      | Mount engine sockets for nested containers<br>(Enabled by default with services: docker:\*dind) |
 | -v VOLUME          | Mount VOLUME or HOST:TARGET in containers                                                       |
 | -w WORKDIR         | Override the container's working path                                                           |
