@@ -147,7 +147,7 @@ class Docker:
         elif not docker_host:
 
             # Add socket volume
-            if Platform.IS_LINUX:
+            if Platform.IS_LINUX or Platform.IS_WINDOWS:
                 volumes.add('/var/run/docker.sock', '/var/run/docker.sock', 'rw', True)
 
             # Unavailable feature
