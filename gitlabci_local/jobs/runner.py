@@ -89,7 +89,7 @@ class Jobs:
 
         # Append sockets mounts
         if self.__options.sockets or job_data['options']['sockets']:
-            self.__engine.sockets(volumes)
+            self.__engine.sockets(variables, volumes)
 
         # Image validation
         if not image: # pragma: no cover

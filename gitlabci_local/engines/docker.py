@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 
+# Standard libraries
+from os import environ
+
 # Modules libraries
 from docker import from_env
 from docker.errors import APIError, DockerException, ImageNotFound
@@ -123,15 +126,38 @@ class Docker:
             working_dir=directory)
 
     # Sockets
-    def sockets(self, volumes):
+    def sockets(self, variables, volumes):
 
-        # Add socket volume
-        if Platform.IS_LINUX:
-            volumes.add('/var/run/docker.sock', '/var/run/docker.sock', 'rw', True)
+        # Variables
+        docker_host = ''
 
-        # Unavailable feature
+        # Detect host configurations
+        if 'DOCKER_HOST' in environ and environ['DOCKER_HOST']:
+            docker_host = environ['DOCKER_HOST']
+
+        # Network Docker socket
+        if docker_host[0:7] == 'http://' or docker_host[0:6] == 'tcp://':
+            variables['DOCKER_HOST'] = docker_host
+
+        # Local Docker socket
+        elif docker_host[0:7] == 'unix://':
+            volumes.add(docker_host[7:], docker_host[7:], 'rw', True)
+
+        # Default Docker socket
+        elif not docker_host:
+
+            # Add socket volume
+            if Platform.IS_LINUX:
+                volumes.add('/var/run/docker.sock', '/var/run/docker.sock', 'rw', True)
+
+            # Unavailable feature
+            else: # pragma: no cover
+                Outputs.warning('The Docker sockets feature is not available...')
+
+        # Unknown feature
         else: # pragma: no cover
-            Outputs.warning('The Docker sockets feature is not available...')
+            Outputs.warning('The DOCKER_HOST = %s configuration is not supported yet...' %
+                            (docker_host))
 
     # Stop
     def stop(self, container, timeout):

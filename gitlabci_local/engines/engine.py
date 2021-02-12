@@ -143,8 +143,8 @@ class Engine:
                                  directory)
 
     # Sockets
-    def sockets(self, volumes):
-        self.__engine.sockets(volumes)
+    def sockets(self, variables, volumes):
+        self.__engine.sockets(variables, volumes)
 
     # Stop
     def stop(self, container, timeout):

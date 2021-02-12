@@ -187,7 +187,7 @@ class Podman:
         return container
 
     # Sockets
-    def sockets(self, volumes):
+    def sockets(self, variables, volumes):
         pass
 
     # Stop
