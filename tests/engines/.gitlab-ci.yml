@@ -9,3 +9,4 @@ services:
   image: alpine:3
   script:
     - echo 'Job 1'
+    - ip a
