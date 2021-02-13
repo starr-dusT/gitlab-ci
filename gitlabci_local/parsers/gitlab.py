@@ -348,7 +348,7 @@ class GitLab:
                 continue
 
             # Validate job node
-            if 'stage' not in data[node] and 'extends' not in data[node]:
+            if 'script' not in data[node] and 'extends' not in data[node]:
                 continue
 
             # Ignore template stage
