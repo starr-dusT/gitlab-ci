@@ -21,6 +21,14 @@ class GitLab:
     # Constants
     LOCAL_NODE = '.local'
 
+    # Specifications
+    JOB_STAGE_DEFAULT = 'test'
+    STAGES_DEFAULT = {
+        'build': 1,
+        'test': 2,
+        'deploy': 3,
+    }
+
     # Environment
     ENV_JOB_NAME = 'CI_JOB_NAME'
     ENV_PROJECT_DIR = 'CI_PROJECT_DIR'
@@ -337,6 +345,10 @@ class GitLab:
         _environ = dict(environ)
         environ.update(global_values['variables'])
 
+        # Prepare defaults
+        if not stages:
+            stages = GitLab.STAGES_DEFAULT.copy()
+
         # Iterate through nodes
         for node in data:
 
@@ -365,8 +377,13 @@ class GitLab:
 
             # Append unknown stage if required
             if jobs[node]['options']['disabled'] and jobs[node][
-                    'stage'] == 'unknown' and 'unknown' not in stages:
-                stages['unknown'] = list(stages.values())[-1] + 1
+                    'stage'] == GitLab.JOB_STAGE_DEFAULT and GitLab.JOB_STAGE_DEFAULT not in stages:
+                stages[GitLab.JOB_STAGE_DEFAULT] = list(stages.values())[-1] + 1
+
+            # Validate job stage
+            if jobs[node]['stage'] not in stages:
+                raise ValueError('Unknown stage "%s" for "%s"' %
+                                 (jobs[node]['stage'], jobs[node]['name']))
 
         # Sort jobs based on stages
         jobs = OrderedDict(sorted(jobs.items(), key=lambda x: stages[x[1]['stage']]))
@@ -423,7 +440,7 @@ class GitLab:
                 if job_extend not in data:
                     job['options']['disabled'] = '%s unknown' % (job_extend)
                     if job['stage'] is None:
-                        job['stage'] = 'unknown'
+                        job['stage'] = GitLab.JOB_STAGE_DEFAULT
                     break
                 job_extended = self.job(job_extend, data, None)
 
@@ -494,6 +511,8 @@ class GitLab:
         # Extract job stage
         if 'stage' in job_data and job_data['stage']:
             job['stage'] = job_data['stage']
+        elif job['stage'] is None:
+            job['stage'] = GitLab.JOB_STAGE_DEFAULT
 
         # Extract job image
         if 'image' in job_data and job_data['image']:

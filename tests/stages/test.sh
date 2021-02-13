@@ -14,3 +14,8 @@ gitlabci-local -p unknown_stage && exit 1 || true
 gitlabci-local -p && exit 1 || true
 gitlabci-local -p one two
 gitlabci-local -s -p one two </dev/null
+gitlabci-local -c ./.gitlab-ci.defaults.yml --dump
+gitlabci-local -c ./.gitlab-ci.defaults.yml -p
+gitlabci-local -c ./.gitlab-ci.test.yml -p
+gitlabci-local -c ./.gitlab-ci.unknown.yml -p && exit 1 || true
+gitlabci-local -c ./.gitlab-ci.disabled.yml -p
