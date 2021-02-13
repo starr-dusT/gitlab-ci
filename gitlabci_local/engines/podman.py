@@ -11,6 +11,9 @@ from ..system.platform import Platform
 # Podman class
 class Podman:
 
+    # Constants
+    REGISTRY_NAME = 'docker.io'
+
     # Members
     __binary = 'podman'
 
@@ -35,6 +38,12 @@ class Podman:
             return run([self.__binary] + arguments, check=False, stdout=DEVNULL,
                        stderr=DEVNULL)
         return run([self.__binary] + arguments, check=False, stdout=PIPE, stderr=PIPE)
+
+    # Internal image path
+    def __image_path(self, image):
+
+        # Result
+        return Podman.REGISTRY_NAME + '/' + image
 
     # Internal watcher
     def __watch(self, arguments):
@@ -61,9 +70,18 @@ class Podman:
     # Get
     def get(self, image):
 
+        # Prepare image path
+        image_path = self.__image_path(image)
+
         # Validate image exists
-        result = self.__exec(['inspect', '--type', 'image', '--format', 'exists', image],
-                             True)
+        result = self.__exec([
+            'inspect',
+            '--type',
+            'image',
+            '--format',
+            'exists',
+            image_path,
+        ], True)
 
         # Pull missing image
         if result.returncode != 0:
@@ -86,25 +104,34 @@ class Podman:
     # Pull
     def pull(self, image, force=False):
 
+        # Prepare image path
+        image_path = self.__image_path(image)
+
         # Header
-        print('Pulling from %s' % (image))
+        print('Pulling from %s' % (image_path))
         Platform.flush()
 
         # Force image removal
         if force:
-            self.rmi(image)
+            self.rmi(image_path)
 
         # Pull image with logs stream
-        result = self.__exec(['pull', image])
+        result = self.__exec(['pull', image_path])
 
         # Layer completion logs
         if result.returncode == 0:
-            result = self.__exec(
-                ['inspect', '--type', 'image', '--format', '{{.Id}}', image])
+            result = self.__exec([
+                'inspect',
+                '--type',
+                'image',
+                '--format',
+                '{{.Id}}',
+                image_path,
+            ])
             print('Digest: %s' % (result.stdout.strip().decode('utf-8')))
-            print('Status: Image is up to date for %s' % (image))
+            print('Status: Image is up to date for %s' % (image_path))
         else:
-            print('Status: Image not found for %s' % (image))
+            print('Status: Image not found for %s' % (image_path))
             Platform.flush()
             raise FileNotFoundError(result.stderr.decode('utf-8').replace('\\n', '\n'))
 
@@ -121,11 +148,23 @@ class Podman:
     # Remove image
     def rmi(self, image):
 
+        # Prepare image path
+        image_path = self.__image_path(image)
+
         # Remove image
-        result = self.__exec(['inspect', '--type', 'image', '--format', 'exists', image],
-                             True)
+        result = self.__exec([
+            'inspect',
+            '--type',
+            'image',
+            '--format',
+            'exists',
+            image_path,
+        ], True)
         if result.returncode == 0:
-            self.__exec(['rmi', image])
+            self.__exec([
+                'rmi',
+                image_path,
+            ])
 
     # Run
     def run(self, image, command, entrypoint, variables, network, volumes, directory):
@@ -136,6 +175,9 @@ class Podman:
         args_env = []
         args_run = []
         args_volumes = []
+
+        # Prepare image path
+        image_path = self.__image_path(image)
 
         # Adapt command
         if isinstance(command, list): # pragma: no cover
@@ -180,7 +222,7 @@ class Podman:
         args_run += ['--privileged']
         args_run += ['--security-opt', 'label=disable']
         args_run += ['--workdir', directory]
-        args_run += [image]
+        args_run += [image_path]
         args_run += args_command
 
         # Create container image
