@@ -27,15 +27,20 @@ class ConfigurationsFeature:
                 if Lists.match(options.names, job, ignore_case=options.ignore_case,
                                no_regex=options.no_regex):
                     self.__configuration[job] = deepcopy(jobs[job])
-                    if not self.__configuration[job]['services']:
-                        del self.__configuration[job]['services']
-                    del self.__configuration[job]['options']
+                    self.__cleanup(job)
         else:
             for job in jobs:
                 self.__configuration[job] = deepcopy(jobs[job])
-                if not self.__configuration[job]['services']:
-                    del self.__configuration[job]['services']
-                del self.__configuration[job]['options']
+                self.__cleanup(job)
+
+    # Cleanup
+    def __cleanup(self, job):
+
+        # Cleanup job configurations
+        if job in self.__configuration:
+            if not self.__configuration[job]['services']:
+                del self.__configuration[job]['services']
+            del self.__configuration[job]['options']
 
     # Dump
     def dump(self):
