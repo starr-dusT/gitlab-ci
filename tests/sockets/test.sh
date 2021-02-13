@@ -9,7 +9,11 @@ cd "${test_path}/"
 set -ex
 
 # Detect engines
-engine_docker=$(type docker >/dev/null 2>&1 && docker --help | grep -iq 'Docker version' && echo 'true' || echo "${DOCKER_HOST}")
+engine_docker=$(
+  (type docker >/dev/null 2>&1 && timeout 5 docker --help | grep -iq 'Docker version' && echo 'true') \
+    || (curl -s -o /dev/null "${DOCKER_HOST##*/}" && echo 'true') \
+    || true
+)
 
 # Non-Docker hosts
 if [ -z "${engine_docker}" ]; then
@@ -18,6 +22,7 @@ if [ -z "${engine_docker}" ]; then
 fi
 
 # Run tests
+timeout 5 gitlabci-local -c ./.gitlab-ci.incomplete.yml --dump
 timeout 5 gitlabci-local -c ./.gitlab-ci.incomplete.yml -p && exit 1 || true
 timeout 5 gitlabci-local -c ./.gitlab-ci.incomplete.yml -p --sockets
 timeout 5 gitlabci-local -c ./.gitlab-ci.global.yml --dump

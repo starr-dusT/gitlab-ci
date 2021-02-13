@@ -10,12 +10,13 @@ stages:
   stage: sockets
   script:
     - echo 'Job 1'
-    - docker system info
-    - docker ps
+    - echo "DOCKER_HOST=${DOCKER_HOST}"
+    - timeout 5 docker system info
+    - timeout 5 docker ps
 
 'Job 2':
   stage: sockets
   services: []
   script:
     - echo 'Job 2'
-    - docker ps
+    - timeout 5 docker ps
