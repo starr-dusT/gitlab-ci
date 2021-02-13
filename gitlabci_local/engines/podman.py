@@ -134,6 +134,7 @@ class Podman:
         args_command = []
         args_entrypoint = []
         args_env = []
+        args_run = []
         args_volumes = []
 
         # Adapt command
@@ -168,11 +169,22 @@ class Podman:
         for variable in variables:
             args_env.extend(['--env', '%s=%s' % (variable, variables[variable])])
 
+        # Prepare arguments
+        args_run += ['create']
+        args_run += args_entrypoint
+        args_run += args_env
+        args_run += ['--tty']
+        args_run += args_volumes
+        if network:
+            args_run += ['--network', network]
+        args_run += ['--privileged']
+        args_run += ['--security-opt', 'label=disable']
+        args_run += ['--workdir', directory]
+        args_run += [image]
+        args_run += args_command
+
         # Create container image
-        result = self.__exec(['create'] + args_entrypoint + args_env + ['--tty'] +
-                             args_volumes + ['--network', network] + ['--privileged'] +
-                             ['--security-opt', 'label=disable'] +
-                             ['--workdir', directory] + [image] + args_command)
+        result = self.__exec(args_run)
         if result.returncode == 0:
             container = result.stdout.strip().decode('utf-8')
 

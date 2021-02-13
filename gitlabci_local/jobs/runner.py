@@ -234,7 +234,7 @@ class Jobs:
             jobs_status['quiet'] = False
 
         # Prepare network
-        network = 'bridge'
+        network = None
         if self.__options.network:
             network = self.__options.network
 

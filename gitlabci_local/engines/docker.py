@@ -121,9 +121,9 @@ class Docker:
         # Run container image
         return self.__client.containers.run(
             image, command=command, detach=True, entrypoint=entrypoint,
-            environment=variables, network_mode=network, privileged=True, remove=False,
-            stdout=True, stderr=True, stream=True, volumes=volumes.get(),
-            working_dir=directory)
+            environment=variables, network_mode=network if network else 'bridge',
+            privileged=True, remove=False, stdout=True, stderr=True, stream=True,
+            volumes=volumes.get(), working_dir=directory)
 
     # Sockets
     def sockets(self, variables, volumes):
