@@ -25,6 +25,35 @@ class PipelinesFeature:
         # Prepare options
         self.__options = options
 
+    # Filter
+    def __filter(self, job):
+
+        # Filter jobs list
+        if not self.__options.pipeline and not Lists.match(
+                self.__options.names, job, ignore_case=self.__options.ignore_case,
+                no_regex=self.__options.no_regex):
+            return False
+
+        # Filter stages list
+        if self.__options.pipeline and self.__options.names and not Lists.match(
+                self.__options.names, self.__jobs[job]['stage'],
+                ignore_case=self.__options.ignore_case, no_regex=self.__options.no_regex):
+            return False
+
+        # Filter manual jobs
+        job_manual = (self.__jobs[job]['when'] == 'manual')
+        if job_manual and not self.__options.manual and not Lists.match(
+                self.__options.names, job, ignore_case=self.__options.ignore_case,
+                no_regex=self.__options.no_regex):
+            return False
+
+        # Filter disabled jobs
+        if self.__jobs[job]['options']['disabled']:
+            return False
+
+        # Result
+        return True
+
     # Launch
     def launch(self):
 
@@ -35,28 +64,8 @@ class PipelinesFeature:
         # Run selected jobs
         for job in self.__jobs:
 
-            # Filter jobs list
-            if not self.__options.pipeline and not Lists.match(
-                    self.__options.names, job, ignore_case=self.__options.ignore_case,
-                    no_regex=self.__options.no_regex):
-                continue
-
-            # Filter stages list
-            if self.__options.pipeline and self.__options.names and not Lists.match(
-                    self.__options.names, self.__jobs[job]['stage'],
-                    ignore_case=self.__options.ignore_case,
-                    no_regex=self.__options.no_regex):
-                continue
-
-            # Filter manual jobs
-            job_manual = (self.__jobs[job]['when'] == 'manual')
-            if job_manual and not self.__options.manual and not Lists.match(
-                    self.__options.names, job, ignore_case=self.__options.ignore_case,
-                    no_regex=self.__options.no_regex):
-                continue
-
-            # Filter disabled jobs
-            if self.__jobs[job]['options']['disabled']:
+            # Filter jobs
+            if not self.__filter(job):
                 continue
 
             # Raise initial result
