@@ -1,11 +1,8 @@
 #!/usr/bin/env python3
 
-# Standard libraries
-from time import time
-
 # Components
 from ..jobs.runner import Jobs
-from ..prints.colors import Colors
+from ..prints.histories import PipelineHistory
 from ..system.platform import Platform
 from ..types.lists import Lists
 
@@ -58,7 +55,7 @@ class PipelinesFeature:
     def launch(self):
 
         # Variables
-        jobs_status = {'jobs_count': 0, 'quiet': True, 'time_launcher': time()}
+        pipeline_history = PipelineHistory()
         result = None
 
         # Run selected jobs
@@ -75,46 +72,31 @@ class PipelinesFeature:
             # Run job
             attempt = 0
             expected = result
-            jobs_status['jobs_count'] += 1
             result = Jobs(options=self.__options).run(self.__jobs[job], result,
-                                                      jobs_status)
+                                                      pipeline_history)
 
             # Retry job if allowed
             if expected and not result and self.__jobs[job]['retry'] > 0:
                 while not result and attempt < self.__jobs[job]['retry']:
                     attempt += 1
                     result = Jobs(options=self.__options).run(self.__jobs[job], expected,
-                                                              jobs_status)
+                                                              pipeline_history)
+
+        # Update pipeline history
+        pipeline_history.result = result
 
         # Non quiet jobs
-        if not jobs_status['quiet']:
+        if not pipeline_history.jobs_quiet:
 
             # Pipeline jobs footer
-            if jobs_status['jobs_count'] > 1:
+            if pipeline_history.jobs_count > 1:
 
-                # Evaluate duration total time
-                time_total_duration = time() - jobs_status['time_launcher']
-                time_total_seconds = '%.0f second%s' % (
-                    time_total_duration % 60, 's' if time_total_duration % 60 > 1 else '')
-                time_total_minutes = ''
-                if time_total_duration >= 60:
-                    time_total_minutes = '%.0f minute%s ' % (
-                        time_total_duration / 60,
-                        's' if time_total_duration / 60 > 1 else '')
-                time_total_string = time_total_minutes + time_total_seconds
+                # Output pipeline history
+                pipeline_history.print()
 
-                # Final footer
-                print(' %s> Pipeline: %s in %s total%s' %
-                      (Colors.YELLOW, Colors.BOLD + 'Success' if result else Colors.RED +
-                       'Failure', time_total_string, Colors.RESET))
-                print(' ')
-                print(' ')
-                Platform.flush()
-
-            # Simple job footer
-            else:
-                print(' ')
-                Platform.flush()
+            # Footer
+            print(' ')
+            Platform.flush()
 
         # Result
         return bool(result)

@@ -7,7 +7,7 @@ from pathlib import Path, PurePosixPath
 from signal import getsignal, SIGINT, signal, SIGTERM
 from stat import S_IRGRP, S_IROTH, S_IXGRP, S_IXOTH, S_IXUSR
 from sys import stdout
-from time import sleep, time
+from time import sleep
 
 # Components
 from ..engines.engine import Engine
@@ -194,7 +194,7 @@ class Jobs:
         return result
 
     # Run
-    def run(self, job_data, last_result, jobs_status):
+    def run(self, job_data, last_result, pipeline_history):
 
         # Variables
         host = False
@@ -202,7 +202,9 @@ class Jobs:
         real_paths = False
         result = False
         script_file = None
-        time_start = time()
+
+        # Prepare history
+        job_history = pipeline_history.add(job_data['stage'], job_data['name'])
 
         # Prepare real paths
         if self.__options.real_paths:
@@ -230,8 +232,10 @@ class Jobs:
         # Prepare quiet runner
         if job_data['options']['quiet']:
             quiet = True
-        elif jobs_status['quiet']:
-            jobs_status['quiet'] = False
+
+        # Drop quiet flag
+        elif pipeline_history.jobs_quiet:
+            pipeline_history.jobs_quiet = False
 
         # Prepare network
         network = None
@@ -250,7 +254,7 @@ class Jobs:
 
         # Header
         if not quiet:
-            Outputs.header(jobs_status, job_data, image, engine_type)
+            job_history.header(pipeline_history.jobs_count, image, engine_type)
 
         # Acquire project paths
         path_project = Paths.resolve(self.__options.path)
@@ -422,8 +426,8 @@ class Jobs:
                                        last_result, result)
 
         # Initial job details
-        job_details = ''
         job_details_list = []
+        job_details_string = ''
 
         # Prepare when details
         if job_data['when'] not in ['on_success']:
@@ -432,26 +436,23 @@ class Jobs:
         # Prepare allow_failure details
         if job_data['allow_failure']:
             job_details_list += ['failure allowed']
+            job_history.failure_allowed = True
 
         # Prepare job details
         if job_details_list:
-            job_details = ' (' + ', '.join(job_details_list) + ')'
+            job_details_string = ' (' + ', '.join(job_details_list) + ')'
 
-        # Evaluate duration time
-        time_duration = time() - time_start
-        time_seconds = '%.0f second%s' % (time_duration % 60,
-                                          's' if time_duration % 60 > 1 else '')
-        time_minutes = ''
-        if time_duration >= 60:
-            time_minutes = '%.0f minute%s ' % (time_duration / 60,
-                                               's' if time_duration / 60 > 1 else '')
-        time_string = time_minutes + time_seconds
+        # Update job history
+        job_history.details = job_details_string
+        job_history.result = result
 
-        # Footer
+        # Separator
         print(' ')
         Platform.flush()
+
+        # Footer
         if not quiet:
-            Outputs.footer(result, time_string, job_data, job_details)
+            job_history.footer()
 
         # Allowed failure result
         if job_data['when'] not in ['on_failure', 'always'
