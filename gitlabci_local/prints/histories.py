@@ -23,7 +23,7 @@ class TimedHistory:
     def _refresh_times(self):
 
         # Evaluate duration
-        duration = time() - self.__start_time
+        duration = int(time() - self.__start_time)
 
         # Evaluate seconds
         seconds = '%.0f second%s' % (duration % 60, 's' if duration % 60 > 1 else '')
