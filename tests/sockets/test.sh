@@ -21,6 +21,11 @@ if [ -z "${engine_docker}" ]; then
   exit 0
 fi
 
+# Configure Docker
+if [ ! -z "${DOCKER_HOST}" ]; then
+  export DOCKER_HOST=$(echo "${DOCKER_HOST}" | sed 's/docker/172.17.0.1/g')
+fi
+
 # Run tests
 timeout 5 gitlabci-local -c ./.gitlab-ci.incomplete.yml --dump
 timeout 5 gitlabci-local -c ./.gitlab-ci.incomplete.yml -p && exit 1 || true
