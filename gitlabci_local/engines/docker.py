@@ -140,18 +140,18 @@ class Docker:
             variables['DOCKER_HOST'] = docker_host
 
         # Local Docker socket
-        elif docker_host[0:7] == 'unix://':
+        elif docker_host[0:7] == 'unix://': # pragma: no cover
             volumes.add(docker_host[7:], docker_host[7:], 'rw', True)
 
         # Default Docker socket
-        elif not docker_host:
+        elif not docker_host: # pragma: no cover
 
             # Add socket volume
             if Platform.IS_LINUX or Platform.IS_WINDOWS:
                 volumes.add('/var/run/docker.sock', '/var/run/docker.sock', 'rw', True)
 
             # Unavailable feature
-            else: # pragma: no cover
+            else:
                 Outputs.warning('The Docker sockets feature is not available...')
 
         # Unknown feature
