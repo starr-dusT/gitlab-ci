@@ -38,8 +38,18 @@ class ConfigurationsFeature:
 
         # Cleanup job configurations
         if job in self.__configuration:
+            if self.__configuration[job]['entrypoint'] is None:
+                del self.__configuration[job]['entrypoint']
+            if self.__configuration[job]['retry'] == 0:
+                del self.__configuration[job]['retry']
             if not self.__configuration[job]['services']:
                 del self.__configuration[job]['services']
+            if self.__configuration[job]['tags'] is None:
+                del self.__configuration[job]['tags']
+            if self.__configuration[job]['trigger'] is None:
+                del self.__configuration[job]['trigger']
+            if not self.__configuration[job]['variables']:
+                del self.__configuration[job]['variables']
             del self.__configuration[job]['options']
 
     # Dump
