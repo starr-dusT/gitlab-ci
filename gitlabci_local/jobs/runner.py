@@ -216,10 +216,30 @@ class Jobs:
             else: # pragma: no cover
                 Outputs.warning('The real paths feature is not available...')
 
+        # Initial job details
+        job_details_list = []
+        job_details_string = ''
+
+        # Prepare when details
+        if job_data['when'] not in ['on_success']:
+            job_details_list += ['when: %s' % (job_data['when'])]
+
+        # Prepare allow_failure details
+        if job_data['allow_failure']:
+            job_details_list += ['failure allowed']
+            job_history.failure_allowed = True
+
+        # Prepare job details
+        if job_details_list:
+            job_details_string = ' (' + ', '.join(job_details_list) + ')'
+
+        # Update job details
+        job_history.details = job_details_string
+
         # Filter when
         if last_result and job_data['when'] not in ['on_success', 'manual', 'always']:
             return last_result
-        if not last_result and job_data['when'] not in ['on_failure']:
+        if not last_result and job_data['when'] not in ['on_failure', 'always']:
             return last_result
 
         # Prepare image
@@ -430,25 +450,7 @@ class Jobs:
             result = self.__run_native(variables, entrypoint, script_file, job_data,
                                        last_result, result)
 
-        # Initial job details
-        job_details_list = []
-        job_details_string = ''
-
-        # Prepare when details
-        if job_data['when'] not in ['on_success']:
-            job_details_list += ['when: %s' % (job_data['when'])]
-
-        # Prepare allow_failure details
-        if job_data['allow_failure']:
-            job_details_list += ['failure allowed']
-            job_history.failure_allowed = True
-
-        # Prepare job details
-        if job_details_list:
-            job_details_string = ' (' + ', '.join(job_details_list) + ')'
-
         # Update job history
-        job_history.details = job_details_string
         job_history.result = result
 
         # Separator

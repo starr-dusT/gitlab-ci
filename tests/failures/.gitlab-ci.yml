@@ -45,16 +45,21 @@ after_script:
 'Job 6':
   stage: failure_stage
   script:
+    - echo '__SHOULD_NEVER_HAPPEN__'
+
+'Job 7':
+  stage: failure_stage
+  script:
     - echo '__SHOULD_ALWAYS_RUN__'
   when: always
 
-'Job 7':
+'Job 8':
   stage: failure_stage
   script:
     - echo '__SHOULD_RUN_ON_FAILURE__'
   when: on_failure
 
-'Job 8':
+'Job 9':
   stage: failure_stage
   script:
     - echo '__SHOULD_RUN_ON_FAILURE__'
