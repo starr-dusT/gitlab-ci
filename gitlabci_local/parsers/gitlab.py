@@ -97,7 +97,10 @@ class GitLab:
 
             # Filter services node
             if node == 'services':
-                global_values['services'] = data[node][:]
+                if isinstance(data[node], dict):
+                    global_values['services'] = dict(data[node])
+                elif isinstance(data[node], list):
+                    global_values['services'] = data[node][:]
                 continue
 
             # Filter stages node
@@ -497,7 +500,10 @@ class GitLab:
             if job['retry'] is None:
                 job['retry'] = 0
             if job['services'] is None:
-                job['services'] = global_values['services'][:]
+                if isinstance(global_values['services'], dict):
+                    job['services'] = dict(global_values['services'])
+                elif isinstance(global_values['services'], list):
+                    job['services'] = global_values['services'][:]
             if job['when'] is None:
                 job['when'] = 'on_success'
             if job['allow_failure'] is None:
@@ -566,8 +572,11 @@ class GitLab:
             job['allow_failure'] = job_data['allow_failure']
 
         # Extract job services
-        if 'services' in job_data and isinstance(job_data['services'], list):
-            job['services'] = job_data['services'][:]
+        if 'services' in job_data:
+            if isinstance(job_data['services'], dict):
+                job['services'] = dict(job_data['services'])
+            elif isinstance(job_data['services'], list):
+                job['services'] = job_data['services'][:]
 
         # Extract job tags
         if 'tags' in job_data and job_data['tags']:
@@ -595,8 +604,12 @@ class GitLab:
         # Detect sockets services
         if job['services']:
             for service in job['services']:
-                if match(r'docker:.*dind', service):
-                    job['options']['sockets'] = True
+                if isinstance(service, dict) and 'name' in service:
+                    if match(r'.*docker:.*dind', service['name']):
+                        job['options']['sockets'] = True
+                elif isinstance(service, str):
+                    if match(r'.*docker:.*dind', service):
+                        job['options']['sockets'] = True
 
         # Result
         return job

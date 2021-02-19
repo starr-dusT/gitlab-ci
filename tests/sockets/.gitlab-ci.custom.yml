@@ -1,0 +1,33 @@
+image: docker:latest
+
+services:
+  - name: private/registry/docker:dind
+    alias: docker
+
+stages:
+  - sockets
+
+'Job 1':
+  stage: sockets
+  script:
+    - echo 'Job 1'
+    - echo "DOCKER_HOST=${DOCKER_HOST}"
+    - timeout 5 docker system info
+    - timeout 5 docker ps
+
+'Job 2':
+  stage: sockets
+  services: []
+  script:
+    - echo 'Job 2'
+    - timeout 5 docker ps
+  when: manual
+
+'Job 3':
+  stage: sockets
+  services:
+    - name: private/registry/docker:dind
+      alias: docker
+  script:
+    - echo 'Job 3'
+    - timeout 5 docker ps

@@ -35,3 +35,5 @@ timeout 5 gitlabci-local -c ./.gitlab-ci.global.yml 'Job 1'
 timeout 5 gitlabci-local -c ./.gitlab-ci.global.yml 'Job 2' && exit 1 || true
 timeout 5 gitlabci-local -c ./.gitlab-ci.specific.yml -p
 timeout 5 gitlabci-local -c ./.gitlab-ci.specific.yml --dump
+timeout 5 gitlabci-local -c ./.gitlab-ci.custom.yml -p
+timeout 5 gitlabci-local -c ./.gitlab-ci.custom.yml 'Job 2' && exit 1 || true
