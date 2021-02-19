@@ -271,7 +271,7 @@ class Jobs:
         # Prepare working directory
         if self.__options.workdir:
             if self.__options.workdir.startswith('.local:'):
-                workdir = self.__options.workdir[len('.local:'):]
+                workdir = expandvars(self.__options.workdir[len('.local:'):])
                 if host or real_paths:
                     target_workdir = Paths.get((self.__options.path / workdir).resolve())
                 else:
