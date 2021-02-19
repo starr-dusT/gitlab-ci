@@ -12,6 +12,7 @@ from time import sleep
 # Components
 from ..engines.engine import Engine
 from ..package.bundle import Bundle
+from ..system.git import Git
 from ..system.platform import Platform
 from ..types.paths import Paths
 from ..types.volumes import Volumes
@@ -392,6 +393,8 @@ class Jobs:
         environ[env_job_path] = target_project
 
         # Configure local environment
+        environ[Bundle.ENV_COMMIT_SHA] = Git.head_revision_hash(path_project)
+        environ[Bundle.ENV_COMMIT_SHORT_SHA1] = Git.head_revision_short_hash(path_project)
         environ[Bundle.ENV_LOCAL] = 'true'
 
         # Prepare variables
@@ -412,6 +415,8 @@ class Jobs:
         # Prepare CI variables
         variables[env_job_name] = environ[env_job_name]
         variables[env_job_path] = environ[env_job_path]
+        variables[Bundle.ENV_COMMIT_SHA] = environ[Bundle.ENV_COMMIT_SHA]
+        variables[Bundle.ENV_COMMIT_SHORT_SHA1] = environ[Bundle.ENV_COMMIT_SHORT_SHA1]
         variables[Bundle.ENV_LOCAL] = environ[Bundle.ENV_LOCAL]
 
         # Container execution
