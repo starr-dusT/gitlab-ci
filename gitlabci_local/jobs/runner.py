@@ -80,8 +80,8 @@ class Jobs:
 
                 # Parse VOLUME
                 else:
-                    volume_host = Paths.resolve(cwd / expandvars(volume))
-                    volume_target = Paths.resolve(cwd / expandvars(volume))
+                    volume_host = Paths.resolve(cwd / expandvars(volume_nodes[0]))
+                    volume_target = Paths.resolve(cwd / expandvars(volume_nodes[0]))
                     volume_mode = 'rw'
 
                 # Append volume mounts

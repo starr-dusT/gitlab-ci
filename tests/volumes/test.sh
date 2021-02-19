@@ -24,3 +24,4 @@ gitlabci-local 'Job 2'
 gitlabci-local -w . 'Job 2'
 gitlabci-local -r 'Job 2'
 gitlabci-local -r -w . 'Job 2'
+gitlabci-local -c ./.gitlab-ci.relative.yml -p
