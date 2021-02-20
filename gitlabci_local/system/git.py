@@ -1,40 +1,49 @@
 #!/usr/bin/env python3
 
 # Standard libraries
+from os import environ
 from subprocess import CalledProcessError, check_output, DEVNULL
+
+# Components
+from ..package.bundle import Bundle
 
 # Git class
 class Git:
 
-    # Constants
-    __BINARY = 'git'
+    # Members
+    __binary: str = 'git'
+
+    # Constructor
+    def __init__(self):
+
+        # Configure binary
+        if Bundle.ENV_GIT_BINARY_PATH in environ:
+            self.__binary = environ[Bundle.ENV_GIT_BINARY_PATH]
 
     # HEAD revision hash
-    @staticmethod
-    def head_revision_hash(workdir=None):
+    def head_revision_hash(self, workdir=None):
 
         # Result
         try:
             return check_output(
-                [Git.__BINARY, 'rev-parse', 'HEAD'],
+                [self.__binary, 'rev-parse', 'HEAD'],
                 cwd=workdir,
                 shell=False,
                 stderr=DEVNULL,
             ).strip().decode()
-        except CalledProcessError:
+        except (CalledProcessError, FileNotFoundError):
             return ''
 
     # HEAD revision short hash
-    @staticmethod
-    def head_revision_short_hash(workdir=None):
+    def head_revision_short_hash(self, workdir=None):
 
         # Result
         try:
             return check_output(
-                [Git.__BINARY, 'rev-parse', '--short', 'HEAD'],
+                [self.__binary, 'rev-parse', '--short', 'HEAD'],
                 cwd=workdir,
                 shell=False,
                 stderr=DEVNULL,
             ).strip().decode()
-        except CalledProcessError:
+        except (CalledProcessError, FileNotFoundError):
             return ''

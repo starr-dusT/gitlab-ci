@@ -1,7 +1,7 @@
 image: alpine:3
 
 stages:
-  - local_raw
+  - local_git
 
 .local:
   volumes:
@@ -9,7 +9,7 @@ stages:
   workdir: .
 
 'Job 1':
-  stage: local_raw
+  stage: local_git
   script:
     - echo "CI_COMMIT_SHA=${CI_COMMIT_SHA}"
     - echo "CI_COMMIT_SHORT_SHA=${CI_COMMIT_SHORT_SHA}"

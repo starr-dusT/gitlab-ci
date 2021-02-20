@@ -412,9 +412,12 @@ class Jobs:
         environ[env_job_name] = job_data['name']
         environ[env_job_path] = target_project
 
+        # Prepare Git environment
+        git = Git()
+
         # Configure local environment
-        environ[Bundle.ENV_COMMIT_SHA] = Git.head_revision_hash(path_project)
-        environ[Bundle.ENV_COMMIT_SHORT_SHA1] = Git.head_revision_short_hash(path_project)
+        environ[Bundle.ENV_COMMIT_SHA] = git.head_revision_hash(path_project)
+        environ[Bundle.ENV_COMMIT_SHORT_SHA1] = git.head_revision_short_hash(path_project)
         environ[Bundle.ENV_LOCAL] = 'true'
 
         # Prepare variables
