@@ -139,6 +139,10 @@ class Updates:
         # Acquire updates check last timestamp
         last = self.__settings.get('updates', 'last_timestamp')
 
+        # Fake test updates
+        if Bundle.ENV_UPDATES_DAILY in environ:
+            last = None
+
         # Handle daily checks
         current = int(time())
         if not last or strftime('%Y-%m-%d', localtime(current)) != strftime(
