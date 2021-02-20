@@ -10,3 +10,4 @@ set -ex
 
 # Run tests
 gitlabci-local -p
+gitlabci-local --dump
