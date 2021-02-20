@@ -440,6 +440,24 @@ variables:
 # =============================================================================
 # Stage: test (local)
 
+'Python DinD':
+  extends:
+    - .unit-tests-template
+  image: local:quiet
+  before_script:
+    - *unit-tests-template-before
+    - docker rm -f gitlabci-local-dind >/dev/null 2>&1
+    - docker run -d -v "${PWD}/.dind:/certs" -v "${PWD}:${PWD}" --name gitlabci-local-dind --privileged docker:dind >/dev/null
+    - sleep 10
+    - export DIND_IP=$(docker exec gitlabci-local-dind hostname -i)
+    - export DOCKER_CERT_PATH="${PWD}/.dind/client/"
+    - export DOCKER_HOST="tcp://${DIND_IP}:2376"
+    - export DOCKER_TLS_VERIFY=0
+  after_script:
+    - docker rm -f gitlabci-local-dind >/dev/null
+  only:
+    - local
+
 'Python Local':
   extends:
     - .unit-tests-template
