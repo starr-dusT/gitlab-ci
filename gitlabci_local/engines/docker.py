@@ -131,6 +131,15 @@ class Docker:
         # Variables
         docker_host = ''
 
+        # Detect TLS configurations
+        if 'DOCKER_TLS_VERIFY' in environ:
+            variables['DOCKER_TLS_VERIFY'] = environ['DOCKER_TLS_VERIFY']
+
+        # Detect certificates configurations
+        if 'DOCKER_CERT_PATH' in environ:
+            variables['DOCKER_CERT_PATH'] = '/certs'
+            volumes.add(environ['DOCKER_CERT_PATH'], '/certs', 'ro', True)
+
         # Detect host configurations
         if 'DOCKER_HOST' in environ and environ['DOCKER_HOST']:
             docker_host = environ['DOCKER_HOST']
