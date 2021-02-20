@@ -28,7 +28,7 @@ stages:
 'Job 3':
   stage: sockets
   services:
-    - name: private/registry/docker:dind
+    - name: internal/registry/docker:dind
       alias: docker
   script:
     - echo 'Job 3'

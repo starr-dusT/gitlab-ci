@@ -605,12 +605,8 @@ class GitLab:
         # Detect sockets services
         if job['services']:
             for service in job['services']:
-                if isinstance(service, dict) and 'name' in service:
-                    if match(Images.DOCKER_DIND_REGEX, service['name']):
-                        job['options']['sockets'] = True
-                elif isinstance(service, str):
-                    if match(Images.DOCKER_DIND_REGEX, service):
-                        job['options']['sockets'] = True
+                if match(Images.DOCKER_DIND_REGEX, service):
+                    job['options']['sockets'] = True
 
         # Result
         return job
