@@ -9,4 +9,6 @@ cd "${test_path}/"
 set -ex
 
 # Run tests
-gitlabci-local -p
+gitlabci-local -c ./.gitlab-ci.dict.yml -p
+gitlabci-local -c ./.gitlab-ci.list.yml -p
+gitlabci-local -c ./.gitlab-ci.str.yml -p
