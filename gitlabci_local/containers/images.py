@@ -4,6 +4,7 @@
 class Images:
 
     # Constants
+    DOCKER_DIND_REGEX = r'.*docker:.*dind'
     LOCAL_IMAGE = 'local'
     LOCAL_QUIET_IMAGE = 'local:quiet'
     LOCAL_SILENT_IMAGE = 'local:silent'

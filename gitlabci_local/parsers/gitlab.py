@@ -96,11 +96,13 @@ class GitLab:
                 continue
 
             # Filter services node
-            if node == 'services':
-                if isinstance(data[node], dict):
-                    global_values['services'] = dict(data[node])
-                elif isinstance(data[node], list):
-                    global_values['services'] = data[node][:]
+            if node == 'services' and isinstance(data[node], list):
+                global_values['services'] = []
+                for item in data[node]:
+                    if isinstance(item, dict):
+                        global_values['services'] = [item.get('name', '')]
+                    elif isinstance(item, str):
+                        global_values['services'] += [item]
                 continue
 
             # Filter stages node
@@ -500,10 +502,7 @@ class GitLab:
             if job['retry'] is None:
                 job['retry'] = 0
             if job['services'] is None:
-                if isinstance(global_values['services'], dict):
-                    job['services'] = dict(global_values['services'])
-                elif isinstance(global_values['services'], list):
-                    job['services'] = global_values['services'][:]
+                job['services'] = global_values['services'][:]
             if job['when'] is None:
                 job['when'] = 'on_success'
             if job['allow_failure'] is None:
@@ -572,11 +571,13 @@ class GitLab:
             job['allow_failure'] = job_data['allow_failure']
 
         # Extract job services
-        if 'services' in job_data:
-            if isinstance(job_data['services'], dict):
-                job['services'] = dict(job_data['services'])
-            elif isinstance(job_data['services'], list):
-                job['services'] = job_data['services'][:]
+        if 'services' in job_data and isinstance(job_data['services'], list):
+            job['services'] = []
+            for item in job_data['services']:
+                if isinstance(item, dict):
+                    job['services'] += [item.get('name', '')]
+                elif isinstance(item, str):
+                    job['services'] += [item]
 
         # Extract job tags
         if 'tags' in job_data and job_data['tags']:
@@ -605,10 +606,10 @@ class GitLab:
         if job['services']:
             for service in job['services']:
                 if isinstance(service, dict) and 'name' in service:
-                    if match(r'.*docker:.*dind', service['name']):
+                    if match(Images.DOCKER_DIND_REGEX, service['name']):
                         job['options']['sockets'] = True
                 elif isinstance(service, str):
-                    if match(r'.*docker:.*dind', service):
+                    if match(Images.DOCKER_DIND_REGEX, service):
                         job['options']['sockets'] = True
 
         # Result
