@@ -184,17 +184,6 @@ class StageHistory:
         # Result
         return job
 
-    # Get
-    def get(self, job_name):
-
-        # Find job
-        for job in self.__jobs:
-            if job.name == job_name:
-                return job
-
-        # Fallback
-        return None
-
     # Print
     def print(self):
 
