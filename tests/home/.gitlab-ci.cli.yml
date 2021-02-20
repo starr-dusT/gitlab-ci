@@ -1,0 +1,12 @@
+image: alpine:3
+
+stages:
+  - home_cli
+
+'Job 1':
+  stage: home_cli
+  script:
+    - pwd
+    - ls -la ./
+    - ls -la /mnt/
+    - test "${PWD}" = "${USERHOME?}"

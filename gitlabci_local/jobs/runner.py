@@ -2,7 +2,6 @@
 
 # Standard libraries
 from os import chmod, environ, stat, system
-from os.path import expandvars
 from pathlib import Path, PurePosixPath
 from signal import getsignal, SIGINT, signal, SIGTERM
 from stat import S_IRGRP, S_IROTH, S_IXGRP, S_IXOTH, S_IXUSR
@@ -69,20 +68,20 @@ class Jobs:
 
                 # Parse HOST:TARGET:MODE
                 if len(volume_nodes) == 3:
-                    volume_host = Paths.resolve(cwd / expandvars(volume_nodes[0]))
-                    volume_target = expandvars(volume_nodes[1])
+                    volume_host = Paths.resolve(cwd / Paths.expand(volume_nodes[0]))
+                    volume_target = Paths.expand(volume_nodes[1], home=False)
                     volume_mode = volume_nodes[2]
 
                 # Parse HOST:TARGET
                 elif len(volume_nodes) == 2:
-                    volume_host = Paths.resolve(cwd / expandvars(volume_nodes[0]))
-                    volume_target = expandvars(volume_nodes[1])
+                    volume_host = Paths.resolve(cwd / Paths.expand(volume_nodes[0]))
+                    volume_target = Paths.expand(volume_nodes[1], home=False)
                     volume_mode = 'rw'
 
                 # Parse VOLUME
                 else:
-                    volume_host = Paths.resolve(cwd / expandvars(volume_nodes[0]))
-                    volume_target = Paths.resolve(cwd / expandvars(volume_nodes[0]))
+                    volume_host = Paths.resolve(cwd / Paths.expand(volume_nodes[0]))
+                    volume_target = Paths.resolve(cwd / Paths.expand(volume_nodes[0]))
                     volume_mode = 'rw'
 
                 # Append volume mounts
@@ -292,7 +291,7 @@ class Jobs:
         # Prepare working directory
         if self.__options.workdir:
             if self.__options.workdir.startswith('.local:'):
-                workdir = expandvars(self.__options.workdir[len('.local:'):])
+                workdir = Paths.expand(self.__options.workdir[len('.local:'):])
                 if host or real_paths:
                     target_workdir = Paths.get((self.__options.path / workdir).resolve())
                 else:
@@ -429,7 +428,8 @@ class Jobs:
 
         # Prepare job variables
         for variable in job_data['variables']:
-            variables[variable] = expandvars(str(job_data['variables'][variable]))
+            variables[variable] = Paths.expand(str(job_data['variables'][variable]),
+                                               home=False)
 
         # Restore environment
         environ.clear()

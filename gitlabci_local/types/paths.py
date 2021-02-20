@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 # Standard libraries
+from os.path import expanduser, expandvars
 from pathlib import Path, PurePosixPath
 
 # Components
@@ -8,6 +9,21 @@ from ..system.platform import Platform
 
 # Paths class
 class Paths:
+
+    # Expand
+    @staticmethod
+    def expand(path, env=True, home=True):
+
+        # Expand environment
+        if env:
+            path = expandvars(path)
+
+        # Expand home
+        if home:
+            path = expanduser(path)
+
+        # Result
+        return path
 
     # Getter
     @staticmethod

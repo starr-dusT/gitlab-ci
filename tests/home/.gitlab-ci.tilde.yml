@@ -1,0 +1,17 @@
+image: alpine:3
+
+stages:
+  - home_tilde
+
+.local:
+  volumes:
+    - ~:/mnt
+  workdir: '~'
+
+'Job 1':
+  stage: home_tilde
+  script:
+    - pwd
+    - ls -la ./
+    - ls -la /mnt/
+    - echo "${PWD}" | grep '^/home/\|^/root'
