@@ -213,6 +213,7 @@ variables:
   stage: test
   timeout: 15m
   variables:
+    CI_LOCAL_UPDATES_DISABLE: 'true'
     FORCE_STYLING: 'true'
     TEMP: .tmp
     TERM: ansi

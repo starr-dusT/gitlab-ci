@@ -22,7 +22,6 @@ class Updates:
     __enabled = False
     __name = None
     __settings = None
-    __version = None
 
     # Constructor
     def __init__(self, name, settings):
@@ -30,7 +29,6 @@ class Updates:
         # Initialize members
         self.__name = name
         self.__settings = settings
-        self.__version = Version.get()
 
         # Acquire enabled
         enabled = self.__settings.get('updates', 'enabled')
@@ -39,79 +37,26 @@ class Updates:
             self.__settings.set('updates', 'enabled', enabled)
 
         # Check enabled
-        self.__enabled = int(enabled) == 1 and Bundle.ENV_UPDATES_DISABLE not in environ
-
-    # Checker
-    def check(self, older=False):
-
-        # Reference version
-        version = '0.0.0' if older else self.__version
-
-        # Fake test updates
-        if Bundle.ENV_UPDATES_FAKE in environ:
-            available = environ[Bundle.ENV_UPDATES_FAKE]
-            if available >= version:
-
-                # Show updates message
-                release_date = datetime.utcfromtimestamp(Bundle.RELEASE_FIRST_TIMESTAMP)
-                self.message(older=older, available=available, date=release_date)
-                return True
-
-        # Check if not offline
-        if not Bundle.ENV_UPDATES_OFFLINE in environ:
-
-            # Check for updates
-            check = UpdateChecker(bypass_cache=True).check(self.__name, version)
-            if check:
-
-                # Show updates message
-                self.message(older=older, available=check.available_version,
-                             date=check.release_date)
-                return True
-
-        # Older offline failure
-        if older:
-
-            # Show offline message
-            self.message(offline=True)
-            return True
-
-        # Result
-        return False
-
-    # Daily
-    def daily(self):
-
-        # Acquire updates check last timestamp
-        last = self.__settings.get('updates', 'last_timestamp')
-
-        # Handle daily checks
-        current = int(time())
-        if not last or strftime('%Y-%m-%d', localtime(current)) != strftime(
-                '%Y-%m-%d', localtime(int(last))):
-            self.__settings.set('updates', 'last_timestamp', current)
-            return True
-
-        # Default fallback
-        return False
-
-    # Enabled
-    def enabled(self):
-        return self.__enabled
+        self.__enabled = int(enabled) == 1 and (Bundle.ENV_UPDATES_DISABLE not in environ
+                                                or
+                                                not environ[Bundle.ENV_UPDATES_DISABLE])
 
     # Message
-    def message(self, offline=False, older=False, available=None, date=None):
+    def __message(self, offline=False, older=False, available=None, date=None):
 
         # Create message box
         box = Boxes()
 
+        # Acquire current version
+        version = Version.get()
+
         # Evaluate same version
-        same = available == self.__version
+        same = available == version
 
         # Version message prefix
         version_prefix = '%sVersion: %s%s %s%s' % (
             Colors.YELLOW_LIGHT, Colors.BOLD, self.__name, Colors.RED if not offline
-            and available and not older and not same else Colors.GREEN, self.__version)
+            and available and not older and not same else Colors.GREEN, version)
 
         # Offline version message
         if offline:
@@ -148,3 +93,63 @@ class Updates:
 
         # Print message box
         box.print()
+
+    # Checker
+    def check(self, older=False):
+
+        # Reference version
+        version = '0.0.0' if older else Version.get()
+
+        # Fake test updates
+        if Bundle.ENV_UPDATES_FAKE in environ:
+            available = environ[Bundle.ENV_UPDATES_FAKE]
+            if available >= version:
+
+                # Show updates message
+                release_date = datetime.utcfromtimestamp(Bundle.RELEASE_FIRST_TIMESTAMP)
+                self.__message(older=older, available=available, date=release_date)
+                return True
+
+        # Check if not offline
+        if not Bundle.ENV_UPDATES_OFFLINE in environ:
+
+            # Check for updates
+            check = UpdateChecker(bypass_cache=True).check(self.__name, version)
+            if check:
+
+                # Show updates message
+                self.__message(older=older, available=check.available_version,
+                               date=check.release_date)
+                return True
+
+        # Older offline failure
+        if older:
+
+            # Show offline message
+            self.__message(offline=True)
+            return True
+
+        # Result
+        return False
+
+    # Daily
+    @property
+    def daily(self):
+
+        # Acquire updates check last timestamp
+        last = self.__settings.get('updates', 'last_timestamp')
+
+        # Handle daily checks
+        current = int(time())
+        if not last or strftime('%Y-%m-%d', localtime(current)) != strftime(
+                '%Y-%m-%d', localtime(int(last))):
+            self.__settings.set('updates', 'last_timestamp', current)
+            return True
+
+        # Default fallback
+        return False
+
+    # Enabled
+    @property
+    def enabled(self):
+        return self.__enabled

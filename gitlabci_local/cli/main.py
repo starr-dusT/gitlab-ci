@@ -297,7 +297,7 @@ def main():
         Platform.flush()
 
     # Check for daily updates
-    if updates.enabled() and updates.daily():
+    if updates.enabled and updates.daily:
         updates.check()
 
     # Result
