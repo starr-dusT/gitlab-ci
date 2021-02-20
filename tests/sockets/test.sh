@@ -28,18 +28,27 @@ if [ ! -z "${DOCKER_HOST}" ] && echo "${DOCKER_HOST}" | grep -q '^tcp://'; then
   export DOCKER_HOST=$(echo "${DOCKER_HOST}" | sed "s#${docker_hostname}#${docker_ip}#g")
 fi
 
-# Run tests
+# Run tests (incomplete)
 gitlabci-local -c ./.gitlab-ci.incomplete.yml --dump
 gitlabci-local -c ./.gitlab-ci.incomplete.yml --pull
 timeout 5 gitlabci-local -c ./.gitlab-ci.incomplete.yml -p && exit 1 || true
 timeout 5 gitlabci-local -c ./.gitlab-ci.incomplete.yml -p --sockets
+
+# Run tests (global)
 gitlabci-local -c ./.gitlab-ci.global.yml --dump
 gitlabci-local -c ./.gitlab-ci.global.yml --pull
 timeout 5 gitlabci-local -c ./.gitlab-ci.global.yml 'Job 1'
 timeout 5 gitlabci-local -c ./.gitlab-ci.global.yml 'Job 2' && exit 1 || true
+
+# Run tests (environment)
+DOCKER_CERT_PATH="${DOCKER_CERT_PATH}" DOCKER_TLS_VERIFY="${DOCKER_TLS_VERIFY}" timeout 5 gitlabci-local -c ./.gitlab-ci.global.yml 'Job 1' || true
+
+# Run tests (specific)
 gitlabci-local -c ./.gitlab-ci.specific.yml --dump
 gitlabci-local -c ./.gitlab-ci.specific.yml --pull
 timeout 5 gitlabci-local -c ./.gitlab-ci.specific.yml -p
+
+# Run tests (custom)
 gitlabci-local -c ./.gitlab-ci.custom.yml --dump
 gitlabci-local -c ./.gitlab-ci.custom.yml --pull
 timeout 5 gitlabci-local -c ./.gitlab-ci.custom.yml -p

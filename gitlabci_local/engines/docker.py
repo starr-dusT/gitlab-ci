@@ -14,6 +14,11 @@ from ..system.platform import Platform
 # Docker class
 class Docker:
 
+    # Constants
+    ENV_DOCKER_CERT_PATH = 'DOCKER_CERT_PATH'
+    ENV_DOCKER_HOST = 'DOCKER_HOST'
+    ENV_DOCKER_TLS_VERIFY = 'DOCKER_TLS_VERIFY'
+
     # Members
     __client = None
 
@@ -132,21 +137,22 @@ class Docker:
         docker_host = ''
 
         # Detect TLS configurations
-        if 'DOCKER_TLS_VERIFY' in environ:
-            variables['DOCKER_TLS_VERIFY'] = environ['DOCKER_TLS_VERIFY']
+        if Docker.ENV_DOCKER_TLS_VERIFY in environ:
+            variables[Docker.ENV_DOCKER_TLS_VERIFY] = environ[
+                Docker.ENV_DOCKER_TLS_VERIFY]
 
         # Detect certificates configurations
-        if 'DOCKER_CERT_PATH' in environ:
-            variables['DOCKER_CERT_PATH'] = '/certs'
-            volumes.add(environ['DOCKER_CERT_PATH'], '/certs', 'ro', True)
+        if Docker.ENV_DOCKER_CERT_PATH in environ:
+            variables[Docker.ENV_DOCKER_CERT_PATH] = '/certs'
+            volumes.add(environ[Docker.ENV_DOCKER_CERT_PATH], '/certs', 'ro', True)
 
         # Detect host configurations
-        if 'DOCKER_HOST' in environ and environ['DOCKER_HOST']:
-            docker_host = environ['DOCKER_HOST']
+        if Docker.ENV_DOCKER_HOST in environ and environ[Docker.ENV_DOCKER_HOST]:
+            docker_host = environ[Docker.ENV_DOCKER_HOST]
 
         # Network Docker socket
         if docker_host[0:7] == 'http://' or docker_host[0:6] == 'tcp://':
-            variables['DOCKER_HOST'] = docker_host
+            variables[Docker.ENV_DOCKER_HOST] = docker_host
 
         # Local Docker socket
         elif docker_host[0:7] == 'unix://': # pragma: no cover
@@ -165,8 +171,8 @@ class Docker:
 
         # Unknown feature
         else: # pragma: no cover
-            Outputs.warning('The DOCKER_HOST = %s configuration is not supported yet...' %
-                            (docker_host))
+            Outputs.warning('The %s = %s configuration is not supported yet...' %
+                            (Docker.ENV_DOCKER_HOST, docker_host))
 
     # Stop
     def stop(self, container, timeout):
