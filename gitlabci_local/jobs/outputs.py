@@ -46,7 +46,7 @@ class Outputs:
 
     # Warning
     @staticmethod
-    def warning(message):
+    def warning(message): # pragma: no cover
 
         # Warning output
         print('  %s‣ WARNING: %s%s%s' % (
