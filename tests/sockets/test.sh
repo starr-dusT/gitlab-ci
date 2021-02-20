@@ -22,8 +22,10 @@ if [ -z "${engine_docker}" ]; then
 fi
 
 # Configure Docker
-if [ ! -z "${DOCKER_HOST}" ]; then
-  export DOCKER_HOST=$(echo "${DOCKER_HOST}" | sed 's/docker/172.17.0.1/g')
+if [ ! -z "${DOCKER_HOST}" ] && echo "${DOCKER_HOST}" | grep -q '^tcp://'; then
+  docker_hostname=$(echo "${DOCKER_HOST}" | sed 's#tcp://\(.*\):.*#\1#')
+  docker_ip=$(getent ahostsv4 "${docker_hostname}" | head -n1 | cut -d' ' -f1)
+  export DOCKER_HOST=$(echo "${DOCKER_HOST}" | sed "s#${docker_hostname}#${docker_ip}#g")
 fi
 
 # Run tests
