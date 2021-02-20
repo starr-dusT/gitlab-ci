@@ -27,13 +27,18 @@ if [ ! -z "${DOCKER_HOST}" ]; then
 fi
 
 # Run tests
-timeout 5 gitlabci-local -c ./.gitlab-ci.incomplete.yml --dump
+gitlabci-local -c ./.gitlab-ci.incomplete.yml --dump
+gitlabci-local -c ./.gitlab-ci.incomplete.yml --pull
 timeout 5 gitlabci-local -c ./.gitlab-ci.incomplete.yml -p && exit 1 || true
 timeout 5 gitlabci-local -c ./.gitlab-ci.incomplete.yml -p --sockets
-timeout 5 gitlabci-local -c ./.gitlab-ci.global.yml --dump
+gitlabci-local -c ./.gitlab-ci.global.yml --dump
+gitlabci-local -c ./.gitlab-ci.global.yml --pull
 timeout 5 gitlabci-local -c ./.gitlab-ci.global.yml 'Job 1'
 timeout 5 gitlabci-local -c ./.gitlab-ci.global.yml 'Job 2' && exit 1 || true
+gitlabci-local -c ./.gitlab-ci.specific.yml --dump
+gitlabci-local -c ./.gitlab-ci.specific.yml --pull
 timeout 5 gitlabci-local -c ./.gitlab-ci.specific.yml -p
-timeout 5 gitlabci-local -c ./.gitlab-ci.specific.yml --dump
+gitlabci-local -c ./.gitlab-ci.custom.yml --dump
+gitlabci-local -c ./.gitlab-ci.custom.yml --pull
 timeout 5 gitlabci-local -c ./.gitlab-ci.custom.yml -p
 timeout 5 gitlabci-local -c ./.gitlab-ci.custom.yml 'Job 2' && exit 1 || true
