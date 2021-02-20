@@ -128,7 +128,18 @@ class GitLab:
         # Parse nested include
         if 'include' in data and data['include']:
             data_new = dict()
-            for include_node in data['include']:
+
+            # Prepare includes nodes
+            data_include_list = []
+            if isinstance(data['include'], dict):
+                data_include_list = [data['include']]
+            elif isinstance(data['include'], list):
+                data_include_list = data['include']
+            elif isinstance(data['include'], str):
+                data_include_list = [{'local': data['include']}]
+
+            # Iterate through includes nodes
+            for include_node in data_include_list:
 
                 # Parse local nodes
                 if 'local' in include_node:
