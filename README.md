@@ -162,6 +162,11 @@ For example, `-e TERM=ansi` may enable colored terminal outputs.
 The variable `CI_LOCAL` is automatically defined to `true` by gitlabci-local  
 to allow specific conditions for local purposes in jobs' scripts.
 
+The following variables are also defined by gitlabci-local:
+
+- `CI_COMMIT_SHA`: The commit revision for which project is built (GitLab CI)
+- `CI_COMMIT_SHORT_SHA`: The first eight characters of CI_COMMIT_SHA (GitLab CI)
+
 ---
 
 ## Supported container engines
