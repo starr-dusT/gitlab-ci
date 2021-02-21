@@ -24,5 +24,10 @@ gitlabci-local 'Job 2'
 gitlabci-local -w . 'Job 2'
 gitlabci-local -r 'Job 2'
 gitlabci-local -r -w . 'Job 2'
-gitlabci-local -c ./.gitlab-ci.relative.yml -p
-gitlabci-local -c ./.gitlab-ci.variables.yml -p
+if [ "${OSTYPE}" = 'msys' ] || [ "${OSTYPE}" = 'win32' ]; then
+  gitlabci-local -c ./.gitlab-ci.windows.yml -p || true
+else
+  gitlabci-local -c ./.gitlab-ci.relative.yml -p
+  gitlabci-local -c ./.gitlab-ci.variables.yml -p
+fi
+gitlabci-local -c ./.gitlab-ci.empty.yml -p && exit 1 || true

@@ -56,15 +56,17 @@ class Jobs:
         # Extend mounts
         if self.__options.volume:
             for volume in self.__options.volume:
-                cwd = Path('.')
-                volume_local = False
-                volume_nodes = volume.split(':')
 
                 # Handle .local volumes
-                if volume_nodes[0] == '.local':
+                cwd = Path('.')
+                volume_local = False
+                if volume.startswith(Volumes.LOCAL_FLAG):
                     cwd = self.__options.path
                     volume_local = True
-                    volume_nodes.pop(0)
+                    volume = volume[len(Volumes.LOCAL_FLAG):]
+
+                # Parse volume fields
+                volume_nodes = Volumes.parse(volume)
 
                 # Parse HOST:TARGET:MODE
                 if len(volume_nodes) == 3:

@@ -14,6 +14,7 @@ from oyaml import safe_load as yaml_safe_load
 # Components
 from ..containers.images import Images
 from ..features.menus import MenusFeature
+from ..types.volumes import Volumes
 
 # GitLab class
 class GitLab:
@@ -291,12 +292,12 @@ class GitLab:
                 if not self.__options.volume:
                     self.__options.volume = []
                 for volume in local['volumes']:
-                    self.__options.volume += ['.local:' + volume]
+                    self.__options.volume += [Volumes.LOCAL_FLAG + volume]
 
             # Parse local workdir
             if 'workdir' in local:
                 if not self.__options.workdir:
-                    self.__options.workdir = '.local:' + local['workdir']
+                    self.__options.workdir = Volumes.LOCAL_FLAG + local['workdir']
 
             # Parse local configurations
             if 'configurations' in local:

@@ -6,6 +6,9 @@ from ..system.platform import Platform
 # Volumes class
 class Volumes:
 
+    # Constants
+    LOCAL_FLAG = '.local:'
+
     # Members
     __volumes = None
 
@@ -46,3 +49,38 @@ class Volumes:
     # Get
     def get(self):
         return self.__volumes
+
+    # Parse
+    @staticmethod
+    def parse(volume):
+
+        # Invalid volume
+        if not volume:
+            raise ValueError('Empty volume parameter cannot be parsed')
+
+        # Relative volume
+        if 1 <= len(volume) <= 2:
+            return [volume]
+
+        # Variables
+        volume_node = ''
+        volume_nodes = []
+
+        # Iterate through volume
+        for char in volume + '\0':
+
+            # Detect Windows drive
+            if char == ':' and len(volume_node) == 1 and volume_node[0].isalpha():
+                volume_node += char
+
+            # Detect separator or end
+            elif char in (':', '\0'):
+                volume_nodes += [volume_node]
+                volume_node = ''
+
+            # Append to volume node
+            else:
+                volume_node += char
+
+        # Result
+        return volume_nodes
