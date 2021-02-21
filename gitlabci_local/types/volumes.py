@@ -2,6 +2,7 @@
 
 # Components
 from ..system.platform import Platform
+from ..types.paths import Paths
 
 # Volumes class
 class Volumes:
@@ -75,7 +76,7 @@ class Volumes:
 
             # Detect separator or end
             elif char in (':', ';', '\0'):
-                volume_nodes += [volume_node]
+                volume_nodes += [Paths.translate(volume_node)]
                 volume_node = ''
 
             # Append to volume node

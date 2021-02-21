@@ -48,3 +48,18 @@ class Paths:
 
         # Result
         return path
+
+    # Translator
+    @staticmethod
+    def translate(data):
+
+        # Double backslash translation
+        if data[0:1] == '\\':
+            data = '/' + data[1:]
+
+        # Double slash translation
+        if data[0:2] == '//':
+            data = data[1:]
+
+        # Result
+        return data
