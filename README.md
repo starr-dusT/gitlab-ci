@@ -245,11 +245,17 @@ image:
   name: IMAGE_NAME
   entrypoint: ['COMMANDS']
 
-variables:
-  - VARIABLES: VALUES
+services:
+  - ...docker:dind
+  - SERVICE_NAME
+  - name: SERVICE_NAME
+    alias: SERVICE_ALIAS
 
 stages:
   - STAGE_NAMES
+
+variables:
+  - VARIABLES: VALUES
 
 # Global scripts
 
@@ -276,6 +282,12 @@ JOB_NAME:
   image:
     name: IMAGE_NAME
     entrypoint: ['COMMANDS']
+
+  services:
+    - ...docker:dind
+    - SERVICE_NAME
+    - name: SERVICE_NAME
+      alias: SERVICE_ALIAS
 
   variables:
     VARIABLES: VALUES
