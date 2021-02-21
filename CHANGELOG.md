@@ -1,4 +1,87 @@
 
+<a name="4.0.0"></a>
+## [4.0.0](https://gitlab.com/AdrianDC/gitlabci-local/compare/3.1.2...4.0.0) (2021-02-21)
+
+### Bug Fixes
+
+* finish [#171](https://gitlab.com/AdrianDC/gitlabci-local/issues/171): fixup MSYS paths translations upon volumes parse
+* finish [#171](https://gitlab.com/AdrianDC/gitlabci-local/issues/171): support ';' separated git-bash paths expansions
+* resolve [#171](https://gitlab.com/AdrianDC/gitlabci-local/issues/171): resolve support of Windows paths volumes mounts
+* finish [#179](https://gitlab.com/AdrianDC/gitlabci-local/issues/179): avoid resolving ~ on Windows hosts and refactor
+* resolve [#179](https://gitlab.com/AdrianDC/gitlabci-local/issues/179): expand home paths for volumes and workdir
+* resolve [#178](https://gitlab.com/AdrianDC/gitlabci-local/issues/178): support all types of include: configurations
+* finish [#160](https://gitlab.com/AdrianDC/gitlabci-local/issues/160): remove unneeded 'dict' iterator on services type
+* finish [#177](https://gitlab.com/AdrianDC/gitlabci-local/issues/177): add coverage after daily checks with a pipeline
+* finish [#160](https://gitlab.com/AdrianDC/gitlabci-local/issues/160): add coverage of all environment variables
+* finish [#160](https://gitlab.com/AdrianDC/gitlabci-local/issues/160): fix handlings of 'dict' or 'str' services lists
+* finish [#177](https://gitlab.com/AdrianDC/gitlabci-local/issues/177): add coverage for daily checks after a pipeline
+* resolve [#177](https://gitlab.com/AdrianDC/gitlabci-local/issues/177): prepare version values only if needed
+* finish [#174](https://gitlab.com/AdrianDC/gitlabci-local/issues/174): add 'git' environment path and run local tests
+* resolve [#175](https://gitlab.com/AdrianDC/gitlabci-local/issues/175): ensure when: always jobs always run
+* finish [#160](https://gitlab.com/AdrianDC/gitlabci-local/issues/160): add support for the name: variant of 'services:'
+* resolve [#173](https://gitlab.com/AdrianDC/gitlabci-local/issues/173): expand variables from the workdir value
+* resolve [#172](https://gitlab.com/AdrianDC/gitlabci-local/issues/172): fix one part .local:volumes items
+* prepare [#165](https://gitlab.com/AdrianDC/gitlabci-local/issues/165): consider nodes containing 'script' as jobs
+* resolve [#164](https://gitlab.com/AdrianDC/gitlabci-local/issues/164): avoid --debug features if interrupted by Ctrl+C
+* resolve [#163](https://gitlab.com/AdrianDC/gitlabci-local/issues/163): handle APIError fails in docker.supports()
+
+### Cleanups
+
+* coverage: disable coverage of Windows specific sections
+* finish [#160](https://gitlab.com/AdrianDC/gitlabci-local/issues/160): disable coverage of function 'Outputs.warning'
+* finish [#169](https://gitlab.com/AdrianDC/gitlabci-local/issues/169): remove the unused 'StageHistory.get' function
+* gitlab-ci: add 'Python DinD' local tests job with DinD
+* finish [#169](https://gitlab.com/AdrianDC/gitlabci-local/issues/169): use integer durations to avoid '1 seconds'
+* finish [#160](https://gitlab.com/AdrianDC/gitlabci-local/issues/160): cleanup 'null' empty configurations fields
+* features: isolate the pipelines filter into a function
+* finish [#166](https://gitlab.com/AdrianDC/gitlabci-local/issues/166): disable coverage of DOCKER_HOST offline cases
+* finish [#160](https://gitlab.com/AdrianDC/gitlabci-local/issues/160): unify the configurations cleanup in a function
+* gitlab-ci: always push to SonarCloud on develop / master
+* finish [#162](https://gitlab.com/AdrianDC/gitlabci-local/issues/162): mention real paths are available on macOS
+* resolve [#162](https://gitlab.com/AdrianDC/gitlabci-local/issues/162): specific warnings about unsupported features
+* document [#160](https://gitlab.com/AdrianDC/gitlabci-local/issues/160): mention sockets are enabled by dind services
+
+### Documentation
+
+* preview: refresh the SVG for the latest 4.0.0 release
+* finish [#178](https://gitlab.com/AdrianDC/gitlabci-local/issues/178): document the 'include:' supported nodes
+* finish [#160](https://gitlab.com/AdrianDC/gitlabci-local/issues/160): document the 'services:' supported nodes
+* finish [#174](https://gitlab.com/AdrianDC/gitlabci-local/issues/174): document CI_COMMIT_SHA and CI_COMMIT_SHORT_SHA
+
+### Features
+
+* prepare [#118](https://gitlab.com/AdrianDC/gitlabci-local/issues/118): add an 'EXPERIMENTAL' to enable Docker sockets
+* resolve [#176](https://gitlab.com/AdrianDC/gitlabci-local/issues/176): share DOCKER_CERT_PATH and DOCKER_TLS_VERIFY
+* implement [#174](https://gitlab.com/AdrianDC/gitlabci-local/issues/174): set CI_COMMIT_SHA and CI_COMMIT_SHORT_SHA
+* implement [#169](https://gitlab.com/AdrianDC/gitlabci-local/issues/169): add pipeline / jobs histories and refactor
+* resolve [#168](https://gitlab.com/AdrianDC/gitlabci-local/issues/168): explicitly use docker.io registry for Podman
+* implement [#167](https://gitlab.com/AdrianDC/gitlabci-local/issues/167): support Podman default network interface
+* resolve [#165](https://gitlab.com/AdrianDC/gitlabci-local/issues/165): handle empty job stages and missing stages
+* resolve [#161](https://gitlab.com/AdrianDC/gitlabci-local/issues/161): add support for Docker sockets on Windows
+* resolve [#166](https://gitlab.com/AdrianDC/gitlabci-local/issues/166): add support for DOCKER_HOST sockets
+* implement [#160](https://gitlab.com/AdrianDC/gitlabci-local/issues/160): enable the sockets option with dind services
+
+### Revert
+
+* finish [#168](https://gitlab.com/AdrianDC/gitlabci-local/issues/168): let fixed Podman resolve short-names again
+
+### Test
+
+* finish [#179](https://gitlab.com/AdrianDC/gitlabci-local/issues/179): minor fixes of 'home' tests with /root workdir
+* finish [#179](https://gitlab.com/AdrianDC/gitlabci-local/issues/179): add a test with the "${PWD}" absolute path env
+* finish [#165](https://gitlab.com/AdrianDC/gitlabci-local/issues/165): add 'trigger:' coverage with a faulty 'script:'
+
+### Test
+
+* test [#178](https://gitlab.com/AdrianDC/gitlabci-local/issues/178): validate all types of include: configurations
+* test [#160](https://gitlab.com/AdrianDC/gitlabci-local/issues/160): resolve the DOCKER_HOST hostname to IP for DinD
+* test [#160](https://gitlab.com/AdrianDC/gitlabci-local/issues/160): resolve DinD pull executions without a timeout
+* test [#160](https://gitlab.com/AdrianDC/gitlabci-local/issues/160): adapt DOCKER_HOST for GitLab CI tests
+* test [#160](https://gitlab.com/AdrianDC/gitlabci-local/issues/160): ensure DOCKER_HOST points to a working deamon
+* test [#167](https://gitlab.com/AdrianDC/gitlabci-local/issues/167): add a coverage test for engine network modes
+* test [#160](https://gitlab.com/AdrianDC/gitlabci-local/issues/160): run sockets tests only Docker supported hosts
+
+
 <a name="3.1.2"></a>
 ## [3.1.2](https://gitlab.com/AdrianDC/gitlabci-local/compare/3.1.1...3.1.2) (2021-02-09)
 
