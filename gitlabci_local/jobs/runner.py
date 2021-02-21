@@ -309,7 +309,7 @@ class Jobs:
                     target_workdir = Paths.get(PurePosixPath(target_project) / workdir)
 
             # Expand remote working directory
-            else:
+            else: # pragma: no cover
                 if workdir[0:1] == '~':
                     target_workdir = Paths.get(workdir)
                 else:

@@ -71,7 +71,7 @@ class Volumes:
 
             # Detect Windows drive
             if char == ':' and len(volume_node) == 1 and volume_node[0].isalpha():
-                volume_node += char
+                volume_node += char # pragma: no cover
 
             # Detect separator or end
             elif char in (':', '\0'):
