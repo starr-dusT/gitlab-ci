@@ -17,3 +17,4 @@ gitlabci-local -c ./.gitlab-ci.tilde.yml -p
 gitlabci-local -c ./.gitlab-ci.cli.yml -e USERHOME="${HOME}" -v ~:~ -w ~ -p && exit 1 || true
 gitlabci-local -c ./.gitlab-ci.cli.yml -e USERHOME="${HOME}" -v ~:/mnt -w ~ -p
 gitlabci-local -c ./.gitlab-ci.cli.yml -e USERHOME="${HOME}" -v "${HOME}:/mnt" -w "${HOME}" -p
+gitlabci-local -c ./.gitlab-ci.cli.yml -e USERHOME="${PWD}" -v "${PWD}:/mnt" -w "${PWD}" -p
