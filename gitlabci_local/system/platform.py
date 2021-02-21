@@ -11,11 +11,13 @@ class Platform:
 
     # Environment
     ENV_ANDROID = 'ANDROID_ROOT'
+    ENV_EXPERIMENTAL = 'EXPERIMENTAL'
     ENV_SIMULATE_MAC_OS = 'SIMULATE_MAC_OS'
     ENV_SUDO_USER = 'SUDO_USER'
 
     # Constants
     IS_ANDROID = ('ANDROID_ROOT' in environ)
+    IS_EXPERIMENTAL = (ENV_EXPERIMENTAL in environ)
     IS_LINUX = (platform in ['linux', 'linux2'])
     IS_MAC_OS = (platform in ['darwin'] or ENV_SIMULATE_MAC_OS in environ)
     IS_SIMULATED = (ENV_SIMULATE_MAC_OS in environ)
