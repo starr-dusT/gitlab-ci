@@ -7,6 +7,7 @@ stages:
   stage: home_cli
   script:
     - pwd
+    - ls -la /
     - ls -la ./
     - ls -la /mnt/
-    - test "${PWD}" = "${USERHOME?}"
+    - test "${PWD}" = "${WORKDIR?}"
