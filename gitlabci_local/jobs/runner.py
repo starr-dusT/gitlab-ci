@@ -288,23 +288,41 @@ class Jobs:
             target_project = Paths.get(Platform.BUILDS_DIR / Path(path_project).name)
             target_parent = Paths.get(Platform.BUILDS_DIR)
 
-        # Prepare working directory
+        # Prepare specific working directory
         if self.__options.workdir:
-            if self.__options.workdir.startswith('.local:'):
-                workdir = Paths.expand(self.__options.workdir[len('.local:'):])
+            relativedir = Path('.')
+            workdir = self.__options.workdir
+
+            # Handle .local working directory
+            if workdir.startswith('.local:'):
+                relativedir = self.__options.path
+                workdir = workdir[len('.local:'):]
+
+            # Expand real working directory
+            if Platform.IS_LINUX or Platform.IS_MAC_OS:
+                workdir = Paths.expand(workdir)
                 if host or real_paths:
-                    target_workdir = Paths.get((self.__options.path / workdir).resolve())
+                    target_workdir = Paths.get((relativedir / workdir).resolve())
                 else:
                     target_workdir = Paths.get(PurePosixPath(target_project) / workdir)
+
+            # Expand remote working directory
             else:
-                if host or real_paths:
-                    target_workdir = Paths.get(
-                        (Path('.') / self.__options.workdir).resolve())
+                if workdir[0:1] == '~':
+                    target_workdir = Paths.get(workdir)
                 else:
-                    target_workdir = Paths.get(
-                        PurePosixPath(target_project) / self.__options.workdir)
+                    workdir = Paths.expand(workdir, home=False)
+                    if host or real_paths:
+                        target_workdir = Paths.get((relativedir / workdir).resolve())
+                    else:
+                        target_workdir = Paths.get(
+                            PurePosixPath(target_project) / workdir)
+
+        # Prepare real working directory
         elif host or real_paths:
             target_workdir = Paths.get(self.__options.path)
+
+        # Prepare target working directory
         else:
             target_workdir = target_project
 

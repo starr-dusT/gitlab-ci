@@ -12,6 +12,6 @@ stages:
   stage: home_tilde
   script:
     - pwd
-    - ls -la ./
     - ls -la /mnt/
+    - ls -la ./
     - echo "${PWD}" | grep '^/home/\|^/root'

@@ -11,10 +11,24 @@ set -ex
 # Run tests (.local)
 gitlabci-local -c ./.gitlab-ci.env.yml -p
 gitlabci-local -c ./.gitlab-ci.relative.yml -p
-gitlabci-local -c ./.gitlab-ci.tilde.yml -p
+if [ "${OSTYPE}" = 'msys' ] || [ "${OSTYPE}" = 'win32' ]; then
+  gitlabci-local -c ./.gitlab-ci.tilde.yml -p && exit 1 || true
+  gitlabci-local -c ./.gitlab-ci.tilde.yml -p -w //root
+else
+  gitlabci-local -c ./.gitlab-ci.tilde.yml -p
+fi
 
 # Run tests (-v)
 gitlabci-local -c ./.gitlab-ci.cli.yml -e USERHOME="${HOME}" -v ~:~ -w ~ -p && exit 1 || true
-gitlabci-local -c ./.gitlab-ci.cli.yml -e USERHOME="${HOME}" -v ~:/mnt -w ~ -p
-gitlabci-local -c ./.gitlab-ci.cli.yml -e USERHOME="${HOME}" -v "${HOME}:/mnt" -w "${HOME}" -p
-gitlabci-local -c ./.gitlab-ci.cli.yml -e USERHOME="${PWD}" -v "${PWD}:/mnt" -w "${PWD}" -p
+if [ "${OSTYPE}" = 'msys' ] || [ "${OSTYPE}" = 'win32' ]; then
+  gitlabci-local -c ./.gitlab-ci.cli.yml -e USERHOME="${HOME}" -v ~:/mnt -w ~ -p && exit 1 || true
+  gitlabci-local -c ./.gitlab-ci.cli.yml -e USERHOME="${HOME}" -v ~:/mnt -w //root -p
+  gitlabci-local -c ./.gitlab-ci.cli.yml -e USERHOME="${HOME}" -v "${HOME}:/mnt" -w "${HOME}" -p && exit 1 || true
+  gitlabci-local -c ./.gitlab-ci.cli.yml -e USERHOME="${HOME}" -v "${HOME}:/mnt" -w //root -p
+  gitlabci-local -c ./.gitlab-ci.cli.yml -e USERHOME="${PWD}" -v "${PWD}:/mnt" -w "${PWD}" -p && exit 1 || true
+  gitlabci-local -c ./.gitlab-ci.cli.yml -e USERHOME="${PWD}" -v "${PWD}:/mnt" -w //root -p
+else
+  gitlabci-local -c ./.gitlab-ci.cli.yml -e USERHOME="${HOME}" -v ~:/mnt -w ~ -p
+  gitlabci-local -c ./.gitlab-ci.cli.yml -e USERHOME="${HOME}" -v "${HOME}:/mnt" -w "${HOME}" -p
+  gitlabci-local -c ./.gitlab-ci.cli.yml -e USERHOME="${PWD}" -v "${PWD}:/mnt" -w "${PWD}" -p
+fi
