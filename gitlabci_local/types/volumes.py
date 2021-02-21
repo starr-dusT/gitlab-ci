@@ -74,7 +74,7 @@ class Volumes:
                 volume_node += char # pragma: no cover
 
             # Detect separator or end
-            elif char in (':', '\0'):
+            elif char in (':', ';', '\0'):
                 volume_nodes += [volume_node]
                 volume_node = ''
 
