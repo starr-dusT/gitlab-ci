@@ -237,8 +237,11 @@ gitlabci-local --settings
 ```yml
 # Global configurations
 
+include: FILE_PATH
 include:
-  local: FILE_PATHS
+  local: FILE_PATH
+include:
+  - local: FILE_PATH
 
 image: IMAGE_NAME
 image:
