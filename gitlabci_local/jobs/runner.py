@@ -9,7 +9,7 @@ from sys import stdout
 from time import sleep
 
 # Components
-from ..engines.engine import Engine
+#from ..engines.engine import Engine
 from ..package.bundle import Bundle
 from ..system.git import Git
 from ..system.platform import Platform
@@ -265,10 +265,10 @@ class Jobs:
             network = self.__options.network
 
         # Prepare engine execution
-        if not host:
-            if self.__engine is None:
-                self.__engine = Engine(self.__options)
-            engine_type = self.__engine.name()
+        #if not host:
+        #    if self.__engine is None:
+        #        self.__engine = Engine(self.__options)
+        #    engine_type = self.__engine.name()
 
         # Prepare native execution
         else:

@@ -1,5 +1,5 @@
 colored>=1.4.2
-docker>=4.1.0
+#docker>=4.1.0
 oyaml>=0.9
 PyInquirer>=1.0.3
 python-dotenv>=0.10.5

@@ -8,9 +8,9 @@ from subprocess import check_output, DEVNULL, Popen
 from sys import argv, exit
 
 # Components
-from ..engines.engine import supported as engine_supported
+#from ..engines.engine import supported as engine_supported
 from ..features.configurations import ConfigurationsFeature
-from ..features.images import ImagesFeature
+#from ..features.images import ImagesFeature
 from ..features.menus import MenusFeature
 from ..features.pipelines import PipelinesFeature
 from ..package.bundle import Bundle
@@ -72,10 +72,10 @@ def main():
         (', '.join(networks_enum), networks_enum[0]))
     group.add_argument('-e', dest='env', action='append',
                        help='Define VARIABLE=value, pass VARIABLE or ENV file')
-    group.add_argument(
-        '-E', dest='engine',
-        help='Force a specific engine (or define %s)\nDefault list: %s' %
-        (Bundle.ENV_ENGINE, ','.join(engine_supported())))
+    #group.add_argument(
+    #    '-E', dest='engine',
+    #    help='Force a specific engine (or define %s)\nDefault list: %s' %
+    #    (Bundle.ENV_ENGINE, ','.join(engine_supported())))
     group.add_argument('-H', '--host', dest='host', action='store_true',
                        help='Run all jobs on the host rather than containers')
     group.add_argument(
@@ -186,18 +186,18 @@ def main():
         options.configuration = Path(options.configuration) / Bundle.CONFIGURATION
 
     # Prepare engine
-    if options.engine is None and Bundle.ENV_ENGINE in environ:
-        options.engine = environ[Bundle.ENV_ENGINE]
-        options.engine_default = True
-    elif options.engine is not None:
-        environ[Bundle.ENV_ENGINE] = options.engine
-        options.engine_default = False
-    else:
-        options.engine = settings.get('engines', 'engine')
-        options.engine_default = True
-        if not options.engine:
-            options.engine = ','.join(engine_supported())
-            settings.set('engines', 'engine', options.engine)
+    #if options.engine is None and Bundle.ENV_ENGINE in environ:
+    #    options.engine = environ[Bundle.ENV_ENGINE]
+    #    options.engine_default = True
+    #elif options.engine is not None:
+    #    environ[Bundle.ENV_ENGINE] = options.engine
+    #    options.engine_default = False
+    #else:
+    #    options.engine = settings.get('engines', 'engine')
+    #    options.engine_default = True
+        #if not options.engine:
+        #    options.engine = ','.join(engine_supported())
+        #    settings.set('engines', 'engine', options.engine)
 
     # Prepare paths
     options.configuration = Path(options.configuration).resolve()
@@ -224,12 +224,12 @@ def main():
         result = ConfigurationsFeature(jobs=jobs, options=options).dump()
 
     # Pull jobs images
-    elif options.pull:
-        result = ImagesFeature(jobs=jobs, options=options).pull(force=options.force)
+    #elif options.pull:
+    #    result = ImagesFeature(jobs=jobs, options=options).pull(force=options.force)
 
-    # Remove jobs images
-    elif options.rmi:
-        result = ImagesFeature(jobs=jobs, options=options).rmi()
+    ## Remove jobs images
+    #elif options.rmi:
+    #    result = ImagesFeature(jobs=jobs, options=options).rmi()
 
     # Select job
     elif options.list and interactive:
